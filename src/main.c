@@ -1,0 +1,77 @@
+#include <stdio.h>
+#include <string.h>
+#include <ctype.h>
+#include <stdlib.h>
+#include <unistd.h>
+#include <getopt.h>
+
+
+
+int main(int argc, char* argv[]) {
+  int isRecovery = FALSE;
+  int k = -1;
+  int n = 0;
+  char * secret_image = calloc(sizeof(char), 40);
+  char * mark_image = calloc(sizeof(char), 40);
+  char * dir = calloc(sizeof(char), 40);
+
+  int opt = 0;
+  static struct option long_options[] = {
+        {"secret",    required_argument, 0,  's' },
+        {"mark",      required_argument, 0,  'm' },
+        {"dir",       required_argument, 0,  'dir' },
+        {"d",         no_argument,       0,  'd' },
+        {"r",         no_argument,       0,  'r' },
+        {"k",         required_argument, 0,  'k' },
+        {"n",         required_argument, 0,  'n' },
+        {0,           0,                 0,  0   }
+  };
+
+  int long_index =0;
+  while ((opt = getopt_long_only(argc, argv,"", long_options, &long_index )) != -1) {
+    switch (opt){
+      case 's':
+        strcpy(secret_image, optarg);
+        break;
+       case 'm':
+        strcpy(mark_image, optarg);
+        break;
+      case 'dir':
+        strcpy(dir, optarg);
+        break;
+      case 'd':
+        isRecovery = FALSE;
+        break;
+      case 'r':
+        isRecovery = TRUE;
+        break;
+      case 'k':
+        k = atoi(optarg);
+        break;
+      case 'n':
+        n = atoi(optarg);
+        break;
+      default:
+        printf("Invalid!\n");
+        break;
+    }
+  }
+
+  if(k == -1){
+  	printf("Failure: k was not specified! \n");
+  	exit(EXIT_FAILURE);
+  }
+  if(!(k >= 2 && k <= n)){
+  	printf("Failure: k must be between 2 and n \n");
+  	exit(EXIT_FAILURE);
+  }
+
+  if(dir[0] == 0){
+  	printf("Failure: directory was not specified \n");
+  	exit(EXIT_FAILURE);
+  }
+
+  printf("Parameters validated! \n");
+
+  return EXIT_SUCCESS;
+}
