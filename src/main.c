@@ -5,6 +5,9 @@
 #include <unistd.h>
 #include <getopt.h>
 
+#define FALSE 0
+#define TRUE 1
+
 
 
 int main(int argc, char* argv[]) {
@@ -17,9 +20,9 @@ int main(int argc, char* argv[]) {
 
   int opt = 0;
   static struct option long_options[] = {
-        {"secret",    required_argument, 0,  's' },
-        {"mark",      required_argument, 0,  'm' },
-        {"dir",       required_argument, 0,  'dir' },
+        {"s",    required_argument, 0,  's' },
+        {"m",      required_argument, 0,  'm' },
+        {"dir",       required_argument, 0,  'i' },
         {"d",         no_argument,       0,  'd' },
         {"r",         no_argument,       0,  'r' },
         {"k",         required_argument, 0,  'k' },
@@ -36,7 +39,7 @@ int main(int argc, char* argv[]) {
        case 'm':
         strcpy(mark_image, optarg);
         break;
-      case 'dir':
+      case 'i':
         strcpy(dir, optarg);
         break;
       case 'd':
