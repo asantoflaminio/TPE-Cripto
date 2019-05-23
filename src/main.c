@@ -11,7 +11,7 @@
 
 
 int main(int argc, char* argv[]) {
-  int isRecovery = FALSE;
+  int recoverImage = FALSE;
   int k = -1;
   int n = 0;
   char * secret_image = calloc(sizeof(char), 40);
@@ -43,10 +43,10 @@ int main(int argc, char* argv[]) {
         strcpy(dir, optarg);
         break;
       case 'd':
-        isRecovery = FALSE;
+        recoverImage = FALSE;
         break;
       case 'r':
-        isRecovery = TRUE;
+        recoverImage = TRUE;
         break;
       case 'k':
         k = atoi(optarg);
@@ -75,6 +75,12 @@ int main(int argc, char* argv[]) {
   }
 
   printf("Parameters validated! \n");
+
+  if (recoverImage) {
+   // write_image(decrypt(dir, k, image)); //change this
+  } else {
+  //  encode(read_image(image), k, n, dir); //change this
+  }
 
   return EXIT_SUCCESS;
 }
