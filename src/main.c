@@ -4,6 +4,7 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <getopt.h>
+#include "bmp_processor.h"
 
 #define FALSE 0
 #define TRUE 1
@@ -81,6 +82,8 @@ int main(int argc, char* argv[]) {
   } else {
   //  encode(read_image(image), k, n, dir); //change this
   }
+
+  bmp_image_t *image = bmp_from_path("./beautybeastshare.bmp");
 
   return EXIT_SUCCESS;
 }

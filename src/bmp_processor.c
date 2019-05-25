@@ -3,7 +3,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <errno.h>
-#include "bmp.h"
+#include "bmp_processor.h"
 
 struct __attribute__ ((packed)) bmp_header {
     char fileIdentifier[2];
