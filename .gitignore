@@ -1,0 +1,15 @@
+#Visual Studio Code folder
+.vscode/
+
+#Visual Studio Code: settings.json
+settings.json
+#Binary Files
+*.bin
+*.sys
+*.out
+
+#Object Files
+*.o
+
+#Log Files
+*.log
