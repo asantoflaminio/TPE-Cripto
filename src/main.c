@@ -12,7 +12,7 @@
 
 
 int main(int argc, char* argv[]) {
-  int recoverImage = FALSE;
+  /*int recoverImage = FALSE;
   int k = -1;
   int n = 0;
   char * secret_image = calloc(sizeof(char), 40);
@@ -81,9 +81,11 @@ int main(int argc, char* argv[]) {
    // write_image(decrypt(dir, k, image)); //change this
   } else {
   //  encode(read_image(image), k, n, dir); //change this
-  }
+  }*/
 
   bmp_image_t *image = bmp_from_path("./beautybeastshare.bmp");
+  int answ;
+  answ = bmp_save(image, "./prueba.bmp");
 
-  return EXIT_SUCCESS;
+  return 0;
 }
