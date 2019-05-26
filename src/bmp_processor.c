@@ -1,123 +1,89 @@
-#include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <errno.h>
+#include <dirent.h>
 #include "bmp_processor.h"
+#include "utils.h"
 
-struct __attribute__ ((packed)) bmp_header {
-    char fileIdentifier[2];
-    uint32_t fileSize;
-    uint16_t reserved1;
-    uint16_t reserved2;
-    uint32_t imageDataOffset;
-};
-
-struct __attribute__ ((packed)) bmp_info {
-    uint32_t headerSize;
-    int32_t imageWidth;
-    int32_t imageHeight;
-    uint16_t colorPlanes;
-    uint16_t bitsPerPixel;
-    uint32_t compressionMethod;
-    uint32_t imageSize;
-    int32_t horizontalRes;
-    int32_t verticalRes;
-    uint32_t colorsInPalette;
-    uint32_t numImportantColors;
-};
-
-struct bmp_image {
-    struct bmp_header header;
-    struct bmp_info info;
-    uint8_t *data;
-};
-
-bmp_image_t *bmp_from_path(const char *path) {
-    FILE *fp = fopen(path, "rb");
-
-    if (fp == NULL) {
-        printf("Could not open file %s: ", path);
-        printf("%s\n", strerror(errno));
-        return NULL;
+image_t* read_image(const char* filename) {
+    int byte_ammount = -1;
+    FILE* file = fopen(filename, "rb");
+    if (file == NULL) {
+        printf("Error while reading BMP Image \n");
+        exit(EXIT_FAILURE);
     }
+    image_t* img = malloc(sizeof(struct tagImage));
 
-    bmp_image_t *image = malloc(sizeof(bmp_image_t));
+    img->id = calloc(strlen(filename)+1, sizeof(char));
+    strcpy(img->id,filename);
+    //READ IMG SIZE
+    fread(&img->first_2_byte, sizeof(short),1,file);
+    fread(&img->size, sizeof(int),1,file);
+    fread(&img->second_4_byte, sizeof(int),1,file);
+    //READ OFFSET
+    fread(&img->offset, sizeof(int),1,file);
+    //Rewind
+    //rewind(file);
+    fseek(file, 0L, SEEK_SET);
 
-    fread(&image->header, sizeof(struct bmp_header), 1, fp);
-    fread(&image->info, sizeof(struct bmp_info), 1, fp);
+    img->header = calloc(img->offset+1, sizeof (unsigned char));
+    fread(img->header, sizeof(unsigned char), img->offset, file);
 
-    const size_t header_size = sizeof(struct bmp_header) + sizeof(struct bmp_info);
+  unsigned short x = (img->header[HIDEN_X_2] << HIDEN_X_1) + img->header[HIDEN_X_1];
+  img->hidden_x = x;
 
-    if (header_size != image->header.imageDataOffset) {
-        printf("Image contains extra data!");
-        goto _ABORT;
-    }
-
-    if (image->info.bitsPerPixel != 24) {
-        printf("Image does not contains 24 bits per pixel.");
-        goto _ABORT;
-    }
-
-    if (image->info.compressionMethod != 0) {
-        printf("Image is compressed");
-        goto _ABORT;
-    }
-
-    if (image->header.imageDataOffset - header_size != 0) {
-        printf("Image contains extra data between header and bitmap!");
-        goto _ABORT;
-    }
-
-    image->data = malloc(image->info.imageSize);
-    fread(image->data, image->info.imageSize, 1, fp);
-
-    fclose(fp);
-
-    return image;
-
-    _ABORT:
-
-    free(image);
-    fclose(fp);
-
-    return NULL;
+    img->bytes = calloc(img->size - img->offset + 1,sizeof (unsigned char));
+    fread(img->bytes, sizeof(unsigned char), img->size - img->offset, file);
+    fclose(file);
+    return img;
 }
 
+void write_image(image_t* img) {
+    char* name = "prueba.bmp";
+    FILE * file = fopen(name, "w+"); // desps borrar esto y descomentar la otra
+   // FILE * file = fopen(img->id, "w+");
+  if (file) {
 
-int bmp_save(const bmp_image_t *image, const char *path) {
-    FILE *fp = fopen(path, "wb+");
-
-    if (fp == NULL) {
-        printf("Could not open file %s: ", path);
-        printf("%s\n", strerror(errno));
-        return 0;
-    }
-
-    fwrite(&image->header, sizeof(struct bmp_header), 1, fp);
-    fwrite(&image->info, sizeof(struct bmp_info), 1, fp);
-
-    fwrite(image->data, image->info.imageSize, 1, fp);
-
-    fclose(fp);
-
-    return 1;
+    fwrite(img->header, img->offset, 1, file);
+    fwrite(img->bytes, img->size - img->offset, 1, file);
+    fseek(file,HIDEN_X_1,SEEK_SET);
+    // char x[2];
+    // itoa(img->hiden_x, x, 10);
+    fwrite(&img->hidden_x,2,1,file);
+    fclose(file);
+    return;
+  }
+  printf("Error while writing image: %s\n", img->id);
+  exit(EXIT_FAILURE);
 }
 
-void bmp_free(bmp_image_t *image) {
-
-    free(image->data);
-    free(image);
+void printImage(image_t* img) {
+    printf("Print BMP Matrix Image");
+    return;
 }
 
-uint8_t *bmp_get_data_buffer(bmp_image_t *image) {
-    return image->data;
-}
+image_t ** read_images_from_dir(char * directory, int n) {
+  int image_qty = 0;
+  struct dirent *p_dirent;
+  DIR* dir;
+  dir = opendir(directory);
+  image_t ** images = malloc(IMG_MAX * sizeof(image_t *));
+  char * path;
 
-uint32_t bmp_get_image_size(bmp_image_t *image) {
-    return image->info.imageSize;
-}
+  assure(dir != NULL, "Problem opening directory, check your sintax.\n");
+  while ((p_dirent = readdir(dir)) != NULL) {
+      if(strstr(p_dirent->d_name, ".bmp") && image_qty < IMG_MAX && image_qty <= n) {
+        path = calloc(strlen(directory) + strlen(p_dirent->d_name) + 2, 1);
+        strcpy(path, directory);
+        strcat(path, "/");
+        strcat(path, p_dirent->d_name);
 
-int bmp_check_size(bmp_image_t *image, long size) {
-    return image->info.imageSize > size * 8;
+        // images[image_qty] = malloc(sizeof(image_t));
+        images[image_qty++] = read_image(path);
+        free(path);
+      }
+  }
+  closedir(dir);
+
+  return images;
 }

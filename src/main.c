@@ -83,9 +83,9 @@ int main(int argc, char* argv[]) {
   //  encode(read_image(image), k, n, dir); //change this
   }*/
 
-  bmp_image_t *image = bmp_from_path("./beautybeastshare.bmp");
-  int answ;
-  answ = bmp_save(image, "./prueba.bmp");
+  image_t *image = read_image("./beautybeastshare.bmp");
+  
+  write_image(image);
 
   return 0;
 }

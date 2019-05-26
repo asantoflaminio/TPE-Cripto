@@ -1,20 +1,13 @@
-#ifndef STEGOBMP_BMP_H
-#define STEGOBMP_BMP_H
+#ifndef __bmpprocessor__
+#define __bmpprocessor__
 
-#include <stdint.h>
+#include <stdio.h>
+#include "utils.h"
 
-typedef struct bmp_image bmp_image_t;
+image_t* read_image(const char*);
+void write_image(image_t*);
+void file_error(FILE*);
+void printImage(image_t* img);
+image_t ** read_images_from_dir(char *, int);
 
-bmp_image_t *bmp_from_path(const char *path);
-
-int bmp_save(const bmp_image_t *image, const char *path);
-
-void bmp_free(bmp_image_t *image);
-
-uint8_t *bmp_get_data_buffer(bmp_image_t *image);
-
-uint32_t bmp_get_image_size(bmp_image_t *image);
-
-int bmp_check_size(bmp_image_t *image, long size);
-
-#endif 
+#endif
