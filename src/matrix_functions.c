@@ -9,7 +9,7 @@
 
 
 // este main es solo para testear esto
-/*
+
 int main (void){
 	int m1[2][2] = {{2,2}, {2,2}};
 	int m2[2][2] = {{2,2}, {2,2}};
@@ -40,9 +40,15 @@ int main (void){
 	multiply(2,3,3,1, e1,e2,multAnswer);
 	printMatrix(2, 1, multAnswer);
 	printf("---------\n");
+	printf("Invertimos\n");
+	int d[2][2] = {{3,4}, {1,2}};	
+	float inv[2][2];
+	inverse(2, d, inv);
+	printMatrixFloat(2, 2, inv);
 	printf("---FIN---\n");
 }
-*/
+
+
 void add (size_t rows, size_t columns, int m1[rows][columns], int m2[rows][columns], int answer[rows][columns]){
 
 	int i;
@@ -117,7 +123,7 @@ void multiply (size_t rows1, size_t columns1, size_t rows2, size_t columns2 ,int
 	
 }
 
-void concat (size_t rows, size_t columns1,size_t columns2, int m1[rows][columns1], int m2[rows][columns2], int answer[rows][columns1+columns2]){
+void concat (size_t rows, size_t columns1, size_t columns2, int m1[rows][columns1], int m2[rows][columns2], int answer[rows][columns1+columns2]){
 	int i;
 	int j;
 	int aux;
@@ -144,3 +150,98 @@ void printMatrix(size_t rows, size_t columns, int m[rows][columns]){
 		    printf("\n");
 	}
 }
+
+void printMatrixFloat(size_t rows, size_t columns, float m[rows][columns]){
+	int i;
+	int j;
+	for (i=0; i<rows; i++){
+		    for(j=0; j<columns; j++){
+		        printf("%f  ", m[i][j]);
+		    }
+		    printf("\n");
+	}
+}
+
+//No se si el answer vamos a tener q pasarlo a int o que???
+void inverse(size_t size, int m[size][size], float answer[size][size]){
+
+
+    int det = determinant(size, m); 
+    if (det == 0) { 
+        printf("Invalid matrix. Doesn't have inverse.");
+        return;
+    } 
+  
+    // Find adjoint 
+    int adjMatrix[size][size]; 
+    adjoint(size, m, adjMatrix); 
+  
+    for (int i=0; i<size; i++) 
+        for (int j=0; j<size; j++) 
+            answer[i][j] = adjMatrix[i][j]/ (float) det; 
+
+
+}
+
+
+
+void cofactor(int size, int m[size][size], int ans[size][size], int forbidden_row, int forbidden_col) { 
+    int i = 0;
+    int j = 0; 
+  	int k;
+  	int z;
+    for (k = 0; k < size; k++) { 
+        for (z = 0; z < size; z++) { 
+            if (k != forbidden_row && z != forbidden_col) { 
+                ans[i][j++] = m[k][z]; 
+                if (j == size - 1) { 
+                    j = 0; 
+                    i++; 
+                } 
+            } 
+        } 
+    } 
+} 
+  
+
+int determinant(size_t size, int m[size][size]) { 
+    int det = 0;  
+  	int i;
+
+    if (size == 1) {
+        return m[0][0]; 
+    }
+  
+  	// aux es para guardar los cofactors
+    int aux[size][size]; 
+    int sign = 1;  
+  
+    for (i = 0; i < size; i++) { 
+        cofactor(size, m, aux, 0, i); 
+        det += sign * m[0][i] * determinant(size - 1, aux); 
+        sign = -sign; 
+    } 
+  
+    return det; 
+} 
+
+
+void adjoint(int size, int m[size][size],int answer[size][size]) { 
+    if (size == 1) { 
+        answer[0][0] = 1; 
+        return; 
+    } 
+  
+    int sign = 1;
+    int aux[size][size];
+    int i;
+    int j; 
+  
+    for (i=0; i<size; i++) { 
+        for (j=0; j<size; j++) { 
+            cofactor(size, m, aux, i, j); 
+            sign = ((i+j)%2==0)? 1: -1; 
+            answer[j][i] = (sign)*(determinant(size-1,aux)); 
+        } 
+    } 
+} 
