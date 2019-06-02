@@ -15,12 +15,21 @@ int main (void){
 	int a[4][2] = {{3,7}, {6,1}, {2,5}, {6,6}};
 	int at[2][4];
 	transpose(4,2,a,at);
-	int mul[2][2];
-	multiply(2,4,4,2, at, a, mul); // at*a
-	int inv[2][2];
-	inverse(2, mul, inv);
+	int inv[2][2] ;//= {{110,147},{147,238}};
+	int ata[4][2]; //at*a
+	multiply(2,4,4,2, at, a, ata); // a * inv
+	inverse(2, ata, inv);
 	printf("Ok la inversa es\n");
 	printMatrix(2, 2, inv);
+	int mul[4][2];
+	multiply(4,2,2,2, a, inv, mul); // a * inv
+	printf("1er Resultado es\n");
+	printMatrix(4, 2, mul);
+	printf("-----------\n");
+	int mul2[4][4];
+	multiply(4,2,2,4, mul, at, mul2); // (a * i) * at
+	printf("Resultado es\n");
+	printMatrix(4, 4, mul2);
 	/*int m1[2][2] = {{2,2}, {2,2}};
 	int m2[2][2] = {{2,2}, {2,2}};
 	int ans[2][2];
@@ -130,9 +139,9 @@ void multiply (size_t rows1, size_t columns1, size_t rows2, size_t columns2 ,int
 	for (i = 0; i < rows1; i++) {
       for (j = 0; j < columns2; j++) {
         for (k = 0; k < rows2; k++) {
-          	sum = sum + m1[i][k]*m2[k][j];
+          	sum = (sum + (m1[i][k]*m2[k][j])%251)%251;
         }
-        answer[i][j] = sum%251;
+        answer[i][j] = sum;
         sum = 0;
       }
     }
@@ -192,13 +201,27 @@ void inverse(size_t size, int m[size][size], int answer[size][size]){
     int adjMatrix[size][size]; 
     adjoint(size, m, adjMatrix); 
   
-    for (int i=0; i<size; i++) 
-        for (int j=0; j<size; j++) 
-           // answer[i][j] = adjMatrix[i][j]/ (float) det; 
-        	answer[i][j] = ((int)adjMatrix[i][j]/det)%251; 
+    for (int i=0; i<size; i++) {
+    	for (int j=0; j<size; j++){
+        	// answer[i][j] = adjMatrix[i][j]/ (float) det; 
+        	answer[i][j] = ((adjMatrix[i][j]%251)*modInverse(det, 251))%251; 
 
-
+        	if(answer[i][j] < 0){
+				answer[i][j] = answer[i][j] + 251;
+			}
+        } 
+          
+    }
+         
 }
+
+int modInverse(int a, int m) 
+{ 
+    a = a%m; 
+    for (int x=1; x<m; x++) 
+       if ((a*x) % m == 1) 
+          return x; 
+} 
 
 
 
@@ -235,7 +258,7 @@ int determinant(size_t size, int m[size][size]) {
   
     for (i = 0; i < size; i++) { 
         cofactor(size, m, aux, 0, i); 
-        det += sign * m[0][i] * determinant(size - 1, aux); 
+        det = (det + sign * (m[0][i] * determinant(size - 1, aux))%251)%251; 
         sign = -sign; 
     } 
   

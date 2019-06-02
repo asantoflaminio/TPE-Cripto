@@ -13,4 +13,5 @@ void cofactor(int size, int m[size][size], int ans[size][size], int forbidden_ro
 int determinant(size_t size, int m[size][size]);
 void adjoint(int size, int m[size][size],int answer[size][size]);
 void gauss_jordan(int rows, int m[rows][rows+1], float** answer);
+int modInverse(int a, int m);
 #endif
