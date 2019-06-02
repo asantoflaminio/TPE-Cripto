@@ -10,7 +10,7 @@
 // LEER COSAS A CORREGIR EN INVERSE
 
 // este main es solo para testear esto
-/*
+
 int main (void){
 	int m1[2][2] = {{2,2}, {2,2}};
 	int m2[2][2] = {{2,2}, {2,2}};
@@ -46,9 +46,15 @@ int main (void){
 	float inv[2][2];
 	inverse(2, d, inv);
 	printMatrixFloat(2, 2, inv);
+	printf("---------\n");
+	printf("Gauss Jordan\n");
+	int gs[2][3] = {{1,1,36}, {1,2,71}};
+	float *ansgs = calloc(2, sizeof(float));;
+	gauss_jordan(2, gs, &ansgs);
+	printf("Rta es %f y %f\n", ansgs[0], ansgs[1]);
 	printf("---FIN---\n");
 }
-*/
+
 
 void add (size_t rows, size_t columns, int m1[rows][columns], int m2[rows][columns], int answer[rows][columns]){
 
@@ -246,3 +252,46 @@ void adjoint(int size, int m[size][size],int answer[size][size]) {
         } 
     } 
 } 
+
+// la ultima columna serian los valores G
+// ojo q da float
+//truncamos %251 al final
+void gauss_jordan(int rows, int m[rows][rows+1], float** answer) {
+
+	//free(*answer);
+
+   // *answer = malloc(rows * sizeof(float));
+
+	int i,j,k;
+    float c;
+    float aux[rows][rows+1];
+    //copio la matriz
+    for(i=0; i<rows;i++){
+    	for(j=0;j<(rows+1);j++){
+    		aux[i][j] = (float) m[i][j];
+    	}
+    }
+
+    for(j=0; j<rows; j++)
+    {
+        for(i=0; i<rows; i++)
+        {
+            if(i!=j)
+            {
+                c=aux[i][j]/aux[j][j];
+                //printf("c es %f con i %d y j %d \n", c, i, j);
+                for(k=0; k<(rows+1); k++)
+                {
+                    aux[i][k]=aux[i][k]-c*aux[j][k];
+                }
+            }
+        }
+    }
+
+    for(i=0; i<rows; i++)
+    {
+    	
+        (*answer)[i]=(aux[i][rows]/aux[i][i]);//%251;
+
+    }
+}
