@@ -7,12 +7,11 @@
 // el tema es q leemos y guardamos como punteros
 // no se bien como hadnlear eso desps
 
-// LEER COSAS A CORREGIR EN INVERSE
 
 // este main es solo para testear esto
-
+/*
 int main (void){
-	/*int a[4][2] = {{3,7}, {6,1}, {2,5}, {6,6}};
+	int a[4][2] = {{3,7}, {6,1}, {2,5}, {6,6}};
 	int at[2][4];
 	transpose(4,2,a,at);
 	int inv[2][2] ;//= {{110,147},{147,238}};
@@ -29,7 +28,7 @@ int main (void){
 	int mul2[4][4];
 	multiply(4,2,2,4, mul, at, mul2); // (a * i) * at
 	printf("Resultado es\n");
-	printMatrix(4, 4, mul2);*/
+	printMatrix(4, 4, mul2);
 	/*int m1[2][2] = {{2,2}, {2,2}};
 	int m2[2][2] = {{2,2}, {2,2}};
 	int ans[2][2];
@@ -63,7 +62,7 @@ int main (void){
 	int d[2][2] = {{3,4}, {1,2}};	
 	float inv[2][2];
 	inverse(2, d, inv);
-	printMatrixFloat(2, 2, inv);*/
+	printMatrixFloat(2, 2, inv);
 	printf("---------\n");
 	printf("Gauss Jordan\n");
 	int gs[2][3] = {{1,1,36}, {1,2,71}};
@@ -72,7 +71,7 @@ int main (void){
 	printf("Rta es %d y %d\n", ansgs[0], ansgs[1]);
 	printf("---FIN---\n");
 }
-
+*/
 
 void add (size_t rows, size_t columns, int m1[rows][columns], int m2[rows][columns], int answer[rows][columns]){
 
@@ -187,8 +186,6 @@ void printMatrixFloat(size_t rows, size_t columns, float m[rows][columns]){
 	}
 }
 
-//No se si el answer vamos a tener q pasarlo a int o que???
-// also falta lo de %251 
 void inverse(size_t size, int m[size][size], int answer[size][size]){
 
 
@@ -203,7 +200,6 @@ void inverse(size_t size, int m[size][size], int answer[size][size]){
   
     for (int i=0; i<size; i++) {
     	for (int j=0; j<size; j++){
-        	// answer[i][j] = adjMatrix[i][j]/ (float) det; 
         	answer[i][j] = ((adjMatrix[i][j]%251)*mod_inverse(det, 251))%251; 
 
         	if(answer[i][j] < 0){
@@ -287,8 +283,6 @@ void adjoint(int size, int m[size][size],int answer[size][size]) {
 } 
 
 // la ultima columna serian los valores G
-// ojo q da float
-//truncamos %251 al final
 void gauss_jordan(int rows, int m[rows][rows+1], int** answer) {
 
 	//free(*answer);
