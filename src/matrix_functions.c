@@ -12,7 +12,16 @@
 // este main es solo para testear esto
 
 int main (void){
-	int m1[2][2] = {{2,2}, {2,2}};
+	int a[4][2] = {{3,7}, {6,1}, {2,5}, {6,6}};
+	int at[2][4];
+	transpose(4,2,a,at);
+	int mul[2][2];
+	multiply(2,4,4,2, at, a, mul); // at*a
+	int inv[2][2];
+	inverse(2, mul, inv);
+	printf("Ok la inversa es\n");
+	printMatrix(2, 2, inv);
+	/*int m1[2][2] = {{2,2}, {2,2}};
 	int m2[2][2] = {{2,2}, {2,2}};
 	int ans[2][2];
 	printf("Sumamos\n");
@@ -52,7 +61,7 @@ int main (void){
 	float *ansgs = calloc(2, sizeof(float));;
 	gauss_jordan(2, gs, &ansgs);
 	printf("Rta es %f y %f\n", ansgs[0], ansgs[1]);
-	printf("---FIN---\n");
+	printf("---FIN---\n");*/
 }
 
 
@@ -171,7 +180,7 @@ void printMatrixFloat(size_t rows, size_t columns, float m[rows][columns]){
 
 //No se si el answer vamos a tener q pasarlo a int o que???
 // also falta lo de %251 
-void inverse(size_t size, int m[size][size], float answer[size][size]){
+void inverse(size_t size, int m[size][size], int answer[size][size]){
 
 
     int det = determinant(size, m); 
@@ -185,7 +194,8 @@ void inverse(size_t size, int m[size][size], float answer[size][size]){
   
     for (int i=0; i<size; i++) 
         for (int j=0; j<size; j++) 
-            answer[i][j] = adjMatrix[i][j]/ (float) det; 
+           // answer[i][j] = adjMatrix[i][j]/ (float) det; 
+        	answer[i][j] = ((int)adjMatrix[i][j]/det)%251; 
 
 
 }
