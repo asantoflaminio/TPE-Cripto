@@ -7,9 +7,10 @@
 // el tema es q leemos y guardamos como punteros
 // no se bien como hadnlear eso desps
 
+// LEER COSAS A CORREGIR EN INVERSE
 
 // este main es solo para testear esto
-
+/*
 int main (void){
 	int m1[2][2] = {{2,2}, {2,2}};
 	int m2[2][2] = {{2,2}, {2,2}};
@@ -47,7 +48,7 @@ int main (void){
 	printMatrixFloat(2, 2, inv);
 	printf("---FIN---\n");
 }
-
+*/
 
 void add (size_t rows, size_t columns, int m1[rows][columns], int m2[rows][columns], int answer[rows][columns]){
 
@@ -163,6 +164,7 @@ void printMatrixFloat(size_t rows, size_t columns, float m[rows][columns]){
 }
 
 //No se si el answer vamos a tener q pasarlo a int o que???
+// also falta lo de %251 
 void inverse(size_t size, int m[size][size], float answer[size][size]){
 
 
@@ -171,8 +173,7 @@ void inverse(size_t size, int m[size][size], float answer[size][size]){
         printf("Invalid matrix. Doesn't have inverse.");
         return;
     } 
-  
-    // Find adjoint 
+    
     int adjMatrix[size][size]; 
     adjoint(size, m, adjMatrix); 
   
