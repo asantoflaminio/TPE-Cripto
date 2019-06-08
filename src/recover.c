@@ -7,8 +7,8 @@
 
 #include <getopt.h>
 #include "bmp_processor.h"
-#include "matrix_functions.h"
 #include "steganography.h"
+#include "matrix_functions.h"
 #include "utils.h"
 
 void recover(int k, int n){ //, image_t* output_image, image_t* watermark_image){
@@ -51,27 +51,50 @@ void recover(int k, int n){ //, image_t* output_image, image_t* watermark_image)
 
 			for(int i=0; i < rows; i++){
 				for(int j = 0; j< cols;j++){
-					printf("reached %d, i %d, j %d\n", reached,i,j);
+					//printf("reached %d, i %d, j %d\n", reached,i,j);
 					shadows[reached][i][j] = sh[index];
 					index++;
 				}
 			}
 			reached++;
-
-
-			//shadows[reached] = sh;
         }
         
 
 	}
 		
-
+	closedir(directory);
     
-
-    closedir(directory);
-   
-  // leo mi portadora
 	// faltaria la watermark
+
+	/*
+	Obtengo la matriz B que se obtiene concatenando las primeras columnas de todas las shadows.
+	rows va a ser igual a las filas de las shadows
+	*/
+	int b_matrix[rows][k];
+	int current_columns = 0;
+	int v[k][rows][1]; //matrices v
+	int g[k][rows][cols-1]; //matrices g
+
+	for(int counter=0; counter < k ;counter++){
+		separateMatrixByColumn(1, cols-1, rows, cols,shadows[counter], v[counter], g[counter]);
+	}
+	if(k==2){
+		concat (4, 1,1, v[0], v[1], b_matrix);
+	}else{
+		//k == 4
+		int curr1[rows][2];
+		concat (4, 1,1, v[0], v[1], curr1);
+		int curr2[rows][3];
+		concat (4, 2,1, curr1, v[2], curr2);
+		concat (4, 3,1, curr2, v[3], b_matrix);
+
+	}
+
+	/*
+	ahroa vamos a obtener secret_projection que surge de poryeccion de B
+	*/
+	int secret_projection[rows][rows]; //no estoy seguro de si el tamaño es igual a rows de B
+	calculateProjection(rows, k, b_matrix, rows, rows, secret_projection); //ARREGLAR ESTO TIRA EXCEPCION. CHEQUEAR Q B ESTE BIEN ARMADA!
 
 }
 

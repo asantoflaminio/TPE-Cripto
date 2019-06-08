@@ -193,14 +193,3 @@ void obtainImageMatrix(image_t* image, int rows, int cols, int answer[rows][cols
 void randomFill(int rows, int cols, int answer[rows][cols]) {
 
 }
-
-/* calcula la proyeccion usando la matrix a
-
-*/
-void calculateProjection(int a_rows, int a_cols, int a_matrix[rows][cols], int rows, int cols, int answer[rows][cols]) {
-	/* en principio aca hay que llamar a las operaciones con matrices que ya tenemos hechos
-	 tenemos que arreglar q la inversa devuelve con float y %251
-	 y ver en q orden se hacen la multiplciciones
-	La formula es answer = A * (A_trasp * A)^inversa * A_trasp
-	*./
-}
