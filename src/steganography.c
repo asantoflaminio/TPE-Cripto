@@ -49,7 +49,7 @@ static size_t lsb1_decrypt(uint8_t *dst, const uint8_t *src, long nbytes, int nu
 	printf("LORD SAVE ME\n");
     size_t curr_src = 0;
     size_t curr_dst = 0;
-	printf("nbytes es %d\n", nbytes);
+	//printf("nbytes es %d\n", nbytes);
     while (curr_dst < nbytes) {
 
         for (int j = 0; j < 8; ++j) {
@@ -63,12 +63,12 @@ static size_t lsb1_decrypt(uint8_t *dst, const uint8_t *src, long nbytes, int nu
         if (null_cutoff && dst[curr_dst] == 0) {
             return curr_dst;
         }
-        printf("dst[%d] es %d\n", curr_dst,dst[curr_dst] );
+        //printf("dst[%d] es %d\n", curr_dst,dst[curr_dst] );
         curr_src += 8;
         curr_dst++;
     }
 
-    printf("Ok hasta aca %d\n", curr_dst);
+   // printf("Ok hasta aca %d\n", curr_dst);
     return curr_dst;
 }
 
@@ -119,13 +119,13 @@ stegobmp_extract_data(char* lsb, void *raw_data, uint8_t *image_buffer, uint32_t
 	}
 }
 
-int stegobmp_extract(bmp_image_t *image, const char *output_path, char* lsb) {
+void* stegobmp_extract(bmp_image_t *image, const char *output_path, char* lsb) {
 
     uint8_t *image_buffer = bmp_get_data_buffer(image);
     uint32_t hidden_data_size = 46200; //HARDCODEADO. SI ES CON LSB2 deberia ser el doble!!
    //uint8_t hidden_data_size = 0;
     char *extension;
-
+    bmp_image_t * answer = image;
     uint32_t offset = 0;
 
     //stegobmp_extract_size(lsb, &hidden_data_size, image_buffer, &offset);
@@ -170,19 +170,20 @@ int stegobmp_extract(bmp_image_t *image, const char *output_path, char* lsb) {
     strcpy(filename, output_path);
     strcat(filename, extension);
 
-    printf("[+] Saving to: %s", filename);
+    printf("[+] Saving to: %s\n", filename);
     FILE *fp = fopen(filename, "wb+");
 
     if (fp == NULL) {
         printf("Could not open file %s: ", output_path);
         printf("%s\n", strerror(errno));
-        return 3;
+      //  return 3;
     }
 
     fwrite(raw_data, hidden_data_size, 1, fp);
 
     fclose(fp);
-
+   // answer->data = raw_data;
+    //return answer;
     return raw_data;
 
 }

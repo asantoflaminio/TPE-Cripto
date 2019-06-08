@@ -91,7 +91,7 @@ int main(int argc, char* argv[]) {
 
   //write_image(image);
 
-  recover(2, 4); //, image_t* output_image, image_t* watermark_image)
+  recover(4, 8); //, image_t* output_image, image_t* watermark_image)
 
   return 0;
 }

@@ -3,7 +3,7 @@
 
 #include <stdlib.h>
 typedef unsigned char byte;
-typedef struct tagImage{
+/*typedef struct tagImage{
 	short first_2_byte;
 	int second_4_byte;
 	byte* header;
@@ -12,7 +12,15 @@ typedef struct tagImage{
 	int offset;
 	char* id;
 	unsigned short hidden_x;
-} image_t;
+} image_t;*/
+
+typedef struct shadowimage1{
+	int matrix[330][210];
+} shadow24;
+
+typedef struct shadowimage2{
+	int matrix[165][105];
+} shadow48;
 
 #define IMG_MAX 8
 #define HIDEN_X_1 8
@@ -24,6 +32,7 @@ static const char mask_last_bit = 0x01;
 static const char mask_no_last_bit = 0xFE;
 static const char full_mask = 0xFF;
 static const char mask_first_bit = 0x80;
-int inverse(int i);
+//int inverse(int i);
 void assure(int truth, char* message);
+const char *get_filename_ext(const char *filename);
 #endif
