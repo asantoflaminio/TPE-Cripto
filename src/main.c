@@ -5,6 +5,7 @@
 #include <unistd.h>
 #include <getopt.h>
 #include "bmp_processor.h"
+#include "recover.h"
 
 #define FALSE 0
 #define TRUE 1
@@ -83,9 +84,14 @@ int main(int argc, char* argv[]) {
   //  encode(read_image(image), k, n, dir); //change this
   }*/
 
-  image_t *image = read_image("./beautybeastshare.bmp");
-  
-  write_image(image);
+  //image_t *image = read_image("./beautybeastshare.bmp");
+
+
+
+
+  //write_image(image);
+
+  recover(2, 4); //, image_t* output_image, image_t* watermark_image)
 
   return 0;
 }
