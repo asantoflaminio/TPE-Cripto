@@ -71,7 +71,6 @@ void recover(int k, int n){ //, image_t* output_image, image_t* watermark_image)
 	rows va a ser igual a las filas de las shadows
 	*/
 	int b_matrix[rows][k];
-	int current_columns = 0;
 	int v[k][rows][1]; //matrices v
 	int g[k][rows][cols-1]; //matrices g
 
@@ -79,21 +78,15 @@ void recover(int k, int n){ //, image_t* output_image, image_t* watermark_image)
 		separateMatrixByColumn(1, cols-1, rows, cols,shadows[counter], v[counter], g[counter]);
 	}
 	if(k==2){
-		concat (4, 1,1, v[0], v[1], b_matrix);
+		concat (rows, 1,1, v[0], v[1], b_matrix);
 	}else{
 		//k == 4
+		
 		int curr1[rows][2];
-		
-		concat (4, 1,1, v[0], v[1], curr1);
-		// printf("Curr1 es \n");
-		// printMatrix(rows,2,curr1);
-		
+		concat (rows, 1,1, v[0], v[1], curr1);		
 		int curr2[rows][3];
-		concat (4, 2,1, curr1, v[2], curr2);
-		printf("curr2 es \n");
-		printMatrix(rows, 3, curr2);
-		printf("FIN\n");
-		concat (4, 3,1, curr2, v[3], b_matrix);
+		concat (rows, 2,1, curr1, v[2], curr2);	
+		concat (rows, 3,1, curr2, v[3], b_matrix);
 
 	}
 
