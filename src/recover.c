@@ -83,9 +83,16 @@ void recover(int k, int n){ //, image_t* output_image, image_t* watermark_image)
 	}else{
 		//k == 4
 		int curr1[rows][2];
+		
 		concat (4, 1,1, v[0], v[1], curr1);
+		// printf("Curr1 es \n");
+		// printMatrix(rows,2,curr1);
+		
 		int curr2[rows][3];
 		concat (4, 2,1, curr1, v[2], curr2);
+		printf("curr2 es \n");
+		printMatrix(rows, 3, curr2);
+		printf("FIN\n");
 		concat (4, 3,1, curr2, v[3], b_matrix);
 
 	}
@@ -93,8 +100,10 @@ void recover(int k, int n){ //, image_t* output_image, image_t* watermark_image)
 	/*
 	ahroa vamos a obtener secret_projection que surge de poryeccion de B
 	*/
+	//printMatrix(rows,k,b_matrix);
 	int secret_projection[rows][rows]; //no estoy seguro de si el tamaño es igual a rows de B
 	calculateProjection(rows, k, b_matrix, rows, rows, secret_projection); //ARREGLAR ESTO TIRA EXCEPCION. CHEQUEAR Q B ESTE BIEN ARMADA!
+																			// al hacer Bt * B nos deberia dar cuadrada!
 
 }
 

@@ -13,36 +13,36 @@
 int main (void){
 
 
-	int b_matrix[4][4];
-	int current_columns = 0;
-	int k = 4;
-	int rows = 4;
-	int shadows[4][4][3]={ {{62,36,92},{59,101,58},{43,126,142},{84,26,163}}, {{40,71,132}, {28,169,47}, {28,198,72}, {48,14,150}} ,
-	{{42,46,42},{42,101,58},{43,126,142},{42,26,163}}, {{0,0,0},{0,101,58},{0,126,142},{0,26,163}}};
-	int v[4][4][1];
-	int g[4][4][2];
-	//separateMatrixByColumn(1, 2, 4, 3,shadows[0], v, g);
-	//printMatrix(4, 1, v);
-	//printMatrix(4, 2, g);
-	for(int counter=0; counter < k ;counter++){
-		separateMatrixByColumn(1, 2, 4, 3,shadows[counter], v[counter], g[counter]);
-	}
-	if(k==2){
-		concat (4, 1,1, v[0], v[1], b_matrix);
-	}else{
-		//k == 4
-		int curr1[rows][2];
-		concat (4, 1,1, v[0], v[1], curr1);
-		int curr2[rows][3];
-		concat (4, 2,1, curr1, v[2], curr2);
-		concat (4, 3,1, curr2, v[3], b_matrix);
+	// int b_matrix[4][4];
+	// int current_columns = 0;
+	// int k = 4;
+	// int rows = 4;
+	// int shadows[4][4][3]={ {{62,36,92},{59,101,58},{43,126,142},{84,26,163}}, {{40,71,132}, {28,169,47}, {28,198,72}, {48,14,150}} ,
+	// {{42,46,42},{42,101,58},{43,126,142},{42,26,163}}, {{0,0,0},{0,101,58},{0,126,142},{0,26,163}}};
+	// int v[4][4][1];
+	// int g[4][4][2];
+	// //separateMatrixByColumn(1, 2, 4, 3,shadows[0], v, g);
+	// //printMatrix(4, 1, v);
+	// //printMatrix(4, 2, g);
+	// for(int counter=0; counter < k ;counter++){
+	// 	separateMatrixByColumn(1, 2, 4, 3,shadows[counter], v[counter], g[counter]);
+	// }
+	// if(k==2){
+	// 	concat (4, 1,1, v[0], v[1], b_matrix);
+	// }else{
+	// 	//k == 4
+	// 	int curr1[rows][2];
+	// 	concat (4, 1,1, v[0], v[1], curr1);
+	// 	int curr2[rows][3];
+	// 	concat (4, 2,1, curr1, v[2], curr2);
+	// 	concat (4, 3,1, curr2, v[3], b_matrix);
 
-	}
-	printMatrix(4, 4, b_matrix);
-		// int b[4][2] = {{62,40}, {59,28}, {43,28}, {84,48}};
-		// int ansproj[4][4];
-		// calculateProjection(4, 2, b, 4, 4, ansproj);
-		// printMatrix(4, 4, ansproj);
+	// }
+	// printMatrix(4, 4, b_matrix);
+		int b[4][2] = {{62,40}, {59,28}, {43,28}, {84,48}};
+		int ansproj[4][4];
+		calculateProjection(4, 2, b, 4, 4, ansproj);
+		printMatrix(4, 4, ansproj);
 	/*
 	int a[4][2] = {{3,7}, {6,1}, {2,5}, {6,6}};
 	int at[2][4];
@@ -281,7 +281,7 @@ void inverse(size_t size, int m[size][size], int answer[size][size]){
 
     int det = determinant(size, m); 
     if (det == 0) { 
-        printf("Invalid matrix. Doesn't have inverse.");
+        printf("Invalid matrix. Doesn't have inverse.\n");
         return;
     } 
     
@@ -422,14 +422,11 @@ void calculateProjection(int a_rows, int a_cols, int a_matrix[a_rows][a_cols], i
 	transpose (a_rows, a_cols, a_matrix, at); //ahi obtengo mi transpuesta en at
 	int multiplication[a_cols][a_cols];
 	multiply (a_cols, a_rows, a_rows, a_cols ,at, a_matrix, multiplication); //en multiplication tengo at*a
-	printf("hey\n");
 	int invM[a_cols][a_cols];
 	inverse(a_cols, multiplication, invM); //en invm tengo (at*a)^inv
 
 	int multiplication2[a_rows][a_cols];
 	multiply(a_rows, a_cols, a_cols, a_cols ,a_matrix, invM, multiplication2); //en multiplication tengo a * invM
-	printf("hey2\n");
 	multiply(a_rows, a_cols, a_cols, a_rows,multiplication2, at, answer); //resultado final es multiplication2 * at
-	printf("hey3\n");
 
 }

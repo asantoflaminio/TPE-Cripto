@@ -46,7 +46,6 @@ static void lsb2_crypt(uint8_t *dst, const uint8_t *src, long nbytes) {
 }
 
 static size_t lsb1_decrypt(uint8_t *dst, const uint8_t *src, long nbytes, int null_cutoff) {
-	printf("LORD SAVE ME\n");
     size_t curr_src = 0;
     size_t curr_dst = 0;
 	//printf("nbytes es %d\n", nbytes);
