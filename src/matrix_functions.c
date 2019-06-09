@@ -181,6 +181,16 @@ void multiply (size_t rows1, size_t columns1, size_t rows2, size_t columns2 ,int
 }
 
 void separateMatrixByColumn (size_t wanted_cols1, size_t wanted_cols2, size_t rows, size_t columns, int m[rows][columns], int answer1[rows][wanted_cols1], int answer2[rows][wanted_cols2]){
+	printf("matriz fea\n");
+	int k;
+	int l;
+	for (k=0; k<rows; k++){
+		    for(l=0; l<columns; l++){
+		        printf("%d  ", m[k][l]);
+		    }
+		    printf("\n");
+	}
+
 	int i;
 	int j;
 	int aux;
@@ -190,12 +200,12 @@ void separateMatrixByColumn (size_t wanted_cols1, size_t wanted_cols2, size_t ro
 		return;
 	}
 
-	for(i=0;i<rows;i++){
-		for(j=0; j<wanted_cols1;j++){
+	for(i = 0 ; i < rows; i++){
+		for(j = 0; j < wanted_cols1; j++){
 			answer1[i][j] = m[i][j];
 		}
 		aux = j;
-		for(j=0; j<wanted_cols2;j++){
+		for(j = 0; j < wanted_cols2; j++){
 			answer2[i][j] = m[i][aux];
 			aux++;
 		}

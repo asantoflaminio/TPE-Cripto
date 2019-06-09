@@ -21,7 +21,7 @@ void recover(int k, int n){ //, image_t* output_image, image_t* watermark_image)
 	int reached = 0;
 	int rows;
 	int cols;
-	uint8_t shadows[k][330][210];//seria lo mas grande  q voy a tener, de ambos.
+	int shadows[k][330][210];//seria lo mas grande  q voy a tener, de ambos.
 	if(k == 2 && n == 4){
 		//LSB2
 		//int shadows[k][330][210];
@@ -36,15 +36,8 @@ void recover(int k, int n){ //, image_t* output_image, image_t* watermark_image)
 		return;
 	}
 
-	/*
-	shadows a vector de uint8_t. Entonces hay q revisar todas las operaciones a ver q onda si cambia algo.
-	y sino cambiar todas las funciones en matrix_functions tranquilamente. OJO q alejo dijo algo de los negativos
-	Mejor intentar pasar todo a int y operar con ints
-	fijarse como pasar vector de uint8_t  a int
-	*/
-
 	while ((file=readdir(directory)) != NULL && reached != k) {
-		size_t index = 0;
+		int index = 0;
         printf("%s\n", file->d_name);
         uint8_t * sh;
         if(strcmp("bmp",get_filename_ext(file->d_name)) == 0){
@@ -55,8 +48,8 @@ void recover(int k, int n){ //, image_t* output_image, image_t* watermark_image)
             bmp_image_t *image = bmp_from_path(result);
 			sh = (uint8_t *) stegobmp_extract(image, "prueba_output.bmp", "LSB1"); 
 
-			for(int i=0; i < rows; i++){
-				for(int j = 0; j< cols;j++){
+			for(int i = 0; i < rows; i++){
+				for(int j = 0; j < cols; j++){
 					//printf("reached %d, i %d, j %d\n", reached,i,j);
 					shadows[reached][i][j] = sh[index];
 					//printf("sh es %d\n", sh[index]);
@@ -66,15 +59,13 @@ void recover(int k, int n){ //, image_t* output_image, image_t* watermark_image)
 			reached++;
 			index = 0;
         }
-        
-
 	}
-
-		
-	closedir(directory);
     
-	/*
-    printf("shadow es\n");
+
+	closedir(directory);
+
+
+	printf("matriz linda\n");
 
 	int i;
 	int j;
@@ -83,26 +74,25 @@ void recover(int k, int n){ //, image_t* output_image, image_t* watermark_image)
 		        printf("%d  ", shadows[0][i][j]);
 		    }
 		    printf("\n");
-	}*/
-
+	}
 	// faltaria la watermark
 
 	/*
 	Obtengo la matriz B que se obtiene concatenando las primeras columnas de todas las shadows.
 	rows va a ser igual a las filas de las shadows
 	*/
-	/*
+	
+
 	int b_matrix[rows][k];
 	int v[k][rows][1]; //matrices v
 	int g[k][rows][cols-1]; //matrices g
 
-	for(int counter=0; counter < k ;counter++){
-		
-		separateMatrixByColumn(1, cols-1, rows, cols,shadows[counter], v[counter], g[counter]);
+	for (int counter=0; counter < 1 ;counter++){ //cambiar el menor a 1, solo lo puse para imprimir una sola
+		separateMatrixByColumn(1, cols-1, rows, cols, shadows[counter], v[counter], g[counter]);
 	}
-	if(k==2){
+	if (k==2){
 		concat (rows, 1,1, v[0], v[1], b_matrix);
-	}else{
+	} else {
 		//k == 4
 		
 		int curr1[rows][2];
@@ -117,9 +107,8 @@ void recover(int k, int n){ //, image_t* output_image, image_t* watermark_image)
 	ahroa vamos a obtener secret_projection que surge de poryeccion de B
 	*/
 	//printMatrix(rows,k,b_matrix);
-	//int secret_projection[rows][rows]; //no estoy seguro de si el tamaño es igual a rows de B
-	//calculateProjection(rows, k, b_matrix, rows, rows, secret_projection); //ARREGLAR ESTO TIRA EXCEPCION. CHEQUEAR Q B ESTE BIEN ARMADA!
+	int secret_projection[rows][rows]; //no estoy seguro de si el tamaño es igual a rows de B
+	calculateProjection(rows, k, b_matrix, rows, rows, secret_projection); //ARREGLAR ESTO TIRA EXCEPCION. CHEQUEAR Q B ESTE BIEN ARMADA!
 																			// al hacer Bt * B nos deberia dar cuadrada!
-
 }
 
