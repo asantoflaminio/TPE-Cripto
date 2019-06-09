@@ -64,17 +64,11 @@ void recover(int k, int n){ //, image_t* output_image, image_t* watermark_image)
 
 	closedir(directory);
 
-
+	/*
 	printf("matriz linda\n");
 
-	int i;
-	int j;
-	for (i=0; i<rows; i++){
-		    for(j=0; j<cols; j++){
-		        printf("%d  ", shadows[0][i][j]);
-		    }
-		    printf("\n");
-	}
+	
+	*/
 	// faltaria la watermark
 
 	/*
@@ -87,8 +81,16 @@ void recover(int k, int n){ //, image_t* output_image, image_t* watermark_image)
 	int v[k][rows][1]; //matrices v
 	int g[k][rows][cols-1]; //matrices g
 
-	for (int counter=0; counter < 1 ;counter++){ //cambiar el menor a 1, solo lo puse para imprimir una sola
-		separateMatrixByColumn(1, cols-1, rows, cols, shadows[counter], v[counter], g[counter]);
+	for (int counter=0; counter < k ;counter++){ //cambiar el menor a 1, solo lo puse para imprimir una sola, antes era k
+		int i;
+		int j;
+		int aux[rows][cols];
+		for (i=0; i<rows; i++){
+			    for(j=0; j<cols; j++){
+			        aux[i][j] = shadows[counter][i][j];
+			    }
+		}
+		separateMatrixByColumn(1, cols-1, rows, cols, aux, v[counter], g[counter]);
 	}
 	if (k==2){
 		concat (rows, 1,1, v[0], v[1], b_matrix);

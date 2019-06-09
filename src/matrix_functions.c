@@ -2,6 +2,7 @@
 #include <string.h>
 #include <ctype.h>
 #include <stdlib.h>
+#include <stdint.h>
 #include "matrix_functions.h"
 // NO se si vamos a tener matrices de tipo int o que
 // el tema es q leemos y guardamos como punteros
@@ -181,7 +182,8 @@ void multiply (size_t rows1, size_t columns1, size_t rows2, size_t columns2 ,int
 }
 
 void separateMatrixByColumn (size_t wanted_cols1, size_t wanted_cols2, size_t rows, size_t columns, int m[rows][columns], int answer1[rows][wanted_cols1], int answer2[rows][wanted_cols2]){
-	printf("matriz fea\n");
+
+	/*printf("matriz fea\n");
 	int k;
 	int l;
 	for (k=0; k<rows; k++){
@@ -189,7 +191,7 @@ void separateMatrixByColumn (size_t wanted_cols1, size_t wanted_cols2, size_t ro
 		        printf("%d  ", m[k][l]);
 		    }
 		    printf("\n");
-	}
+	}*/
 
 	int i;
 	int j;
