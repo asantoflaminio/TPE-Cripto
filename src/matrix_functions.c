@@ -12,7 +12,12 @@
 // este main es solo para testear esto
 /*
 int main (void){
-
+	int multiB[4][4] = {{76,21,94,63}, {21, 113, 222,134}, {94,222,80,222},{63,134,222,69}};
+	int inv[4][4];
+	inverse(4, multiB, inv);
+	printf("inversa quedo \n");
+	printMatrix(4,4, inv);
+	printf("----------\n");
 
 	// int b_matrix[4][4];
 	// int current_columns = 0;
@@ -40,20 +45,21 @@ int main (void){
 
 	// }
 	// printMatrix(4, 4, b_matrix);
-		int b[4][2] = {{62,40}, {59,28}, {43,28}, {84,48}};
+	/*	int b[4][2] = {{62,40}, {59,28}, {43,28}, {84,48}};
 		int ansproj[4][4];
 		calculateProjection(4, 2, b, 4, 4, ansproj);
 		printMatrix(4, 4, ansproj);
+	*/
+	// int a[4][2] = {{3,7}, {6,1}, {2,5}, {6,6}};
+	// int at[2][4];
+	// transpose(4,2,a,at);
+	// int inv2[2][2] ;//= {{110,147},{147,238}};
+	// int ata[4][2]; //at*a
+	// multiply(2,4,4,2, at, a, ata); // a * inv
+	// inverse(2, ata, inv2);
+	// printf("Ok la inversa es\n");
+	// printMatrix(2, 2, inv2);
 	/*
-	int a[4][2] = {{3,7}, {6,1}, {2,5}, {6,6}};
-	int at[2][4];
-	transpose(4,2,a,at);
-	int inv[2][2] ;//= {{110,147},{147,238}};
-	int ata[4][2]; //at*a
-	multiply(2,4,4,2, at, a, ata); // a * inv
-	inverse(2, ata, inv);
-	printf("Ok la inversa es\n");
-	printMatrix(2, 2, inv);
 	int mul[4][2];
 	multiply(4,2,2,2, a, inv, mul); // a * inv
 	printf("1er Resultado es\n");
@@ -289,7 +295,8 @@ void printMatrixFloat(size_t rows, size_t columns, float m[rows][columns]){
 }
 
 void inverse(size_t size, int m[size][size], int answer[size][size]){
-
+	//printf("Matriz recibida.\n");
+	//printMatrix(size,size,m);
 
     int det = determinant(size, m); 
     if (det == 0) { 
@@ -299,7 +306,8 @@ void inverse(size_t size, int m[size][size], int answer[size][size]){
     
     int adjMatrix[size][size]; 
     adjoint(size, m, adjMatrix); 
-  
+   //  printf("La adjunta es\n");
+  	// printMatrix(size, size, adjMatrix);
     for (int i=0; i<size; i++) {
     	for (int j=0; j<size; j++){
         	answer[i][j] = ((adjMatrix[i][j]%251)*mod_inverse(det, 251))%251; 
@@ -323,14 +331,21 @@ int mod_inverse(int a, int m)
 
 
 
-void cofactor(int size, int m[size][size], int ans[size][size], int forbidden_row, int forbidden_col) { 
+void cofactor(int size, int m[size][size], int ans[size-1][size-1], int forbidden_row, int forbidden_col) { 
     int i = 0;
     int j = 0; 
   	int k;
   	int z;
+  	//printf("size es %d\n", size);
+  	//printf("");
     for (k = 0; k < size; k++) { 
         for (z = 0; z < size; z++) { 
             if (k != forbidden_row && z != forbidden_col) { 
+            	// printf("i es %d\n", i);
+            	// printf("j es %d\n", j);
+            	// printf("k es %d\n", k);
+            	// printf("z es %d\n", z);
+            	// printf("----------------\n");
                 ans[i][j++] = m[k][z]; 
                 if (j == size - 1) { 
                     j = 0; 
@@ -347,16 +362,30 @@ int determinant(size_t size, int m[size][size]) {
   	int i;
 
     if (size == 1) {
+    	//printf("WHAT\n");
         return m[0][0]; 
     }
   
   	// aux es para guardar los cofactors
-    int aux[size][size]; 
+    int aux[size-1][size-1];
     int sign = 1;  
-  
+  //	printf("ok...\n");
     for (i = 0; i < size; i++) { 
         cofactor(size, m, aux, 0, i); 
-        det = (det + sign * (m[0][i] * determinant(size - 1, aux))%251)%251; 
+      /*  int aux[size-1][size-1];
+	    for (i=0; i<size-1; i++){
+			for(j=0; j<size-1; j++){
+				aux[i][j] = m[i][j];
+			}
+		}*/
+        if(sign == -1){
+        	det = (det + sign * (m[0][i] * determinant(size - 1, aux))); 
+        	// if(det < 0){
+        	// 	det = det + 251;
+        	// }
+        }else{
+        	det = (det + sign * (m[0][i] * determinant(size - 1, aux))); 
+        }
         sign = -sign; 
     } 
   
@@ -367,17 +396,20 @@ int determinant(size_t size, int m[size][size]) {
 void adjoint(int size, int m[size][size],int answer[size][size]) { 
     if (size == 1) { 
         answer[0][0] = 1; 
+        printf("RETORNO\n");
         return; 
     } 
   
     int sign = 1;
-    int aux[size][size];
+    int aux[size-1][size-1];
     int i;
     int j; 
-  
+  	//printf("hasta aca ok\n");
     for (i=0; i<size; i++) { 
         for (j=0; j<size; j++) { 
             cofactor(size, m, aux, i, j); 
+          //  printf("IMPRIMO COFACTOR:\n");
+         //   printMatrix(size, size, aux);
             sign = ((i+j)%2==0)? 1: -1; 
             answer[j][i] = (sign)*(determinant(size-1,aux)); 
         } 
@@ -432,8 +464,11 @@ void calculateProjection(int a_rows, int a_cols, int a_matrix[a_rows][a_cols], i
 
 	int at[a_cols][a_rows];
 	transpose (a_rows, a_cols, a_matrix, at); //ahi obtengo mi transpuesta en at
+	
 	int multiplication[a_cols][a_cols];
 	multiply (a_cols, a_rows, a_rows, a_cols ,at, a_matrix, multiplication); //en multiplication tengo at*a
+	// printf("mutliplacacion dentro\n");
+	// printMatrix(a_cols, a_cols, multiplication);
 	int invM[a_cols][a_cols];
 	inverse(a_cols, multiplication, invM); //en invm tengo (at*a)^inv
 

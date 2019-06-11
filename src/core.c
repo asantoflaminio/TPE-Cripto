@@ -176,6 +176,9 @@ void recover(int k, int n, image_t* output_image, image_t* watermark_image){
 	add(rows, rows, secret_projection, r_matrix, secret);
 	int watermark[][]
 	add(rows, rows, secret_projection, rw_matrix, watermark);
+
+	//ahora tengo q escribir esas matrices en archivos
+	// tema headers que hago??
 }
 
 
