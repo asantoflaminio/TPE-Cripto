@@ -10,14 +10,14 @@
 
 
 // este main es solo para testear esto
-/*
-int main (void){
-	int multiB[4][4] = {{76,21,94,63}, {21, 113, 222,134}, {94,222,80,222},{63,134,222,69}};
-	int inv[4][4];
-	inverse(4, multiB, inv);
-	printf("inversa quedo \n");
-	printMatrix(4,4, inv);
-	printf("----------\n");
+
+// int main (void){
+// 	int multiB[4][4] = {{122,13,11,82}, {13,184,182,154}, {11,182,113,21},{82,154,21,76}};
+// 	int inv[4][4];
+// 	inverse(4, multiB, inv);
+// 	printf("inversa quedo \n");
+// 	printMatrix(4,4, inv);
+// 	printf("----------\n");
 
 	// int b_matrix[4][4];
 	// int current_columns = 0;
@@ -110,7 +110,7 @@ int main (void){
 	gauss_jordan(2, gs, &ansgs);
 	printf("Rta es %d y %d\n", ansgs[0], ansgs[1]);
 	printf("---FIN---\n");*/
-//}
+// }
 
 
 void add (size_t rows, size_t columns, int m1[rows][columns], int m2[rows][columns], int answer[rows][columns]){
@@ -295,8 +295,8 @@ void printMatrixFloat(size_t rows, size_t columns, float m[rows][columns]){
 }
 
 void inverse(size_t size, int m[size][size], int answer[size][size]){
-	//printf("Matriz recibida.\n");
-	//printMatrix(size,size,m);
+	// printf("Matriz recibida.\n");
+	// printMatrix(size,size,m);
 
     int det = determinant(size, m); 
     if (det == 0) { 
@@ -306,15 +306,16 @@ void inverse(size_t size, int m[size][size], int answer[size][size]){
     
     int adjMatrix[size][size]; 
     adjoint(size, m, adjMatrix); 
-   //  printf("La adjunta es\n");
-  	// printMatrix(size, size, adjMatrix);
+    //printf("La adjunta es\n");
+   // printMatrix(size, size, adjMatrix);
+   // printf("mInv aca en el mio es %d\n", mod_inverse((det % 251 + 251) % 251, 251));
     for (int i=0; i<size; i++) {
     	for (int j=0; j<size; j++){
-        	answer[i][j] = ((adjMatrix[i][j]%251)*mod_inverse(det, 251))%251; 
+        	answer[i][j] = (((adjMatrix[i][j])*mod_inverse((det % 251 + 251) % 251, 251)) % 251 + 251) % 251 ;  
 
-        	if(answer[i][j] < 0){
+        	/*if(answer[i][j] < 0){
 				answer[i][j] = answer[i][j] + 251;
-			}
+			}*/
         } 
           
     }
