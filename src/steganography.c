@@ -145,11 +145,11 @@ void* stegobmp_extract(bmp_image_t24 *image, const char *output_path, char* lsb)
 
     stegobmp_extract_data(lsb, raw_data, image_buffer, hidden_data_size, &offset);
 
-		printf("[!] Reached1.\n");
+		//printf("[!] Reached1.\n");
         extension = calloc(30, 1);
         uint8_t *tmp_offset;
         size_t ext_size = 0;
-        printf("[!] Reached2.\n");
+        //printf("[!] Reached2.\n");
         if (strcmp(lsb, "LSB1") == 0) {
         		tmp_offset = image_buffer + sizeof(hidden_data_size) * 8 + hidden_data_size * 8;
                 ext_size = lsb1_decrypt((uint8_t *) extension, tmp_offset, hidden_data_size, 1);
@@ -164,7 +164,7 @@ void* stegobmp_extract(bmp_image_t24 *image, const char *output_path, char* lsb)
 
         extension[ext_size] = 0;
     
-    printf("[!] Reached3.\n");
+    //printf("[!] Reached3.\n");
     char *filename = malloc(strlen(output_path) + strlen(extension) + 1);
     strcpy(filename, output_path);
     strcat(filename, extension);

@@ -7,49 +7,7 @@
 
 
 
-struct __attribute__ ((packed)) bmp_header {
-    char fileIdentifier[2];
-    uint32_t fileSize;
-    uint16_t reserved1;
-    uint16_t reserved2;
-    uint32_t imageDataOffset;
-};
 
-struct __attribute__ ((packed)) bmp_info {
-    uint32_t headerSize;
-    int32_t imageWidth;
-    int32_t imageHeight;
-    uint16_t colorPlanes;
-    uint16_t bitsPerPixel;
-    uint32_t compressionMethod;
-    uint32_t imageSize;
-    int32_t horizontalRes;
-    int32_t verticalRes;
-    uint32_t colorsInPalette;
-    uint32_t numImportantColors;
-};
-
-
-typedef struct                       /**** Colormap entry structure ****/
-    {
-    unsigned char  rgbBlue;          /* Blue value */
-    unsigned char  rgbGreen;         /* Green value */
-    unsigned char  rgbRed;           /* Red value */
-    unsigned char  rgbReserved;      /* Reserved */
-    } RGBQUAD;
-
-struct bmp_image24 {
-    struct bmp_header header;
-    struct bmp_info info;
-    uint8_t *data;
-};
-
-struct bmp_image8 {
-    struct bmp_header header;
-    struct bmp_info info;
-    RGBQUAD  bmiColors[256];
-    uint8_t *data;
-};
 
 bmp_image_t8 *bmp_from_path8(const char *path) {
     FILE *fp = fopen(path, "rb");
