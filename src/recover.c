@@ -12,6 +12,8 @@
 #include "utils.h"
 
 void recover(int k, int n){ //, image_t* output_image, image_t* watermark_image){
+
+	char* watermark_path = "./Archivos de Prueba-4-8/shares/RW/RW.bmp";
 	char* directory_path = "./Archivos de Prueba-4-8/shares/";
   //lo tendria q hacer por cada sombra
   //por cada cosa en el directorio q me pasan...
@@ -45,7 +47,8 @@ void recover(int k, int n){ //, image_t* output_image, image_t* watermark_image)
 		    // in real code you would check for errors in malloc here
 		    strcpy(result, directory_path);
 		    strcat(result, file->d_name);
-            bmp_image_t *image = bmp_from_path(result);
+            bmp_image_t24 *image = bmp_from_path24(result);
+
 			sh = (uint8_t *) stegobmp_extract(image, "prueba_output.bmp", "LSB1"); 
 
 			for(int i = 0; i < rows; i++){
@@ -64,12 +67,6 @@ void recover(int k, int n){ //, image_t* output_image, image_t* watermark_image)
 
 	closedir(directory);
 
-	/*
-	printf("matriz linda\n");
-
-	
-	*/
-	// faltaria la watermark
 
 	/*
 	Obtengo la matriz B que se obtiene concatenando las primeras columnas de todas las shadows.
@@ -108,9 +105,51 @@ void recover(int k, int n){ //, image_t* output_image, image_t* watermark_image)
 	/*
 	ahroa vamos a obtener secret_projection que surge de poryeccion de B
 	*/
+
 	//printMatrix(rows,k,b_matrix);
 	int secret_projection[rows][rows]; //no estoy seguro de si el tamaño es igual a rows de B
 	calculateProjection(rows, k, b_matrix, rows, rows, secret_projection); //ARREGLAR ESTO TIRA EXCEPCION. CHEQUEAR Q B ESTE BIEN ARMADA!
 																			// al hacer Bt * B nos deberia dar cuadrada!
+	// printf("Secret prjection: \n");
+	// printMatrix(rows,rows,secret_projection);
+
+	/*
+	ahora construimos R
+
+	es medio quilombo. se hace  apartir de las matrices G
+	hacemos gauss jordan con 
+
+	Matriz de dos columnas, la primera llena de 1 y la segunda empieza en 1 hsta k.
+	Mutliplicadoa por los I que quiero saber.
+	eso igual a G(x,y) cada una (ver paper es quilombo)
+	del resultado de gauss jordan sacamos como vamos llenando R
+	*/
+	//for(...){
+		//creo q conviene ir por cada fila voy a tener m/k resultados de gauss.
+		// hay que ver bien q le mando a gauss
+		//de esos resultados lleno cada uno de los valores de la fila 
+	//}
+
+	int rw[rows][rows];
+	int rw_index = 0;
+
+
+	bmp_image_t8 *wimage = bmp_from_path8(watermark_path);
+	uint8_t* water = bmp_get_data_buffer8(wimage);
+
+	
+	/*for(int i = 0; i < rows; i++){
+		for(int j = 0; j < rows; j++){
+			//printf("reached %d, i %d, j %d\n", reached,i,j);
+			rw[i][j] = water[rw_index];
+			//printf("sh es %d\n", sh[index]);
+			rw_index++;
+		}
+	}
+
+
+	int watermark_m[rows][rows];
+	add(rows, rows, secret_projection,rw, watermark_m);
+*/
 }
 

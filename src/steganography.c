@@ -118,23 +118,23 @@ stegobmp_extract_data(char* lsb, void *raw_data, uint8_t *image_buffer, uint32_t
 	}
 }
 
-void* stegobmp_extract(bmp_image_t *image, const char *output_path, char* lsb) {
+void* stegobmp_extract(bmp_image_t24 *image, const char *output_path, char* lsb) {
 
-    uint8_t *image_buffer = bmp_get_data_buffer(image);
+    uint8_t *image_buffer = bmp_get_data_buffer24(image);
     uint32_t hidden_data_size = 46200; //HARDCODEADO. SI ES CON LSB2 deberia ser el doble!!
    //uint8_t hidden_data_size = 0;
     char *extension;
-    bmp_image_t * answer = image;
+    bmp_image_t24 * answer = image;
     uint32_t offset = 0;
 
     //stegobmp_extract_size(lsb, &hidden_data_size, image_buffer, &offset);
 
-    if (hidden_data_size < bmp_get_image_size(image)) {
+    if (hidden_data_size < bmp_get_image_size24(image)) {
         printf("[!] Embeded file possibly found.\n");
-        printf("size de image era %d\n", bmp_get_image_size(image) );
+        printf("size de image era %d\n", bmp_get_image_size24(image) );
     	printf("size de hiddenimage es %d\n", hidden_data_size );
     } else {
-    	printf("size de image era %d\n", bmp_get_image_size(image) );
+    	printf("size de image era %d\n", bmp_get_image_size24(image) );
     	printf("size de hiddenimage es %d\n", hidden_data_size );
         //return 1;
     }
