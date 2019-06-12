@@ -138,7 +138,7 @@ void recover(int k, int n){ //, image_t* output_image, image_t* watermark_image)
 	uint8_t* water = bmp_get_data_buffer8(wimage);
 
 	
-	/*for(int i = 0; i < rows; i++){
+	for(int i = 0; i < rows; i++){
 		for(int j = 0; j < rows; j++){
 			//printf("reached %d, i %d, j %d\n", reached,i,j);
 			rw[i][j] = water[rw_index];
@@ -148,8 +148,8 @@ void recover(int k, int n){ //, image_t* output_image, image_t* watermark_image)
 	}
 
 
-	int watermark_m[rows][rows];
-	add(rows, rows, secret_projection,rw, watermark_m);
-*/
+	 int watermark_m[rows][rows];
+	 add(rows, rows, secret_projection,rw, watermark_m);
+
 }
 
