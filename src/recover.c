@@ -32,17 +32,18 @@ void recover(int k, int n){ //, image_t* output_image, image_t* watermark_image)
 	}
 	else if(k == 4 && n == 8){
 		//int shadows[k][165][105];
-		rows = 165;
-		cols = 105;
+		rows = 440;
+		cols = 210;
 	}else{
 		return;
 	}
-
+	/*
 	while ((file=readdir(directory)) != NULL && reached != k) {
 		int index = 0;
         printf("%s\n", file->d_name);
         uint8_t * sh;
-        if(strcmp("bmp",get_filename_ext(file->d_name)) == 0){
+        int hola = 1;
+        if((hola == 1) && (strcmp("bmp",get_filename_ext(file->d_name)) == 0)){
         	char *result = malloc(strlen(directory_path) + strlen(file->d_name) + 1); // +1 for the null-terminator
 		    // in real code you would check for errors in malloc here
 		    strcpy(result, directory_path);
@@ -59,11 +60,14 @@ void recover(int k, int n){ //, image_t* output_image, image_t* watermark_image)
 					index++;
 				}
 			}
+			printf("SIGO\n");
+			printf("sh es %d\n", sh[46201]);
 			reached++;
 			index = 0;
+			hola = 2;
         }
 	}
-    
+    */
 
 	closedir(directory);
 
@@ -74,41 +78,41 @@ void recover(int k, int n){ //, image_t* output_image, image_t* watermark_image)
 	*/
 	
 
-	int b_matrix[rows][k];
-	int v[k][rows][1]; //matrices v
-	int g[k][rows][cols-1]; //matrices g
+	// int b_matrix[rows][k];
+	// int v[k][rows][1]; //matrices v
+	// int g[k][rows][cols-1]; //matrices g
 
-	for (int counter=0; counter < k ;counter++){ //cambiar el menor a 1, solo lo puse para imprimir una sola, antes era k
-		int i;
-		int j;
-		int aux[rows][cols];
-		for (i=0; i<rows; i++){
-			    for(j=0; j<cols; j++){
-			        aux[i][j] = shadows[counter][i][j];
-			    }
-		}
-		separateMatrixByColumn(1, cols-1, rows, cols, aux, v[counter], g[counter]);
-	}
-	if (k==2){
-		concat (rows, 1,1, v[0], v[1], b_matrix);
-	} else {
-		//k == 4
+	// for (int counter=0; counter < k ;counter++){ //cambiar el menor a 1, solo lo puse para imprimir una sola, antes era k
+	// 	int i;
+	// 	int j;
+	// 	int aux[rows][cols];
+	// 	for (i=0; i<rows; i++){
+	// 		    for(j=0; j<cols; j++){
+	// 		        aux[i][j] = shadows[counter][i][j];
+	// 		    }
+	// 	}
+	// 	separateMatrixByColumn(1, cols-1, rows, cols, aux, v[counter], g[counter]);
+	// }
+	// if (k==2){
+	// 	concat (rows, 1,1, v[0], v[1], b_matrix);
+	// } else {
+	// 	//k == 4
 		
-		int curr1[rows][2];
-		concat (rows, 1,1, v[0], v[1], curr1);		
-		int curr2[rows][3];
-		concat (rows, 2,1, curr1, v[2], curr2);	
-		concat (rows, 3,1, curr2, v[3], b_matrix);
+	// 	int curr1[rows][2];
+	// 	concat (rows, 1,1, v[0], v[1], curr1);		
+	// 	int curr2[rows][3];
+	// 	concat (rows, 2,1, curr1, v[2], curr2);	
+	// 	concat (rows, 3,1, curr2, v[3], b_matrix);
 
-	}
+	// }
 
 	/*
 	ahroa vamos a obtener secret_projection que surge de poryeccion de B
 	*/
 
 	//printMatrix(rows,k,b_matrix);
-	int secret_projection[rows][rows]; //no estoy seguro de si el tamaño es igual a rows de B
-	calculateProjection(rows, k, b_matrix, rows, rows, secret_projection); //ARREGLAR ESTO TIRA EXCEPCION. CHEQUEAR Q B ESTE BIEN ARMADA!
+	// int secret_projection[rows][rows]; //no estoy seguro de si el tamaño es igual a rows de B
+	// calculateProjection(rows, k, b_matrix, rows, rows, secret_projection); //ARREGLAR ESTO TIRA EXCEPCION. CHEQUEAR Q B ESTE BIEN ARMADA!
 																			// al hacer Bt * B nos deberia dar cuadrada!
 	// printf("Secret prjection: \n");
 	// printMatrix(rows,rows,secret_projection);
@@ -130,26 +134,52 @@ void recover(int k, int n){ //, image_t* output_image, image_t* watermark_image)
 		//de esos resultados lleno cada uno de los valores de la fila 
 	//}
 
-	int rw[rows][rows];
+	int rw[440][280];
 	int rw_index = 0;
 
 
 	bmp_image_t8 *wimage = bmp_from_path8(watermark_path);
 	uint8_t* water = bmp_get_data_buffer8(wimage);
 
+
+
+	// AL MENOS LO DE ABAJO ANDA OK
+
+	int rw_row;
+	int secret_col;
+	uint8_t * new_data = calloc(123200, 1);;
+	for (rw_row = 0; rw_row < 440; rw_row ++) {
+        for (rw_col = 0; rw_col < 280; rw_col ++) {
+                	rw[rw_row][rw_col] = water[rw_index];
+                	rw_index++;
+        }
+
+    }
+
+
+	// int watermark_m[rows][rows];
+	// add(rows, rows, secret_projection,rw, watermark_m);
 	
-	for(int i = 0; i < rows; i++){
-		for(int j = 0; j < rows; j++){
-			//printf("reached %d, i %d, j %d\n", reached,i,j);
-			rw[i][j] = water[rw_index];
-			//printf("sh es %d\n", sh[index]);
-			rw_index++;
+	bmp_image_t8 *final_watermark = wimage;
+	
+	int aux_index = 0;
+	// printf("rows es %d\n", rows);
+	int aux_i = 0;
+	int aux_j = 0;
+	for(aux_i= 0; aux_i < 440; aux_i++){
+		for(aux_j = 0; aux_j < 280; aux_j++){
+			//printf("mosca\n");
+			new_data[aux_index] = rw[aux_i][aux_j];
+			aux_index++;
 		}
 	}
-
-
-	 int watermark_m[rows][rows];
-	 add(rows, rows, secret_projection,rw, watermark_m);
+	// printf("aux_index la quedo en %d y deberia ser 123200\n", aux_index);
+	// printf("aux_i la quedo en %d\n", aux_i);
+	// printf("aux_j la quedo en %d\n", aux_j);
+	final_watermark->data = (uint8_t*)new_data;
+	printf("Por guardar\n");
+	bmp_save8(final_watermark, "deberia_ser_rw.bmp");
+	printf("Guardado deberia_ser_rw.bmp\n");
 
 }
 
