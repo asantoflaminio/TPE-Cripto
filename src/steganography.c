@@ -100,7 +100,7 @@ static void stegobmp_extract_data(char* lsb, uint8_t *raw_data, uint8_t *image_b
 	if (strcmp(lsb, "LSB1") == 0){
 		lsb1_decrypt(raw_data, image_buffer /*+ sizeof(uint32_t) * 8*/, hidden_data_size, 0);
 	}else{		 
-        lsb2_decrypt(raw_data, image_buffer + sizeof(uint32_t) * 4, hidden_data_size, 0);
+        lsb2_decrypt(raw_data, image_buffer /*+ sizeof(uint32_t) * 4*/, hidden_data_size, 0);
 	}
 }
 
@@ -108,7 +108,12 @@ static void stegobmp_extract_data(char* lsb, uint8_t *raw_data, uint8_t *image_b
 uint8_t* stegobmp_extract(bmp_image_t24 *image, const char *output_path, char* lsb) {
 
     uint8_t *image_buffer = bmp_get_data_buffer24(image);
-    uint32_t hidden_data_size = 46200; //HARDCODEADO. SI ES CON LSB2 deberia ser el doble!!
+    uint32_t hidden_data_size = 46200; 
+    if (strcmp(lsb, "LSB1") == 0){
+        hidden_data_size = 46200;
+    }else{
+        hidden_data_size = 92400;
+    }
 
     bmp_image_t24 * answer = image;
     uint32_t offset = 0;
