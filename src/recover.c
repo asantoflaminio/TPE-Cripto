@@ -94,6 +94,7 @@ void recover(int k, int n){ //, image_t* output_image, image_t* watermark_image)
 	closedir(directory);
 	int secret_size = n * max * steg_aux;
 	uint8_t * secret_projection_extended = calloc(secret_size, 1);;
+	uint8_t * r_extended = calloc(secret_size, 1);;
 	int sp_index = 0;
 	for(int curr = 0; curr < quantity; curr++){
 		// printf("spindex es %d\n", sp_index);
@@ -160,29 +161,55 @@ void recover(int k, int n){ //, image_t* output_image, image_t* watermark_image)
 		}
 
 
+		int r_matrix[n][n];
+
+		for(int r_row =0; r_row < n; r_row++){
+			/* hago la matriz que tiene la columna de 1s y del 1 a k)*/
+			int aux_g[k][3];
+			int aux_g2[k][3];
+			int filler = 1;
+			for(int aux_row = 0; aux_row < k; aux_row++){
+				aux_g[aux_row][0] = 1;
+				aux_g[aux_row][1] = filler;
+				aux_g[aux_row][2] = g[aux_row][r_row][aux_row];
+				filler++;
+			}
+			filler = 1;
+			for(int aux_row = 0; aux_row < k; aux_row++){
+				aux_g[aux_row][0] = 1;
+				aux_g[aux_row][1] = filler;
+				aux_g[aux_row][2] = g[aux_row][r_row][aux_row + k];
+				filler++;
+			}
+		}
+		/*
+		ahora construimos R
+
+		es medio quilombo. se hace  apartir de las matrices G
+		hacemos gauss jordan con 
+
+		Matriz de dos columnas, la primera llena de 1 y la segunda empieza en 1 hsta k.
+		Mutliplicadoa por los I que quiero saber.
+		eso igual a G(x,y) cada una (ver paper es quilombo)
+		del resultado de gauss jordan sacamos como vamos llenando R
+		*/
+		//for(...){
+			//creo q conviene ir por cada fila voy a tener m/k resultados de gauss.
+			// hay que ver bien q le mando a gauss
+			//de esos resultados lleno cada uno de los valores de la fila 
+		//}
+
+
 	}
 
 
 
 
 
-	/*
-	ahora construimos R
+	
 
-	es medio quilombo. se hace  apartir de las matrices G
-	hacemos gauss jordan con 
 
-	Matriz de dos columnas, la primera llena de 1 y la segunda empieza en 1 hsta k.
-	Mutliplicadoa por los I que quiero saber.
-	eso igual a G(x,y) cada una (ver paper es quilombo)
-	del resultado de gauss jordan sacamos como vamos llenando R
-	*/
-	//for(...){
-		//creo q conviene ir por cada fila voy a tener m/k resultados de gauss.
-		// hay que ver bien q le mando a gauss
-		//de esos resultados lleno cada uno de los valores de la fila 
-	//}
-
+	/* esto es la generacion de la watermark*/
 	int rw[height][width];
 	int rw_index = 0;
 
