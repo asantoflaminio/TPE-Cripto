@@ -82,7 +82,7 @@ void recover(int k, int n){ //, image_t* output_image, image_t* watermark_image)
 		printf("Not enough shares\n");
 		return;
 	}
-    
+    printf("imprimo %d\n", shadows[0][46195]);
 
 	closedir(directory);
 
@@ -100,6 +100,7 @@ void recover(int k, int n){ //, image_t* output_image, image_t* watermark_image)
 			}
 			
 		}
+		
 
 		int b_matrix[n][k]; // matriz b
 		int v[k][n][1]; //matrices v
@@ -133,6 +134,7 @@ void recover(int k, int n){ //, image_t* output_image, image_t* watermark_image)
 			int curr2[n][3];
 			concat (n, 2,1, curr1, v[2], curr2);	
 			concat (n, 3,1, curr2, v[3], b_matrix);
+			
 
 		}
 
@@ -140,8 +142,7 @@ void recover(int k, int n){ //, image_t* output_image, image_t* watermark_image)
 		ahroa vamos a obtener secret_projection que surge de proyeccion de B
 		*/
 		calculateProjection(n, k, b_matrix, n, n, secret_projection); 
-		// printf("Proyeccion %d\n", curr);
-		// printMatrix(n,n, secret_projection);
+		
 		// ahora guado los datos en secret_extended para desps sumar a rw
 
 		for(int si = 0; si < n; si++){
@@ -193,39 +194,15 @@ void recover(int k, int n){ //, image_t* output_image, image_t* watermark_image)
 	uint8_t * new_data = calloc(123200, 1);
 	for(rw_index =0; rw_index < 123200; rw_index++){
 				new_data[rw_index] = (water[rw_index] + secret_projection_extended[rw_index])%251;
+				// printf("era %d y ahora es %d\n", water[rw_index], new_data[rw_index]);
 	}
 
 
 
-	// for (rw_row = 0; rw_row < 440; rw_row ++) {
- //        for (rw_col = 0; rw_col < 280; rw_col ++) {
- //                	rw[rw_row][rw_col] = water[rw_index];
- //                	rw_index++;
- //        }
-
- //    }
-
-
-	// int watermark_m[rows][rows];
-	// add(rows, rows, secret_projection,rw, watermark_m);
+	/* solo cambio la data, total el header es el mismo */
 	
 	bmp_image_t8 *final_watermark = wimage;
-	
-	// int aux_index = 0;
-	// printf("rows es %d\n", rows);
-	// int aux_i = 0;
-	// int aux_j = 0;
-	// for(aux_i= 0; aux_i < 440; aux_i++){
-	// 	for(aux_j = 0; aux_j < 280; aux_j++){
-	// 		//printf("mosca\n");
-	// 		new_data[aux_index] = rw[aux_i][aux_j];
-	// 		aux_index++;
-	// 	}
-	// }
-	// printf("aux_index la quedo en %d y deberia ser 123200\n", aux_index);
-	// printf("aux_i la quedo en %d\n", aux_i);
-	// printf("aux_j la quedo en %d\n", aux_j);
-	final_watermark->data = (uint8_t*)new_data;
+	final_watermark->data = new_data;
 	printf("Por guardar\n");
 	bmp_save8(final_watermark, "deberia_ser_paris.bmp");
 	printf("Guardado deberia_ser_paris.bmp\n");
