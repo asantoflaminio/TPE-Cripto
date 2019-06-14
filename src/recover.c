@@ -17,12 +17,13 @@ void recover(int k, int n){ //, image_t* output_image, image_t* watermark_image)
 		printf("Acceptable pairs are k=2 and n=4 OR k=4 and n=8\n");
 		return;
 	}
+
+	// esto viene del main pasado!
 	char* watermark_path = "./Archivos de Prueba-4-8/shares/RW/RW.bmp";
-	char* directory_path = "./Archivos de Prueba-4-8/shares/";
-  //lo tendria q hacer por cada sombra
-  //por cada cosa en el directorio q me pasan...
+	char* directory_path = "./Archivos de Prueba-4-8/shares/"; 
+
 	DIR *directory;
-	directory = opendir(directory_path); //esto me lo va a pasar el usuario *el path*
+	directory = opendir(directory_path); 
 	struct dirent* file;
 	int reached = 0;
 
@@ -31,8 +32,11 @@ void recover(int k, int n){ //, image_t* output_image, image_t* watermark_image)
 	int cols =280;
 	int share_size = 0;
 	int steg_aux = 0;
+	int max = 1925; //DESPS CAMBIARLO
 	if(k==2){
 		share_size = 4*3;
+		steg_type = "LSB2";
+		max = 7700;
 	}else{
 		// k == 4
 		share_size = 8*3;
@@ -46,8 +50,10 @@ void recover(int k, int n){ //, image_t* output_image, image_t* watermark_image)
 	}
 	int quantity = 0;
 	int previous_quantity = 0;
-	int max = 1925; //DESPS CAMBIARLO
+	
 	uint8_t shadows[k][max * share_size];
+	int width = 0;
+	int height = 0;
 
 	while ((file=readdir(directory)) != NULL && reached != k) {
 		int index = 0;  
@@ -60,15 +66,17 @@ void recover(int k, int n){ //, image_t* output_image, image_t* watermark_image)
 		    strcat(result, file->d_name);
             bmp_image_t24 *image = bmp_from_path24(result);
             int sharefile_size_encrypted = (image->info.imageWidth) * (image->info.imageHeight) * 3;
+            width = (image->info.imageWidth);
+            height = (image->info.imageHeight);
             int sharefile_size_decrypted = sharefile_size_encrypted/steg_aux;
-            printf("Quantity es %d\n", sharefile_size_decrypted/share_size); 
+            //printf("Quantity es %d\n", sharefile_size_decrypted/share_size); 
             previous_quantity = quantity;
             quantity = sharefile_size_decrypted/share_size;
             if(quantity!= 0 && previous_quantity !=0 && previous_quantity !=quantity){
             	printf("Error in shares\n");
             	return;
             }
-			sh = (uint8_t *) stegobmp_extract(image, "prueba_output.bmp", "LSB1"); 
+			sh = (uint8_t *) stegobmp_extract(image, steg_type); 
 
 			for(int i = 0; i < quantity * share_size; i++){
 				shadows[reached][i] = sh[index]; // en shadows[0] guardaria todos los datos juntos de la share 0. 
@@ -82,11 +90,10 @@ void recover(int k, int n){ //, image_t* output_image, image_t* watermark_image)
 		printf("Not enough shares\n");
 		return;
 	}
-    printf("imprimo %d\n", shadows[0][46195]);
 
 	closedir(directory);
-
-	uint8_t * secret_projection_extended = calloc(123200, 1);;
+	int secret_size = n * max * steg_aux;
+	uint8_t * secret_projection_extended = calloc(secret_size, 1);;
 	int sp_index = 0;
 	for(int curr = 0; curr < quantity; curr++){
 		// printf("spindex es %d\n", sp_index);
@@ -154,8 +161,6 @@ void recover(int k, int n){ //, image_t* output_image, image_t* watermark_image)
 
 
 	}
-	printf("sp_index es %d\n", sp_index);
-	printf("Done\n");
 
 
 
@@ -178,7 +183,7 @@ void recover(int k, int n){ //, image_t* output_image, image_t* watermark_image)
 		//de esos resultados lleno cada uno de los valores de la fila 
 	//}
 
-	int rw[440][280];
+	int rw[height][width];
 	int rw_index = 0;
 
 
@@ -191,8 +196,8 @@ void recover(int k, int n){ //, image_t* output_image, image_t* watermark_image)
 
 	int rw_row;
 	int rw_col;
-	uint8_t * new_data = calloc(123200, 1);
-	for(rw_index =0; rw_index < 123200; rw_index++){
+	uint8_t * new_data = calloc(secret_size, 1);
+	for(rw_index =0; rw_index < secret_size; rw_index++){
 				new_data[rw_index] = (water[rw_index] + secret_projection_extended[rw_index])%251;
 				// printf("era %d y ahora es %d\n", water[rw_index], new_data[rw_index]);
 	}
