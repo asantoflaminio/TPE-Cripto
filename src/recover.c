@@ -96,6 +96,9 @@ void recover(int k, int n){ //, image_t* output_image, image_t* watermark_image)
 	uint8_t * secret_projection_extended = calloc(secret_size, 1);;
 	uint8_t * r_extended = calloc(secret_size, 1);;
 	int sp_index = 0;
+	int r_index = 0;
+
+
 	for(int curr = 0; curr < quantity; curr++){
 		// printf("spindex es %d\n", sp_index);
 		int secret_projection[n][n];
@@ -168,44 +171,91 @@ void recover(int k, int n){ //, image_t* output_image, image_t* watermark_image)
 			int aux_g[k][3];
 			int aux_g2[k][3];
 			int filler = 1;
-			for(int aux_row = 0; aux_row < k; aux_row++){
+			int *ansgs1 = calloc(2, sizeof(int));
+			int *ansgs2 = calloc(2, sizeof(int));
+			int *ansgs3 = calloc(2, sizeof(int));
+			int *ansgs4 = calloc(2, sizeof(int));;
+			
+			for(int aux_row = 0; aux_row < 2; aux_row++){
 				aux_g[aux_row][0] = 1;
 				aux_g[aux_row][1] = filler;
-				aux_g[aux_row][2] = g[aux_row][r_row][aux_row];
+				aux_g[aux_row][2] = g[aux_row][r_row][0];
 				filler++;
 			}
 			filler = 1;
-			for(int aux_row = 0; aux_row < k; aux_row++){
-				aux_g[aux_row][0] = 1;
-				aux_g[aux_row][1] = filler;
-				aux_g[aux_row][2] = g[aux_row][r_row][aux_row + k];
+			for(int aux_row = 0; aux_row < 2; aux_row++){
+				aux_g2[aux_row][0] = 1;
+				aux_g2[aux_row][1] = filler;
+				aux_g2[aux_row][2] = g[aux_row][r_row][1];
 				filler++;
 			}
+
+			if(k!=4){
+				//blah
+				// COMPLETAR
+			}else{
+				int aux_g3[k][3];
+				int aux_g4[k][3];
+				filler = 1;
+				for(int aux_row = 2; aux_row < 4; aux_row++){
+					aux_g3[aux_row][0] = 1;
+					aux_g3[aux_row][1] = filler;
+					aux_g3[aux_row][2] = g[aux_row][r_row][0];
+					filler++;
+				}
+				filler = 1;
+				for(int aux_row = 2; aux_row < 4; aux_row++){
+					aux_g4[aux_row][0] = 1;
+					aux_g4[aux_row][1] = filler;
+					aux_g4[aux_row][2] = g[aux_row][r_row][1];
+					filler++;
+				}
+
+				gauss_jordan(2, aux_g, &ansgs1);
+				gauss_jordan(2, aux_g2, &ansgs2);
+				gauss_jordan(2, aux_g3, &ansgs3);
+				gauss_jordan(2, aux_g4, &ansgs4);
+
+				r_matrix[r_row][0] = ansgs1[0];
+				r_matrix[r_row][1] = ansgs1[1];
+				r_matrix[r_row][2] = ansgs2[0];
+				r_matrix[r_row][3] = ansgs2[1];
+				r_matrix[r_row][4] = ansgs3[0];
+				r_matrix[r_row][5] = ansgs3[1];
+				r_matrix[r_row][6] = ansgs4[0];
+				r_matrix[r_row][7] = ansgs4[1];
+			}
 		}
-		/*
-		ahora construimos R
 
-		es medio quilombo. se hace  apartir de las matrices G
-		hacemos gauss jordan con 
+		for(int si = 0; si < n; si++){
+			for(int sj=0; sj <n; sj++){
+				r_extended[r_index] = (uint8_t) r_matrix[si][sj];
+				r_index++;
+			}
+		}
 
-		Matriz de dos columnas, la primera llena de 1 y la segunda empieza en 1 hsta k.
-		Mutliplicadoa por los I que quiero saber.
-		eso igual a G(x,y) cada una (ver paper es quilombo)
-		del resultado de gauss jordan sacamos como vamos llenando R
-		*/
-		//for(...){
-			//creo q conviene ir por cada fila voy a tener m/k resultados de gauss.
-			// hay que ver bien q le mando a gauss
-			//de esos resultados lleno cada uno de los valores de la fila 
-		//}
 
 
 	}
 
+	/*leo la rw */
+	bmp_image_t8 *wimage = bmp_from_path8(watermark_path);
+	bmp_image_t8 *simage = bmp_from_path8(watermark_path);
+	/* esto es la generacion de la secreta*/
 
+	
+	uint8_t * secret_data = calloc(secret_size, 1);
+	int secret_index = 0;
+	for(secret_index =0; secret_index < secret_size; secret_index++){
+				secret_data[secret_index] = (r_extended[secret_index] + secret_projection_extended[secret_index])%251;
+	}
 
-
-
+	bmp_image_t8 *final_secret = simage;
+	final_secret->data = secret_data;
+	printf("Por guardar\n");
+	bmp_save8(final_secret, "deberia_ser_albert.bmp");
+	printf("Guardado deberia_ser_albert.bmp\n");
+	
 	
 
 
@@ -214,7 +264,7 @@ void recover(int k, int n){ //, image_t* output_image, image_t* watermark_image)
 	int rw_index = 0;
 
 
-	bmp_image_t8 *wimage = bmp_from_path8(watermark_path);
+	
 	uint8_t* water = bmp_get_data_buffer8(wimage);
 
 
@@ -226,7 +276,6 @@ void recover(int k, int n){ //, image_t* output_image, image_t* watermark_image)
 	uint8_t * new_data = calloc(secret_size, 1);
 	for(rw_index =0; rw_index < secret_size; rw_index++){
 				new_data[rw_index] = (water[rw_index] + secret_projection_extended[rw_index])%251;
-				// printf("era %d y ahora es %d\n", water[rw_index], new_data[rw_index]);
 	}
 
 
