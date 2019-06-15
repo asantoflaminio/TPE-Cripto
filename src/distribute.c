@@ -14,10 +14,12 @@
 void distribute(int k, int n){ 
 
 	char* secret_path = "./Archivos de Prueba-4-8/Secreto.bmp";
-	char* watermark_path = "generated_watermark.bmp";
+	char* watermark_path = "./Archivos de Prueba-4-8/Marca.bmp";
+	char* watermark_destiny_path = "generated_watermark.bmp";
 	char* directory_path = "./Archivos de Prueba-4-8/shares/test"; 
 	
 	bmp_image_t8 *image = bmp_from_path8(secret_path);
+	bmp_image_t8 *wimage = bmp_from_path8(watermark_path);
 
 	if(image == NULL){
 
@@ -25,6 +27,14 @@ void distribute(int k, int n){
 		return;
 
 	}
+
+	if(wimage == NULL){
+
+		printf("Unable to get watermark image.\n");
+		return;
+
+	}
+
 
 	int secret_size = (image->info.imageWidth) * (image->info.imageHeight);
 	int shadow_size = (secret_size/n)*3;
@@ -35,6 +45,7 @@ void distribute(int k, int n){
 	uint8_t * secret_data = bmp_get_data_buffer8(image);
 	uint8_t * secret_projection_extended = calloc(secret_size, 1);
 	int sp_index = 0;
+	int sh_aux_counter = 0;
 	uint8_t num;
 	setSeed(SET);
 
@@ -103,7 +114,7 @@ void distribute(int k, int n){
 				x_matrices[x_counter][col][0] = num;
 
 			}
-			
+
 		}
 		
 		int v_matrices[n][n][1];
@@ -156,8 +167,22 @@ void distribute(int k, int n){
 	/* guardo en archivo las 8 shares*/
 
 	/* calculo Rw que es watermark - secret_projection_extended */
+	// uint8_t watermark_data = bmp_get_data_buffer8(wimage);
+	// uint8_t * new_watermark_data = calloc(secret_size, 1);
+	// int rw_index = 0;
+	// for(rw_index =0; rw_index < secret_size; rw_index++){
+	// 			int aux = (watermark_data[rw_index] - secret_projection_extended[rw_index]);
+	// 			if(aux < 0){
+	// 				aux = aux + 251;
+	// 			}
+	// 			new_watermark_data[rw_index] = aux;
+	// }
 
 	/* Guardo Rw en archivo */
+	// bmp_image_t8 *final_rw = wimage;
+	// final_rw->data = new_watermark_data;
+	// bmp_save8(final_rw, watermark_destiny_path);
+	// printf("Watermark saved %s.\n", watermark_destiny_path);
 
 
 
