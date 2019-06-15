@@ -33,6 +33,8 @@ void distribute(int k, int n){
 	int quantity = secret_size/(n*n);
 
 	uint8_t * secret_data = bmp_get_data_buffer8(image);
+	uint8_t * secret_projection_extended = calloc(secret_size, 1);
+	int sp_index = 0;
 	uint8_t num;
 	setSeed(SET);
 
@@ -71,14 +73,61 @@ void distribute(int k, int n){
 		int secret_projection[n][n];
 		calculateProjection(n, k, a_matrix, n, n, secret_projection); 
 
+
+		for(int si = 0; si < n; si++){
+			for(int sj=0; sj <n; sj++){
+				secret_projection_extended[sp_index] = (uint8_t) secret_projection[si][sj];
+				sp_index++;
+			}
+		}
+
 		/*
 		ahora obtenemos r_matriz que surge de restar S con la proyeccion
 		*/
 		int r_matrix[n][n];
 		substract(n, n, s_matrix, secret_projection, r_matrix);
 
+		/* aca hay que generar n cantidad de X cada uno de kx1 con valores random */
+		int x_matrices[n][k][1];
+
+		for(int x_counter = 0; x_counter < n; x_counter++){
+
+			for(int col = 0; col < k; col++){
+
+				num = nextChar();
+				x_matrices[x_counter][col][0] = num;
+
+			}
+		}
+		
+		int v_matrices[n][n][1];
+
+		/* aca generar n matrices V cada una surje de hacer A*Xj */
+		for(int v_counter = 0; v_counter < n; v_counter++){
+
+			multiply(n,k, k,1, a_matrix, x_matrices[v_counter],v_matrices[v_counter]);
+			// printf("--------------\n");
+			// printMatrix(n,1,v_matrices[v_counter]);
+			
+		}
+
+		/* aca armar n matrices G cada una de n*2 */
+
+
+		/* concateno cada v con su correspondiente G para obtener las n sombras*/
+
+
+		/* agrego las sombras a su version extendida */
+
 	}
 
+	/* aplico esteganografia a cada sombra extendida*/
+
+	/* guardo en archivo las 8 shares*/
+
+	/* calculo Rw que es watermark - secret_projection_extended */
+
+	/* Guardo Rw en archivo */
 
 
 
