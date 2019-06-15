@@ -64,6 +64,7 @@ void distribute(int k, int n){
 				a_matrix[ai][aj] = num;
 
 			}
+
 		}
 		// printf("----------------\n");
 		// printMatrix(n,k, a_matrix);
@@ -75,10 +76,14 @@ void distribute(int k, int n){
 
 
 		for(int si = 0; si < n; si++){
-			for(int sj=0; sj <n; sj++){
+
+			for(int sj = 0; sj < n; sj++){
+
 				secret_projection_extended[sp_index] = (uint8_t) secret_projection[si][sj];
 				sp_index++;
+
 			}
+
 		}
 
 		/*
@@ -98,6 +103,7 @@ void distribute(int k, int n){
 				x_matrices[x_counter][col][0] = num;
 
 			}
+			
 		}
 		
 		int v_matrices[n][n][1];
@@ -105,19 +111,43 @@ void distribute(int k, int n){
 		/* aca generar n matrices V cada una surje de hacer A*Xj */
 		for(int v_counter = 0; v_counter < n; v_counter++){
 
-			multiply(n,k, k,1, a_matrix, x_matrices[v_counter],v_matrices[v_counter]);
+			multiply(n ,k, k, 1, a_matrix, x_matrices[v_counter], v_matrices[v_counter]);
 			// printf("--------------\n");
 			// printMatrix(n,1,v_matrices[v_counter]);
-			
+
 		}
 
+		int g_matrices[n][n][2];
 		/* aca armar n matrices G cada una de n*2 */
 
+			// HACER
 
 		/* concateno cada v con su correspondiente G para obtener las n sombras*/
-
+		// int my_shadows[n][n][3];
+		// for(int sh_counter = 0; sh_counter < n; sh_counter++){
+		// 	concat (n, 1,2, v[sh_counter], g_matrices[sh_counter], my_shadows[sh_counter]);
+		// }
 
 		/* agrego las sombras a su version extendida */
+		// for(int ext_counter = 0; ext_counter < n; ext_counter++){
+
+		// 	for(int i = 0; i < n; i++){
+
+		// 		for(int j = 0; j < 3; j++){
+
+		// 			shadows[ext_counter][sh_aux_counter] = my_shadows[ext_counter][i][j];
+		// 			sh_aux_counter++;
+
+		// 		}
+
+		// 	}
+
+		// 	sh_aux_counter = sh_aux_counter - n*3;
+
+		// }
+
+		// sh_aux_counter = sh_aux_counter + n*3;
+
 
 	}
 
