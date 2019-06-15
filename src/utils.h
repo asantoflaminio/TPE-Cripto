@@ -38,6 +38,8 @@ static const char full_mask = 0xFF;
 static const char mask_first_bit = 0x80;
 //int inverse(int i);
 void assure(int truth, char* message);
+
+/* Funciones provistas por la catedra */
 const char *get_filename_ext(const char *filename);
 void setSeed(int64_t s);
 uint8_t nextChar(void);
