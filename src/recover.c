@@ -13,12 +13,9 @@
 
 void recover(int k, int n){ //, image_t* output_image, image_t* watermark_image){
 	char* steg_type = "LSB1";
-	if(!((k == 2 && n == 4) || (k==4 && n==8))){
-		printf("Acceptable pairs are k=2 and n=4 OR k=4 and n=8\n");
-		return;
-	}
 
 	// esto viene del main pasado!
+	char* secret_path = "deberia_ser_albert.bmp";
 	char* watermark_path = "./Archivos de Prueba-4-8/shares/RW/RW.bmp";
 	char* directory_path = "./Archivos de Prueba-4-8/shares/"; 
 
@@ -253,7 +250,7 @@ void recover(int k, int n){ //, image_t* output_image, image_t* watermark_image)
 	bmp_image_t8 *final_secret = simage;
 	final_secret->data = secret_data;
 	printf("Por guardar\n");
-	bmp_save8(final_secret, "deberia_ser_albert.bmp");
+	bmp_save8(final_secret, secret_path);
 	printf("Guardado deberia_ser_albert.bmp\n");
 	
 	
@@ -285,8 +282,8 @@ void recover(int k, int n){ //, image_t* output_image, image_t* watermark_image)
 	bmp_image_t8 *final_watermark = wimage;
 	final_watermark->data = new_data;
 	printf("Por guardar\n");
-	bmp_save8(final_watermark, "deberia_ser_paris.bmp");
-	printf("Guardado deberia_ser_paris.bmp\n");
+	bmp_save8(final_watermark, "recovered_watermark.bmp");
+	printf("Guardado recovered_watermark.bmp\n");
 
 }
 

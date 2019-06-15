@@ -6,6 +6,7 @@
 #include <getopt.h>
 #include "bmp_processor.h"
 #include "recover.h"
+#include "distribute.h"
 
 #define FALSE 0
 #define TRUE 1
@@ -75,6 +76,11 @@ int main(int argc, char* argv[]) {
   	printf("Failure: directory was not specified \n");
   	exit(EXIT_FAILURE);
   }
+  
+  if(!((k == 2 && n == 4) || (k==4 && n==8))){
+    printf("Acceptable pairs are k=2 and n=4 OR k=4 and n=8\n");
+    return;
+  }
 
   printf("Parameters validated! \n");
 
@@ -91,7 +97,8 @@ int main(int argc, char* argv[]) {
 
   //write_image(image);
 
-  recover(4, 8); //, image_t* output_image, image_t* watermark_image)
+ // recover(4, 8); //, image_t* output_image, image_t* watermark_image)
 
+  distribute(4,8);
   return 0;
 }
