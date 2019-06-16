@@ -195,46 +195,52 @@ void recover(int k, int n){ //, image_t* output_image, image_t* watermark_image)
 
 		for(int r_row =0; r_row < n; r_row++){
 			/* hago la matriz que tiene la columna de 1s y del 1 a k)*/
-			int aux_g[k][k+1];
-			int aux_g2[k][k+1];
-			int filler = 1;
-			int *ansgs1 = calloc(k, sizeof(int));
-			int *ansgs2 = calloc(k, sizeof(int));
 			
-			for(int aux_row = 0; aux_row < k; aux_row++){
-				aux_g[aux_row][0] = 1;
-				for(int cj = 1; cj < k; cj++){
-					aux_g[aux_row][cj] = pow(filler,cj);
-				}
-				aux_g[aux_row][k] = g[aux_row][r_row][0];
-				filler++;
+			if(k == 4){
+
+				int g00 = g[0][r_row][0];
+				int g10 = g[1][r_row][0];
+				int g20 = g[2][r_row][0];
+				int g30 = g[3][r_row][0];
+				int g01 = g[0][r_row][1];
+				int g11 = g[1][r_row][1];
+				int g21 = g[2][r_row][1];
+				int g31 = g[3][r_row][1];
+
+
+				//TODO EN CADA RESTA EL TEMA DEL MODULO ES DECIR SUMAR 251 SI ES NEGATIVO. VER LO De lso chicos.
+				// MAS ALLA de valores negativos tmbn me llama q a veces hay como basura
+
+
+				int h = (177*(g31 - g01 + 3*g11 - 3*g21))%251;
+				int g =  (126*(g21 +  g01 - 2* g11 - 12*h ))%251;		
+				int f = (g11 - g01 - 3*g - 7*h)%251;
+				int e = (g01-f-g-h)%251;
+
+				int d =  (177*(g30 - g00 + 3*g10 - 3*g20))%251;
+				int c =  (126*(g20 +  g00 - 2* g10 - 12*d ))%251;		
+				int b =  (g10 - g00 - 3*c - 7*d)%251;
+				int a = (g00-b-c-d)%251;
+
+				
+
+				r_matrix[r_row][0] = a;
+				r_matrix[r_row][1] = b;
+				r_matrix[r_row][2] = c;
+				r_matrix[r_row][3] = d;
+				r_matrix[r_row][4] = e;
+				r_matrix[r_row][5] = f;
+				r_matrix[r_row][6] = g;
+				r_matrix[r_row][7] = h;
+
+			}else{
+				// k == 2
+				//TODO
+
 			}
-
-			filler = 1;
-
-			for(int aux_row = 0; aux_row < k; aux_row++){
-				aux_g2[aux_row][0] = 1;
-				for(int cj = 1; cj < k; cj++){
-					aux_g2[aux_row][cj] = pow(filler,cj);
-				}
-				aux_g2[aux_row][k] = g[aux_row][r_row][1];
-				filler++;
-			}
-				// printf("------\n");
-				// printMatrix(k,k+1, aux_g);
-
-				gauss_jordan(k, aux_g, &ansgs1);
-				gauss_jordan(k, aux_g2, &ansgs2);
-				//printf("valores son %d %d %d %d\n", ansgs1[0], ansgs1[1], ansgs1[2], ansgs1[3]);
-
-				r_matrix[r_row][0] = ansgs1[0];
-				r_matrix[r_row][1] = ansgs1[1];
-				r_matrix[r_row][2] = ansgs1[2];
-				r_matrix[r_row][3] = ansgs1[3];
-				r_matrix[r_row][4] = ansgs2[0];
-				r_matrix[r_row][5] = ansgs2[1];
-				r_matrix[r_row][6] = ansgs2[2];
-				r_matrix[r_row][7] = ansgs2[3];
+			printf("------------\n");
+			printMatrix(n,n,r_matrix);
+				
 
 		}
 
