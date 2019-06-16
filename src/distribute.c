@@ -4,7 +4,7 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <dirent.h>
-
+#include <math.h>
 #include <getopt.h>
 #include "bmp_processor.h"
 #include "steganography.h"
@@ -131,33 +131,54 @@ void distribute(int k, int n){
 		int g_matrices[n][n][2];
 		/* aca armar n matrices G cada una de n*2 */
 
-			// HACER
+		for(int g_counter = 0; g_counter < n; g_counter++){
+
+
+			for(int i = 0; i < n; i++){
+
+					if(k == 2){
+
+						g_matrices[g_counter][i][0] = r_matrix[i][0] + r_matrix[i][1]*pow((g_counter+1),1);
+						g_matrices[g_counter][i][1] = r_matrix[i][2] + r_matrix[i][3]*pow((g_counter+1),2);
+
+					}else{
+
+						g_matrices[g_counter][i][0] = r_matrix[i][0] + r_matrix[i][1]*pow((g_counter+1),1) + r_matrix[i][2]*pow((g_counter+1),2) + r_matrix[i][3]*pow((g_counter+1),3);
+						g_matrices[g_counter][i][1] = r_matrix[i][4] + r_matrix[i][5]*pow((g_counter+1),2) + r_matrix[i][6]*pow((g_counter+1),2)+ r_matrix[i][7]*pow((g_counter+1),3);
+
+					}
+					
+
+			}
+
+
+		}
 
 		/* concateno cada v con su correspondiente G para obtener las n sombras*/
-		// int my_shadows[n][n][3];
-		// for(int sh_counter = 0; sh_counter < n; sh_counter++){
-		// 	concat (n, 1,2, v[sh_counter], g_matrices[sh_counter], my_shadows[sh_counter]);
-		// }
+		int my_shadows[n][n][3];
+		for(int sh_counter = 0; sh_counter < n; sh_counter++){
+			concat (n, 1,2, v_matrices[sh_counter], g_matrices[sh_counter], my_shadows[sh_counter]);
+		}
 
 		/* agrego las sombras a su version extendida */
-		// for(int ext_counter = 0; ext_counter < n; ext_counter++){
+		for(int ext_counter = 0; ext_counter < n; ext_counter++){
 
-		// 	for(int i = 0; i < n; i++){
+			for(int i = 0; i < n; i++){
 
-		// 		for(int j = 0; j < 3; j++){
+				for(int j = 0; j < 3; j++){
 
-		// 			shadows[ext_counter][sh_aux_counter] = my_shadows[ext_counter][i][j];
-		// 			sh_aux_counter++;
+					shadows[ext_counter][sh_aux_counter] = my_shadows[ext_counter][i][j];
+					sh_aux_counter++;
 
-		// 		}
+				}
 
-		// 	}
+			}
 
-		// 	sh_aux_counter = sh_aux_counter - n*3;
+			sh_aux_counter = sh_aux_counter - n*3;
 
-		// }
+		}
 
-		// sh_aux_counter = sh_aux_counter + n*3;
+		sh_aux_counter = sh_aux_counter + n*3;
 
 
 	}

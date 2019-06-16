@@ -3,6 +3,7 @@
 
 
 void recover(int k, int n);
+int resta(int a, int b);
 
 
 #endif 

@@ -11,6 +11,14 @@
 #include "matrix_functions.h"
 #include "utils.h"
 
+int resta(int a, int b){
+	int ans = a - b;
+	if(ans < 0){
+		ans = ans + 251;
+	}
+	return ans;
+}
+
 void recover(int k, int n){ //, image_t* output_image, image_t* watermark_image){
 	char* steg_type = "LSB1";
 
@@ -157,6 +165,8 @@ void recover(int k, int n){ //, image_t* output_image, image_t* watermark_image)
 				        aux[r][c] = my_shadows[counter][r][c];
 				    }
 			}
+			printf("ERA \n");
+			printMatrix(n,3,aux);
 			separateMatrixByColumn(1, 2, n, 3, aux, v[counter], g[counter]);
 		}
 		if (k==2){
@@ -207,48 +217,80 @@ void recover(int k, int n){ //, image_t* output_image, image_t* watermark_image)
 				int g21 = g[2][r_row][1];
 				int g31 = g[3][r_row][1];
 
+				//printf("imprimo %d, %d, %d, %d, %d, %d, %d, %d\n", g00, g10, g20, g30, g01,g11, g21, g31);
 
-				//TODO EN CADA RESTA EL TEMA DEL MODULO ES DECIR SUMAR 251 SI ES NEGATIVO. VER LO De lso chicos.
-				// MAS ALLA de valores negativos tmbn me llama q a veces hay como basura
+				// int h = (177*(resta(g31 , g01) + resta((3*g11)%251 , (3*g21)%251)))%251;
+				// int g =  (126*(g21 + resta( resta(g01 , (2*g11)%251) , (12*h)%251 )))%251;		
+				// int f = (resta(g11 , resta(g01 , resta((3*g)%251 , (7*h)%251))))%251;
+				// int e = (resta(g01,resta(f,resta(g,h))))%251;
 
+				// int d =  (177*(resta(g30 , g00) + resta((3*g10)%251 , (3*g20)%251)))%251;
+				// int c =  (126*(g20 + resta( resta(g00 , (2*g10)%251) , (12*d)%251 )))%251;		
+				// int b =  (resta(g10 , resta(g00 , resta((3*c)%251 , (7*d)%251))))%251;
+				// int a = (resta(g00,resta(b,resta(c,d))))%251;
 
-				int h = (177*(g31 - g01 + 3*g11 - 3*g21))%251;
-				int g =  (126*(g21 +  g01 - 2* g11 - 12*h ))%251;		
-				int f = (g11 - g01 - 3*g - 7*h)%251;
-				int e = (g01-f-g-h)%251;
+				// int h = (177*(g31 - g01 + 3*g11 - 3*g21))%251;
+				// int g =  (126*(g21 +  g01 - 2* g11 - 12*h ))%251;		
+				// int f = (g11 - g01 - 3*g - 7*h)%251;
+				// int e = (g01-f-g-h)%251;
 
-				int d =  (177*(g30 - g00 + 3*g10 - 3*g20))%251;
-				int c =  (126*(g20 +  g00 - 2* g10 - 12*d ))%251;		
-				int b =  (g10 - g00 - 3*c - 7*d)%251;
-				int a = (g00-b-c-d)%251;
+				// int d =  (177*(g30 - g00 + 3*g10 - 3*g20))%251;
+				// int c =  (126*(g20 +  g00 - 2* g10 - 12*d ))%251;		
+				// int b =  (g10 - g00 - 3*c - 7*d)%251;
+				// int a = (g00-b-c-d)%251;
+
+				int m[4][4] = {{1,1,1,1},{1,2,4,8},{1,3,9,27}, {1,4,16,64}};
+				int inversaM[4][4];
+				inverse(4,m, inversaM);
+				int g0[4][1] = {g00,g10,g20,g30};
+				int g1[4][1] = {g01,g11,g21,g31};
+				int answer[4][1];
+				int answer2[4][1];
+				multiply(4,4,4,1,inversaM,g0,answer);
+				printf("Imprimo inversa\n");
+				printMatrix(4, 4, inversaM);
+				multiply(4,4,4,1,inversaM,g1,answer2);
 
 				
+				r_matrix[r_row][0] = answer[0][0];
+				r_matrix[r_row][1] = answer[1][0];
+				r_matrix[r_row][2] = answer[2][0];
+				r_matrix[r_row][3] = answer[3][0];
+				r_matrix[r_row][4] = answer2[0][0];
+				r_matrix[r_row][5] = answer2[1][0];
+				r_matrix[r_row][6] = answer2[2][0];
+				r_matrix[r_row][7] = answer2[3][0];
+				// r_matrix[r_row][0] = a;
+				// r_matrix[r_row][1] = b;
+				// r_matrix[r_row][2] = c;
+				// r_matrix[r_row][3] = d;
+				// r_matrix[r_row][4] = e;
+				// r_matrix[r_row][5] = f;
+				// r_matrix[r_row][6] = g;
+				// r_matrix[r_row][7] = h;
 
-				r_matrix[r_row][0] = a;
-				r_matrix[r_row][1] = b;
-				r_matrix[r_row][2] = c;
-				r_matrix[r_row][3] = d;
-				r_matrix[r_row][4] = e;
-				r_matrix[r_row][5] = f;
-				r_matrix[r_row][6] = g;
-				r_matrix[r_row][7] = h;
+				// for(int neg = 0; neg < 8; neg++){
+				// 	if(r_matrix[r_row][neg] < 0){
+				// 		r_matrix[r_row][neg] = r_matrix[r_row][neg] + 251;
+				// 	}
+				// }
 
 			}else{
 				// k == 2
 				//TODO
 
 			}
-			printf("------------\n");
-			printMatrix(n,n,r_matrix);
 				
 
 		}
+		 printf("------------\n");
+		 printMatrix(n,n,r_matrix);
 
 		for(int si = 0; si < n; si++){
 
 			for(int sj = 0; sj < n; sj++){
-
 				r_extended[r_index] = (uint8_t) r_matrix[si][sj];
+				
 				r_index++;
 
 			}
@@ -257,11 +299,12 @@ void recover(int k, int n){ //, image_t* output_image, image_t* watermark_image)
 
 
 	}
-
+	
 	/*leo la rw */
 	bmp_image_t8 *wimage = bmp_from_path8(watermark_path);
-	bmp_image_t8 *simage = bmp_from_path8(watermark_path);
+	bmp_image_t8 *simage = bmp_from_path8("./Archivos de Prueba-4-8/Secreto.bmp"); //cambiar
 	/* esto es la generacion de la secreta*/
+	uint8_t* water = bmp_get_data_buffer8(wimage);
 
 	
 	uint8_t * secret_data = calloc(secret_size, 1);
@@ -270,6 +313,7 @@ void recover(int k, int n){ //, image_t* output_image, image_t* watermark_image)
 	for(secret_index = 0; secret_index < secret_size; secret_index++){
 
 				secret_data[secret_index] = (r_extended[secret_index] + secret_projection_extended[secret_index])%251;
+				
 
 	}
 
@@ -287,7 +331,7 @@ void recover(int k, int n){ //, image_t* output_image, image_t* watermark_image)
 
 
 	
-	uint8_t* water = bmp_get_data_buffer8(wimage);
+	
 
 	int rw_row;
 	int rw_col;
@@ -309,4 +353,6 @@ void recover(int k, int n){ //, image_t* output_image, image_t* watermark_image)
 	printf("Guardado recovered_watermark.bmp\n");
 
 }
+
+
 
