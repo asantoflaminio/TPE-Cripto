@@ -8,6 +8,19 @@
 #include <stdint.h>
 #include "steganography.h"
 
+static char *file_ext(const char *string) {
+    char *ext = strrchr(string, '.');
+
+    if (ext == NULL)
+        return (char *) string + strlen(string);
+
+    for (char *iter = ext + 1; *iter != '\0'; iter++) {
+        if (!isalnum((unsigned char) *iter))
+            return (char *) string + strlen(string);
+    }
+
+    return ext;
+}
 
 static void lsb1_crypt(uint8_t *dst, const uint8_t *src, long nbytes) {
 
@@ -124,6 +137,70 @@ uint8_t* stegobmp_extract(bmp_image_t24 *image, char* lsb) {
 
     return raw_data;
 
+}
+
+
+int hide_data(uint8_t *image_buffer, const char *input_path, char* lsb) {
+
+    //uint8_t *image_buffer = bmp_get_data_buffer8(image);
+    uint8_t *file_buffer;
+
+    FILE *fp = fopen(input_path, "rb");
+    if (fp == NULL) {
+        printf("Could not open file %s\n", input_path);
+        printf("Error: ! %s\n", strerror(errno));
+        return 1;
+    }
+
+    
+
+    fseek(fp, 0, SEEK_END);
+    long input_file_size = ftell(fp);
+    fseek(fp, 0, SEEK_SET);
+
+    // if (!bmp_check_size8(image, input_file_size)) {
+    //     printf("Share doesn't have enough space.");
+    //     return 2;
+    // }
+
+    file_buffer = malloc((size_t) input_file_size);
+    fread(file_buffer, (size_t) input_file_size, 1, fp);
+    fclose(fp);
+
+    uint8_t *data_to_save;
+    long size_of_data;
+
+    char *ext = file_ext(input_path);
+
+    size_of_data = sizeof(uint32_t) + input_file_size + strlen(ext) + 1;
+
+    data_to_save = malloc((size_t) size_of_data);
+    uint32_t swapped_size = __bswap_32((unsigned) input_file_size);
+
+    memcpy(data_to_save, &swapped_size, sizeof(uint32_t));
+    memcpy(data_to_save + sizeof(uint32_t), file_buffer, (size_t) input_file_size);
+
+    memcpy(data_to_save + sizeof(uint32_t) + input_file_size, ext, strlen(ext) + 1);
+    
+    // bmp_image_t24 porter = bmp_from_path24(input_path);
+    // uint8_t porter_data = bmp_get_data_buffer24(porter);
+
+    free(file_buffer);
+    printf("wut\n", input_path);
+
+    if (strcmp(lsb, "LSB1") == 0){
+        printf("yep\n", input_path);
+        lsb1_crypt(image_buffer, data_to_save, size_of_data);
+        printf("done here\n", input_path);
+    }else{
+
+        //LSB2
+        lsb2_crypt(image_buffer, data_to_save, size_of_data);
+    }
+
+    free(data_to_save);
+
+    return 0;
 }
 
 
