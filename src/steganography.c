@@ -45,10 +45,9 @@ static void lsb2_crypt(uint8_t *dst, const uint8_t *src, long nbytes) {
     static uint8_t mask = (uint8_t) (~0x3);
 
     for (int i = 0, d = 0; i < nbytes; ++i) {
-
-        for (int j = 4; j >= 0; --j) {
+        
+        for (int j = 2; j >= 0; --j) {
             uint8_t new_bit = (uint8_t) (src[i] & (0x3 << (j*2)));
-
             new_bit = new_bit >> (j*2);
 
 
@@ -87,8 +86,9 @@ static size_t lsb2_decrypt(uint8_t *dst, const uint8_t *src, long nbytes, int nu
     size_t curr_dst = 0;
 
     while (curr_dst < nbytes) {
-
+        //printf("----\n");
         for (int j = 0; j < 4; ++j) {
+            //printf("j vale %d\n",j);
         	//printf("SoY %d\n", src[curr_src + j]);
             uint8_t new_bit = (uint8_t) (src[curr_src + j] & 0x3);
           //  printf("newbit es  %d\n", new_bit);
@@ -143,49 +143,52 @@ uint8_t* stegobmp_extract(bmp_image_t24 *image, char* lsb) {
 int hide_data(uint8_t *image_buffer, const char *input_path, char* lsb) {
 
     //uint8_t *image_buffer = bmp_get_data_buffer8(image);
-    uint8_t *file_buffer;
+    // uint8_t *file_buffer;
 
-    FILE *fp = fopen(input_path, "rb");
-    if (fp == NULL) {
-        printf("Could not open file %s\n", input_path);
-        printf("Error: ! %s\n", strerror(errno));
-        return 1;
-    }
+    // FILE *fp = fopen(input_path, "rb");
+    // if (fp == NULL) {
+    //     printf("Could not open file %s\n", input_path);
+    //     printf("Error: ! %s\n", strerror(errno));
+    //     return 1;
+    // }
 
     
 
-    fseek(fp, 0, SEEK_END);
-    long input_file_size = ftell(fp);
-    fseek(fp, 0, SEEK_SET);
+    // fseek(fp, 0, SEEK_END);
+    // long input_file_size = ftell(fp);
+    // fseek(fp, 0, SEEK_SET);
 
     // if (!bmp_check_size8(image, input_file_size)) {
     //     printf("Share doesn't have enough space.");
     //     return 2;
     // }
 
-    file_buffer = malloc((size_t) input_file_size);
-    fread(file_buffer, (size_t) input_file_size, 1, fp);
-    fclose(fp);
+    // file_buffer = malloc((size_t) input_file_size);
+    // fread(file_buffer, (size_t) input_file_size, 1, fp);
+    // fclose(fp);
 
-    uint8_t *data_to_save;
-    long size_of_data;
+    // uint8_t *data_to_save;
+    // long size_of_data;
 
-    char *ext = file_ext(input_path);
+    // char *ext = file_ext(input_path);
 
-    size_of_data = sizeof(uint32_t) + input_file_size + strlen(ext) + 1;
+    // size_of_data = sizeof(uint32_t) + input_file_size + strlen(ext) + 1;
 
-    data_to_save = malloc((size_t) size_of_data);
-    uint32_t swapped_size = __bswap_32((unsigned) input_file_size);
+    // data_to_save = malloc((size_t) size_of_data);
+    // uint32_t swapped_size = __bswap_32((unsigned) input_file_size);
 
-    memcpy(data_to_save, &swapped_size, sizeof(uint32_t));
-    memcpy(data_to_save + sizeof(uint32_t), file_buffer, (size_t) input_file_size);
+    // memcpy(data_to_save, &swapped_size, sizeof(uint32_t));
+    // memcpy(data_to_save + sizeof(uint32_t), file_buffer, (size_t) input_file_size);
 
-    memcpy(data_to_save + sizeof(uint32_t) + input_file_size, ext, strlen(ext) + 1);
+    // memcpy(data_to_save + sizeof(uint32_t) + input_file_size, ext, strlen(ext) + 1);
     
+
+
     bmp_image_t24* porter = bmp_from_path24(input_path);
     uint8_t* porter_data = bmp_get_data_buffer24(porter);
 
-    free(file_buffer);
+
+    // free(file_buffer);
     int size;
     if((strcmp(lsb,"LSB1") == 0)){
         size = 46200;
@@ -196,9 +199,10 @@ int hide_data(uint8_t *image_buffer, const char *input_path, char* lsb) {
     if (strcmp(lsb, "LSB1") == 0){
         lsb1_crypt(porter_data,image_buffer,  size);
     }else{
-
+        printf("aca\n");
         //LSB2
-        lsb2_crypt(image_buffer, porter_data, size_of_data);
+        lsb2_crypt(porter_data,image_buffer,  size);
+        printf("bye\n");
     }
     //printf("input_path es %s\n", input_path);
     bmp_save24(porter, input_path);

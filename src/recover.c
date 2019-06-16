@@ -27,7 +27,9 @@ void recover(int k, int n){ //, image_t* output_image, image_t* watermark_image)
 	// char* watermark_path = "./Archivos de Prueba-4-8/shares/RW/RW.bmp";
 	// char* directory_path = "./Archivos de Prueba-4-8/shares/"; 
 	char* watermark_path = "generated_watermark.bmp";
-	char* directory_path = "./test_shares/"; 
+	//char* directory_path = "./test_shares/"; 
+	//char* directory_path = "./test24/";
+	char* directory_path = "./48/";
 
 	DIR *directory;
 	directory = opendir(directory_path); 
@@ -111,6 +113,7 @@ void recover(int k, int n){ //, image_t* output_image, image_t* watermark_image)
         }
 
 	}
+
 	if(reached != k){
 
 		printf("Not enough shares\n");
@@ -167,8 +170,8 @@ void recover(int k, int n){ //, image_t* output_image, image_t* watermark_image)
 				        aux[r][c] = my_shadows[counter][r][c];
 				    }
 			}
-			printf("ERA \n");
-			printMatrix(n,3,aux);
+			// printf("ERA \n");
+			// printMatrix(n,3,aux);
 			separateMatrixByColumn(1, 2, n, 3, aux, v[counter], g[counter]);
 		}
 		if (k==2){
@@ -249,8 +252,8 @@ void recover(int k, int n){ //, image_t* output_image, image_t* watermark_image)
 				int answer[4][1];
 				int answer2[4][1];
 				multiply(4,4,4,1,inversaM,g0,answer);
-				printf("Imprimo inversa\n");
-				printMatrix(4, 4, inversaM);
+				// printf("Imprimo inversa\n");
+				// printMatrix(4, 4, inversaM);
 				multiply(4,4,4,1,inversaM,g1,answer2);
 
 				
@@ -281,12 +284,34 @@ void recover(int k, int n){ //, image_t* output_image, image_t* watermark_image)
 				// k == 2
 				//TODO
 
+				int g00 = g[0][r_row][0];
+				int g10 = g[1][r_row][0];
+				int g01 = g[0][r_row][1];
+				int g11 = g[1][r_row][1];
+
+				int m[2][2] = {{1,1},{1,2}};
+				int inversaM[2][2];
+				inverse(2,m, inversaM);
+				int g0[2][1] = {g00,g10};
+				int g1[2][1] = {g01,g11};
+				int answer[2][1];
+				int answer2[2][1];
+				multiply(2,2,2,1,inversaM,g0,answer);
+				// printf("Imprimo inversa\n");
+				// printMatrix(4, 4, inversaM);
+				multiply(2,2,2,1,inversaM,g1,answer2);
+
+
+				r_matrix[r_row][0] = answer[0][0];
+				r_matrix[r_row][1] = answer[1][0];
+				r_matrix[r_row][2] = answer2[0][0];
+				r_matrix[r_row][3] = answer2[1][0];
+
 			}
 				
 
 		}
-		 printf("------------\n");
-		 printMatrix(n,n,r_matrix);
+		
 
 		for(int si = 0; si < n; si++){
 

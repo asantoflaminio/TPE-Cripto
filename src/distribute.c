@@ -16,7 +16,8 @@ void distribute(int k, int n){
 	char* secret_path = "./Archivos de Prueba-4-8/Secreto.bmp";
 	char* watermark_path = "./Archivos de Prueba-4-8/Marca.bmp";
 	char* watermark_destiny_path = "generated_watermark.bmp";
-	char* directory_path = "./test_shares/"; 
+	char* directory_path = "./48/"; 
+	//char* directory_path = "./test_shares/"; 
 	char* lsb;
 
 	if(k == 2){
@@ -196,13 +197,17 @@ void distribute(int k, int n){
 
 	/* aplico esteganografia a cada sombra extendida y guardo en archivo*/
 
+
 	DIR *directory;
 	directory = opendir(directory_path); 
 	struct dirent* file;
 	int reached = 0;
 	int current = 0;
-
-	while ((file=readdir(directory)) != NULL && reached != 8) {
+	if(directory == NULL){
+		printf("Invalid directory for shares.\n");
+		return;
+	}
+	while ((file=readdir(directory)) != NULL && reached != n) {
 
 		if((strcmp("bmp",get_filename_ext(file->d_name)) == 0)){
 
@@ -213,6 +218,7 @@ void distribute(int k, int n){
 		    strcat(result, file->d_name);
 		    printf("Using share %s\n", result);
 			hide_data(shadows[current],result,lsb);
+			printf("out\n");
 			current++;
 
 		}
