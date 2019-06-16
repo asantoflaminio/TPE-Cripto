@@ -11,7 +11,7 @@
 
 // este main es solo para testear esto
 
-// int main (void){
+ //int main (void){
 // 	int multiB[4][4] = {{122,13,11,82}, {13,184,182,154}, {11,182,113,21},{82,154,21,76}};
 // 	int inv[4][4];
 // 	inverse(4, multiB, inv);
@@ -109,8 +109,8 @@
 	int *ansgs = calloc(2, sizeof(int));;
 	gauss_jordan(2, gs, &ansgs);
 	printf("Rta es %d y %d\n", ansgs[0], ansgs[1]);
-	printf("---FIN---\n");*/
-// }
+	printf("---FIN---\n");
+ }*/
 
 
 void add (size_t rows, size_t columns, int m1[rows][columns], int m2[rows][columns], int answer[rows][columns]){
@@ -420,10 +420,6 @@ void adjoint(int size, int m[size][size],int answer[size][size]) {
 // la ultima columna serian los valores G
 void gauss_jordan(int rows, int m[rows][rows+1], int** answer) {
 
-	//free(*answer);
-
-   // *answer = malloc(rows * sizeof(float));
-
 	int i,j,k;
     int c;
     int aux[rows][rows+1];
@@ -441,10 +437,12 @@ void gauss_jordan(int rows, int m[rows][rows+1], int** answer) {
             if(i!=j)
             {
                 c=(aux[i][j] * mod_inverse(aux[j][j], 251))%251 ;
-                //printf("c es %f con i %d y j %d \n", c, i, j);
                 for(k=0; k<(rows+1); k++)
                 {
                     aux[i][k]=aux[i][k]-(c*aux[j][k])%251;
+                    if(aux[i][k] < 0){
+                    	aux[i][k] = aux[i][k] + 251;
+                    }
                 }
             }
         }
