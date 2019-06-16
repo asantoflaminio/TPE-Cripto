@@ -182,23 +182,28 @@ int hide_data(uint8_t *image_buffer, const char *input_path, char* lsb) {
 
     memcpy(data_to_save + sizeof(uint32_t) + input_file_size, ext, strlen(ext) + 1);
     
-    // bmp_image_t24 porter = bmp_from_path24(input_path);
-    // uint8_t porter_data = bmp_get_data_buffer24(porter);
+    bmp_image_t24* porter = bmp_from_path24(input_path);
+    uint8_t* porter_data = bmp_get_data_buffer24(porter);
 
     free(file_buffer);
-    printf("wut\n", input_path);
+    int size;
+    if((strcmp(lsb,"LSB1") == 0)){
+        size = 46200;
+    }else{
+        size = 92400;
+    }
 
     if (strcmp(lsb, "LSB1") == 0){
-        printf("yep\n", input_path);
-        lsb1_crypt(image_buffer, data_to_save, size_of_data);
-        printf("done here\n", input_path);
+        lsb1_crypt(porter_data,image_buffer,  size);
     }else{
 
         //LSB2
-        lsb2_crypt(image_buffer, data_to_save, size_of_data);
+        lsb2_crypt(image_buffer, porter_data, size_of_data);
     }
+    //printf("input_path es %s\n", input_path);
+    bmp_save24(porter, input_path);
 
-    free(data_to_save);
+   // free(data_to_save);
 
     return 0;
 }

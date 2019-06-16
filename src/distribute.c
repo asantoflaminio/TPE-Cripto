@@ -211,10 +211,8 @@ void distribute(int k, int n){
 		    // in real code you would check for errors in malloc here
 		    strcpy(result, directory_path);
 		    strcat(result, file->d_name);
-		    printf("%s\n", result);
-		    printf("Hi.\n");
+		    printf("Using share %s\n", result);
 			hide_data(shadows[current],result,lsb);
-			printf("Bye.\n");
 			current++;
 
 		}
