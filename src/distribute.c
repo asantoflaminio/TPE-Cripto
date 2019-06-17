@@ -16,8 +16,8 @@ void distribute(int k, int n){
 	char* secret_path = "./Archivos de Prueba-4-8/Secreto.bmp";
 	char* watermark_path = "./Archivos de Prueba-4-8/Marca.bmp";
 	char* watermark_destiny_path = "generated_watermark.bmp";
-	char* directory_path = "./48/"; 
-	//char* directory_path = "./test_shares/"; 
+	//char* directory_path = "./48/"; 
+	char* directory_path = "./test24/"; 
 	char* lsb;
 
 	if(k == 2){
@@ -217,7 +217,7 @@ void distribute(int k, int n){
 		    strcpy(result, directory_path);
 		    strcat(result, file->d_name);
 		    printf("Using share %s\n", result);
-			hide_data(shadows[current],result,lsb);
+			hide_data(shadows[current],result,lsb, current+1);
 			printf("out\n");
 			current++;
 

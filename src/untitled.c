@@ -24,12 +24,8 @@ void recover(int k, int n){ //, image_t* output_image, image_t* watermark_image)
 
 	// esto viene del main pasado!
 	char* secret_path = "deberia_ser_albert.bmp";
-	//char* watermark_path = "./Archivos de Prueba-4-8/shares/RW/RW.bmp";
-	//char* directory_path = "./Archivos de Prueba-4-8/shares/"; 
-	char* watermark_path = "generated_watermark.bmp";
-	//char* directory_path = "./test_shares/"; 
-	char* directory_path = "./test24/";
-	//char* directory_path = "./48/";
+	char* watermark_path = "./Archivos de Prueba-4-8/shares/RW/RW.bmp";
+	char* directory_path = "./Archivos de Prueba-4-8/shares/"; 
 
 	DIR *directory;
 	directory = opendir(directory_path); 
@@ -68,7 +64,6 @@ void recover(int k, int n){ //, image_t* output_image, image_t* watermark_image)
 	int previous_quantity = 0;
 	
 	uint8_t shadows[k][max * share_size];
-	int shadow_number[k];
 	int width = 0;
 	int height = 0;
 
@@ -98,6 +93,8 @@ void recover(int k, int n){ //, image_t* output_image, image_t* watermark_image)
             	return;
 
             }
+            printf("IMAGE RESERVED 1 Es %d\n", image->header->reserved1);
+            printf("IMAGE RESERVED 2 Es %d\n", image->header->reserved2);
 			sh = (uint8_t *) stegobmp_extract(image, steg_type); 
 
 			for(int i = 0; i < quantity * share_size; i++){
@@ -106,20 +103,13 @@ void recover(int k, int n){ //, image_t* output_image, image_t* watermark_image)
 				index++;
 
 			}
-			shadow_number[reached] = image->header.reserved1;
 
 			reached++;
 			index = 0;
 
-			free(result);
-			free(sh);
-			free(image->data);
-			free(image);
-
         }
 
 	}
-
 	if(reached != k){
 
 		printf("Not enough shares\n");
@@ -176,8 +166,8 @@ void recover(int k, int n){ //, image_t* output_image, image_t* watermark_image)
 				        aux[r][c] = my_shadows[counter][r][c];
 				    }
 			}
-			// printf("ERA \n");
-			// printMatrix(n,3,aux);
+			printf("ERA \n");
+			printMatrix(n,3,aux);
 			separateMatrixByColumn(1, 2, n, 3, aux, v[counter], g[counter]);
 		}
 		if (k==2){
@@ -219,95 +209,69 @@ void recover(int k, int n){ //, image_t* output_image, image_t* watermark_image)
 			
 			if(k == 4){
 
-				int g00 = g[0][r_row][0]; //ESTO ES DE G0 elemento en la fila r_row y columna 0
-				int g10 = g[1][r_row][0]; //ESTO ES DE G1 elemento en la fila r_row y columna 0
-				int g20 = g[2][r_row][0]; //ESTO ES DE G2 elemento en la fila r_row y columna 0
-				int g30 = g[3][r_row][0]; //ESTO ES DE G3 elemento en la fila r_row y columna 0
-				int g01 = g[0][r_row][1]; //ESTO ES DE G0 elemento en la fila r_row y columna 1
-				int g11 = g[1][r_row][1]; //ESTO ES DE G1 elemento en la fila r_row y columna 1
-				int g21 = g[2][r_row][1]; //ESTO ES DE G2 elemento en la fila r_row y columna 1
-				int g31 = g[3][r_row][1]; //ESTO ES DE G3 elemento en la fila r_row y columna 1
+				int g00 = g[0][r_row][0];
+				int g10 = g[1][r_row][0];
+				int g20 = g[2][r_row][0];
+				int g30 = g[3][r_row][0];
+				int g01 = g[0][r_row][1];
+				int g11 = g[1][r_row][1];
+				int g21 = g[2][r_row][1];
+				int g31 = g[3][r_row][1];
 
+				//printf("imprimo %d, %d, %d, %d, %d, %d, %d, %d\n", g00, g10, g20, g30, g01,g11, g21, g31);
 
-				int g0_coef = shadow_number[0];  // G0 en realidad no viene de la shadow nro 0. Aca le asigno de q numero viene. 
-				int g1_coef = shadow_number[1]; // y asi...
-				int g2_coef = shadow_number[2];
-				int g3_coef = shadow_number[3];
+				// int h = (177*(resta(g31 , g01) + resta((3*g11)%251 , (3*g21)%251)))%251;
+				// int g =  (126*(g21 + resta( resta(g01 , (2*g11)%251) , (12*h)%251 )))%251;		
+				// int f = (resta(g11 , resta(g01 , resta((3*g)%251 , (7*h)%251))))%251;
+				// int e = (resta(g01,resta(f,resta(g,h))))%251;
 
+				// int d =  (177*(resta(g30 , g00) + resta((3*g10)%251 , (3*g20)%251)))%251;
+				// int c =  (126*(g20 + resta( resta(g00 , (2*g10)%251) , (12*d)%251 )))%251;		
+				// int b =  (resta(g10 , resta(g00 , resta((3*c)%251 , (7*d)%251))))%251;
+				// int a = (resta(g00,resta(b,resta(c,d))))%251;
 
-				// ACA uso lo que pregunte https://math.stackexchange.com/questions/3264557/solution-to-linear-equation-system-using-modulo-251
-				// 
+				int h = (177*(g31 - g01 + 3*g11 - 3*g21))%251;
+				int g =  (126*(g21 +  g01 - 2* g11 - 12*h ))%251;		
+				int f = (g11 - g01 - 3*g - 7*h)%251;
+				int e = (g01-f-g-h)%251;
 
-				int m[4][4] = {{1,g0_coef%251,((int)pow(g0_coef,2))%251,((int)pow(g0_coef,3))%251},
-								{1,g1_coef%251,((int)pow(g1_coef,2))%251,((int)pow(g1_coef,3))%251},
-								{1,g2_coef%251,((int)pow(g2_coef,2))%251,((int)pow(g2_coef,3))%251},
-								{1,g3_coef%251,((int)pow(g3_coef,2))%251,((int)pow(g3_coef,3))%251}};
-
-				 // printf("Imprimo m\n");
-				 // printMatrix(4, 4, m);
-
-				int inversaM[4][4];
-				inverse(4,m, inversaM);
-				int g0[4][1] = {g00,g10,g20,g30};
-				int g1[4][1] = {g01,g11,g21,g31};
-				int answer[4][1];
-				int answer2[4][1];
-				multiply(4,4,4,1,inversaM,g0,answer);
-				// printf("Imprimo inversa\n");
-				// printMatrix(4, 4, inversaM);
-				multiply(4,4,4,1,inversaM,g1,answer2);
+				int d =  (177*(g30 - g00 + 3*g10 - 3*g20))%251;
+				int c =  (126*(g20 +  g00 - 2* g10 - 12*d ))%251;		
+				int b =  (g10 - g00 - 3*c - 7*d)%251;
+				int a = (g00-b-c-d)%251;
 
 				
-				r_matrix[r_row][0] = answer[0][0];
-				r_matrix[r_row][1] = answer[1][0];
-				r_matrix[r_row][2] = answer[2][0];
-				r_matrix[r_row][3] = answer[3][0];
-				r_matrix[r_row][4] = answer2[0][0];
-				r_matrix[r_row][5] = answer2[1][0];
-				r_matrix[r_row][6] = answer2[2][0];
-				r_matrix[r_row][7] = answer2[3][0];
 
+				r_matrix[r_row][0] = a;
+				r_matrix[r_row][1] = b;
+				r_matrix[r_row][2] = c;
+				r_matrix[r_row][3] = d;
+				r_matrix[r_row][4] = e;
+				r_matrix[r_row][5] = f;
+				r_matrix[r_row][6] = g;
+				r_matrix[r_row][7] = h;
+
+				for(int neg = 0; neg < 8; neg++){
+					if(r_matrix[r_row][neg] < 0){
+						r_matrix[r_row][neg] = r_matrix[r_row][neg] + 251;
+					}
+				}
 
 			}else{
 				// k == 2
 				//TODO
 
-				int g00 = g[0][r_row][0];
-				int g10 = g[1][r_row][0];
-				int g01 = g[0][r_row][1];
-				int g11 = g[1][r_row][1];
-
-				int g0_coef = shadow_number[0];  // G0 en realidad no viene de la shadow nro 0. Aca le asigno de q numero viene. 
-				int g1_coef = shadow_number[1]; 
-
-				int m[2][2] = {{1,g0_coef},{1,g1_coef}};
-				int inversaM[2][2];
-				inverse(2,m, inversaM);
-				int g0[2][1] = {g00,g10};
-				int g1[2][1] = {g01,g11};
-				int answer[2][1];
-				int answer2[2][1];
-				multiply(2,2,2,1,inversaM,g0,answer);
-				// printf("Imprimo inversa\n");
-				// printMatrix(4, 4, inversaM);
-				multiply(2,2,2,1,inversaM,g1,answer2);
-
-
-				r_matrix[r_row][0] = answer[0][0];
-				r_matrix[r_row][1] = answer[1][0];
-				r_matrix[r_row][2] = answer2[0][0];
-				r_matrix[r_row][3] = answer2[1][0];
-
 			}
 				
 
 		}
-		// printf("r matrix es\n");
-		// printMatrix(n,n, r_matrix);
+		 printf("------------\n");
+		 printMatrix(n,n,r_matrix);
 
 		for(int si = 0; si < n; si++){
 
 			for(int sj = 0; sj < n; sj++){
+
 				r_extended[r_index] = (uint8_t) r_matrix[si][sj];
 				
 				r_index++;
@@ -318,12 +282,11 @@ void recover(int k, int n){ //, image_t* output_image, image_t* watermark_image)
 
 
 	}
-	
+
 	/*leo la rw */
 	bmp_image_t8 *wimage = bmp_from_path8(watermark_path);
 	bmp_image_t8 *simage = bmp_from_path8("./Archivos de Prueba-4-8/Secreto.bmp"); //cambiar
 	/* esto es la generacion de la secreta*/
-	uint8_t* water = bmp_get_data_buffer8(wimage);
 
 	
 	uint8_t * secret_data = calloc(secret_size, 1);
@@ -332,7 +295,7 @@ void recover(int k, int n){ //, image_t* output_image, image_t* watermark_image)
 	for(secret_index = 0; secret_index < secret_size; secret_index++){
 
 				secret_data[secret_index] = (r_extended[secret_index] + secret_projection_extended[secret_index])%251;
-				
+				// printf("hey %d\n", secret_data[secret_index]);
 
 	}
 
@@ -350,7 +313,7 @@ void recover(int k, int n){ //, image_t* output_image, image_t* watermark_image)
 
 
 	
-	
+	uint8_t* water = bmp_get_data_buffer8(wimage);
 
 	int rw_row;
 	int rw_col;
@@ -371,17 +334,6 @@ void recover(int k, int n){ //, image_t* output_image, image_t* watermark_image)
 	bmp_save8(final_watermark, "recovered_watermark.bmp");
 	printf("Guardado recovered_watermark.bmp\n");
 
-	// free(simage);
-	// free(wimage);
-	free(water);
-	free(final_watermark);
-	free(secret_projection_extended);
-	free(r_extended);
-	free(new_data);
-	free(secret_data);
-	free(final_secret);
-
-	
 }
 
 

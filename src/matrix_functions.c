@@ -301,6 +301,8 @@ void inverse(size_t size, int m[size][size], int answer[size][size]){
     int det = determinant(size, m); 
     if (det == 0) { 
         printf("Invalid matrix. Doesn't have inverse.\n");
+        printf("me pasaron\n");
+        printMatrix(size,size, m);
         return;
     } 
     

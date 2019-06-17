@@ -57,7 +57,7 @@ bmp_image_t8 *bmp_from_path8(const char *path) {
     return image;
 
     _ABORT:
-
+    free(image->data);
     free(image);
     fclose(fp);
 
@@ -109,7 +109,7 @@ bmp_image_t24 *bmp_from_path24(const char *path) {
     return image;
 
     _ABORT:
-
+    free(image->data);
     free(image);
     fclose(fp);
 

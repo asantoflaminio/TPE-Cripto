@@ -46,7 +46,7 @@ static void lsb2_crypt(uint8_t *dst, const uint8_t *src, long nbytes) {
 
     for (int i = 0, d = 0; i < nbytes; ++i) {
         
-        for (int j = 2; j >= 0; --j) {
+        for (int j = 3; j >= 0; --j) {
             uint8_t new_bit = (uint8_t) (src[i] & (0x3 << (j*2)));
             new_bit = new_bit >> (j*2);
 
@@ -86,12 +86,9 @@ static size_t lsb2_decrypt(uint8_t *dst, const uint8_t *src, long nbytes, int nu
     size_t curr_dst = 0;
 
     while (curr_dst < nbytes) {
-        //printf("----\n");
         for (int j = 0; j < 4; ++j) {
-            //printf("j vale %d\n",j);
-        	//printf("SoY %d\n", src[curr_src + j]);
             uint8_t new_bit = (uint8_t) (src[curr_src + j] & 0x3);
-          //  printf("newbit es  %d\n", new_bit);
+
             new_bit = new_bit << (6 - j*2);
 
             dst[curr_dst] = dst[curr_dst] | new_bit;
@@ -140,7 +137,7 @@ uint8_t* stegobmp_extract(bmp_image_t24 *image, char* lsb) {
 }
 
 
-int hide_data(uint8_t *image_buffer, const char *input_path, char* lsb) {
+int hide_data(uint8_t *image_buffer, const char *input_path, char* lsb,int current) {
 
     //uint8_t *image_buffer = bmp_get_data_buffer8(image);
     // uint8_t *file_buffer;
@@ -204,6 +201,7 @@ int hide_data(uint8_t *image_buffer, const char *input_path, char* lsb) {
         lsb2_crypt(porter_data,image_buffer,  size);
         printf("bye\n");
     }
+    porter->header.reserved1 = current;
     //printf("input_path es %s\n", input_path);
     bmp_save24(porter, input_path);
 
