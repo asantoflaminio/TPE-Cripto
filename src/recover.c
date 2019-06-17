@@ -24,8 +24,8 @@ void recover(int k, int n){ //, image_t* output_image, image_t* watermark_image)
 
 	// esto viene del main pasado!
 	char* secret_path = "deberia_ser_albert.bmp";
-	//char* watermark_path = "./Archivos de Prueba-4-8/shares/RW/RW.bmp";
-	//char* directory_path = "./Archivos de Prueba-4-8/shares/"; 
+	 // char* watermark_path = "./Archivos de Prueba-4-8/shares/RW/RW.bmp";
+	 // char* directory_path = "./Archivos de Prueba-4-8/shares/"; 
 	char* watermark_path = "generated_watermark.bmp";
 	//char* directory_path = "./test_shares/"; 
 	char* directory_path = "./test24/";
@@ -85,6 +85,7 @@ void recover(int k, int n){ //, image_t* output_image, image_t* watermark_image)
 		    strcpy(result, directory_path);
 		    strcat(result, file->d_name);
             bmp_image_t24 *image = bmp_from_path24(result);
+            //printf("leo la share %d\n", image->header.reserved1);
             int sharefile_size_encrypted = (image->info.imageWidth) * (image->info.imageHeight) * 3;
             width = (image->info.imageWidth);
             height = (image->info.imageHeight);
@@ -114,7 +115,7 @@ void recover(int k, int n){ //, image_t* output_image, image_t* watermark_image)
 			free(result);
 			free(sh);
 			free(image->data);
-			free(image);
+			free(image); 
 
         }
 
@@ -229,10 +230,10 @@ void recover(int k, int n){ //, image_t* output_image, image_t* watermark_image)
 				int g31 = g[3][r_row][1]; //ESTO ES DE G3 elemento en la fila r_row y columna 1
 
 
-				int g0_coef = shadow_number[0];  // G0 en realidad no viene de la shadow nro 0. Aca le asigno de q numero viene. 
-				int g1_coef = shadow_number[1]; // y asi...
-				int g2_coef = shadow_number[2];
-				int g3_coef = shadow_number[3];
+				int g0_coef = shadow_number[0] + 1;  // G0 en realidad no viene de la shadow nro 0. Aca le asigno de q numero viene. 
+				int g1_coef = shadow_number[1] + 1; // y asi...
+				int g2_coef = shadow_number[2] + 1; // Sumo uno pq tengo share 0 hasta 7 y yo quiero de 1 a 8
+				int g3_coef = shadow_number[3] + 1;
 
 
 				// ACA uso lo que pregunte https://math.stackexchange.com/questions/3264557/solution-to-linear-equation-system-using-modulo-251
@@ -277,8 +278,8 @@ void recover(int k, int n){ //, image_t* output_image, image_t* watermark_image)
 				int g01 = g[0][r_row][1];
 				int g11 = g[1][r_row][1];
 
-				int g0_coef = shadow_number[0];  // G0 en realidad no viene de la shadow nro 0. Aca le asigno de q numero viene. 
-				int g1_coef = shadow_number[1]; 
+				int g0_coef = shadow_number[0] + 1;  // G0 en realidad no viene de la shadow nro 0. Aca le asigno de q numero viene. 
+				int g1_coef = shadow_number[1] + 1; // Sumo uno pq tengo share 0 hasta 7 y yo quiero de 1 a 8
 
 				int m[2][2] = {{1,g0_coef},{1,g1_coef}};
 				int inversaM[2][2];

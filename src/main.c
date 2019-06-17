@@ -63,14 +63,6 @@ int main(int argc, char* argv[]) {
     }
   }
 
-  if(k == -1){
-  	printf("Failure: k was not specified! \n");
-  	exit(EXIT_FAILURE);
-  }
-  if(!(k >= 2 && k <= n)){
-  	printf("Failure: k must be between 2 and n \n");
-  	exit(EXIT_FAILURE);
-  }
 
   if(dir[0] == 0){
   	printf("Failure: directory was not specified \n");
@@ -79,7 +71,7 @@ int main(int argc, char* argv[]) {
   
   if(!((k == 2 && n == 4) || (k==4 && n==8))){
     printf("Acceptable pairs are k=2 and n=4 OR k=4 and n=8\n");
-    return;
+    exit(EXIT_FAILURE);
   }
 
   printf("Parameters validated! \n");
@@ -97,13 +89,15 @@ int main(int argc, char* argv[]) {
 
   //write_image(image);
 
-  //recover(4, 8); //, image_t* output_image, image_t* watermark_image)
+  // recover(4, 8); //, image_t* output_image, image_t* watermark_image)
 
    //distribute(4,8);
     distribute(2,4);
    recover(2, 4); 
 
  // 
+
+ 
 
 
   return 0;

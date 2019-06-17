@@ -78,7 +78,7 @@ void distribute(int k, int n){
 		//Para la matrix A de m*k tomo m=8 si k es 4 y m=4 sino, es decir seria lo mismo que n
 
 		int a_matrix[n][k];
-		
+		//int a_matrix[4][2] =  {{3,7}, {6,1}, {2,5}, {6,6}}; //BORRAR y descometnar arriba
 		for(int ai = 0; ai < n; ai++){
 
 			for(int aj = 0; aj < n; aj++){
@@ -89,6 +89,8 @@ void distribute(int k, int n){
 			}
 
 		}
+
+		
 		// printf("----------------\n");
 		// printMatrix(n,k, a_matrix);
 		/*
@@ -117,7 +119,9 @@ void distribute(int k, int n){
 
 		/* aca hay que generar n cantidad de X cada uno de kx1 con valores random */
 		int x_matrices[n][k][1];
+		//int x_matrices[4][2][1] = { {{9}, {5}} ,   {{4}, {4}} ,  {{9}, {8}}  ,  {{3}, {2}} }  ; //BORRAR y desocmentar arriba
 
+		
 		for(int x_counter = 0; x_counter < n; x_counter++){
 
 			for(int col = 0; col < k; col++){
@@ -127,7 +131,7 @@ void distribute(int k, int n){
 
 			}
 
-		}
+		} 
 		
 		int v_matrices[n][n][1];
 
@@ -217,7 +221,7 @@ void distribute(int k, int n){
 		    strcpy(result, directory_path);
 		    strcat(result, file->d_name);
 		    printf("Using share %s\n", result);
-			hide_data(shadows[current],result,lsb, current+1);
+			hide_data(shadows[current],result,lsb, current);
 			printf("out\n");
 			current++;
 
