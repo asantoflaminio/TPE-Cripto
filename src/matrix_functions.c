@@ -4,9 +4,6 @@
 #include <stdlib.h>
 #include <stdint.h>
 #include "matrix_functions.h"
-// NO se si vamos a tener matrices de tipo int o que
-// el tema es q leemos y guardamos como punteros
-// no se bien como hadnlear eso desps
 
 
 // este main es solo para testear esto
@@ -27,11 +24,11 @@
 	// {{42,46,42},{42,101,58},{43,126,142},{42,26,163}}, {{0,0,0},{0,101,58},{0,126,142},{0,26,163}}};
 	// int v[4][4][1];
 	// int g[4][4][2];
-	// //separateMatrixByColumn(1, 2, 4, 3,shadows[0], v, g);
+	// //separate_matrix_by_column(1, 2, 4, 3,shadows[0], v, g);
 	// //printMatrix(4, 1, v);
 	// //printMatrix(4, 2, g);
 	// for(int counter=0; counter < k ;counter++){
-	// 	separateMatrixByColumn(1, 2, 4, 3,shadows[counter], v[counter], g[counter]);
+	// 	separate_matrix_by_column(1, 2, 4, 3,shadows[counter], v[counter], g[counter]);
 	// }
 	// if(k==2){
 	// 	concat (4, 1,1, v[0], v[1], b_matrix);
@@ -47,7 +44,7 @@
 	// printMatrix(4, 4, b_matrix);
 	/*	int b[4][2] = {{62,40}, {59,28}, {43,28}, {84,48}};
 		int ansproj[4][4];
-		calculateProjection(4, 2, b, 4, 4, ansproj);
+		calculate_projection(4, 2, b, 4, 4, ansproj);
 		printMatrix(4, 4, ansproj);
 	*/
 	// int a[4][2] = {{3,7}, {6,1}, {2,5}, {6,6}};
@@ -118,15 +115,13 @@ void add (size_t rows, size_t columns, int m1[rows][columns], int m2[rows][colum
 	int i;
 	int j;
 
-	for(i=0;i<rows;++i)
-	{
-		for(j=0;j<columns;++j)
-		{
+	for(i = 0;i < rows; ++i) {
+		for(j = 0;j < columns; ++j) {
+
 			answer[i][j]=(m1[i][j]+m2[i][j])%251;
-			//printf("%d ",answer[i][j]);
+			
 		}
 		
-		//printf("\n");
 	}
 
 }
@@ -136,18 +131,17 @@ void substract (size_t rows, size_t columns, int m1[rows][columns], int m2[rows]
 	int i;
 	int j;
 
-	for(i=0;i<rows;++i)
-	{
-		for(j=0;j<columns;++j)
-		{
+	for(i = 0;i < rows; ++i) {
+		for(j = 0;j < columns; ++j) {
+
 			answer[i][j]=(m1[i][j]-m2[i][j]);
-			if(answer[i][j] < 0){
+
+			if(answer[i][j] < 0) {
 				answer[i][j] = answer[i][j] + 251;
 			}
-			//printf("%d ",answer[i][j]);
+
 		}
 		
-		//printf("\n");
 	}
 
 }
@@ -164,9 +158,9 @@ void transpose (size_t rows, size_t columns, int m[rows][columns],  int answer[c
 	}
 }
 
-void multiply (size_t rows1, size_t columns1, size_t rows2, size_t columns2 ,int m1[rows1][columns1], int m2[rows2][columns2], int answer[rows1][columns2]){
-	//columns1 y rows2 deben ser iguales!
-	if(columns1 != rows2){
+void multiply (size_t rows1, size_t columns1, size_t rows2, size_t columns2 ,int m1[rows1][columns1], int m2[rows2][columns2], int answer[rows1][columns2]) {
+	
+	if(columns1 != rows2) {
 		printf("Invalid multiplication.\n");
 		return;
 	}
@@ -187,17 +181,7 @@ void multiply (size_t rows1, size_t columns1, size_t rows2, size_t columns2 ,int
 	
 }
 
-void separateMatrixByColumn (size_t wanted_cols1, size_t wanted_cols2, size_t rows, size_t columns, int m[rows][columns], int answer1[rows][wanted_cols1], int answer2[rows][wanted_cols2]){
-
-	/*printf("matriz fea\n");
-	int k;
-	int l;
-	for (k=0; k<rows; k++){
-		    for(l=0; l<columns; l++){
-		        printf("%d  ", m[k][l]);
-		    }
-		    printf("\n");
-	}*/
+void separate_matrix_by_column (size_t wanted_cols1, size_t wanted_cols2, size_t rows, size_t columns, int m[rows][columns], int answer1[rows][wanted_cols1], int answer2[rows][wanted_cols2]) {
 
 	int i;
 	int j;
@@ -208,124 +192,87 @@ void separateMatrixByColumn (size_t wanted_cols1, size_t wanted_cols2, size_t ro
 		return;
 	}
 
-	for(i = 0 ; i < rows; i++){
-		for(j = 0; j < wanted_cols1; j++){
+	for (i = 0 ; i < rows; i++) {
+		for (j = 0; j < wanted_cols1; j++) {
 			answer1[i][j] = m[i][j];
 		}
 		aux = j;
-		for(j = 0; j < wanted_cols2; j++){
+		for (j = 0; j < wanted_cols2; j++) {
 			answer2[i][j] = m[i][aux];
 			aux++;
 		}
 	}
 }
 
-void concat (size_t rows, size_t columns1, size_t columns2, int m1[rows][columns1], int m2[rows][columns2], int answer[rows][columns1+columns2]){
+void concat (size_t rows, size_t columns1, size_t columns2, int m1[rows][columns1], int m2[rows][columns2], int answer[rows][columns1+columns2]) {
+
 	int i;
 	int j;
 	int aux;
 
-	for(i=0;i<rows;i++){
-		for(j=0; j<columns1;j++){
+	for (i = 0 ;i < rows; i++) {
+		for (j = 0; j < columns1; j++) {
 			answer[i][j] = m1[i][j];
 		}
 		aux = j;
-		for(j=0; j<columns2;j++){
+		for (j = 0; j < columns2; j++) {
 			answer[i][aux] = m2[i][j];
 			aux++;
 		}
 	}
 }
 
-void concatWantedBoth (size_t wanted_cols, size_t rows, size_t columns1, size_t columns2, int m1[rows][columns1], int m2[rows][columns2], int answer[rows][wanted_cols+wanted_cols]){
+void printMatrix(size_t rows, size_t columns, int m[rows][columns]) {
+
 	int i;
 	int j;
-	int aux;
-
-	for(i=0;i<rows;i++){
-		for(j=0; j<wanted_cols;j++){
-			answer[i][j] = m1[i][j];
-		}
-		aux = j;
-		for(j=0; j<wanted_cols;j++){
-			answer[i][aux] = m2[i][j];
-			aux++;
-		}
-	}
-}
-
-void concatWantedRight (size_t wanted_cols, size_t rows, size_t columns1, size_t columns2, int m1[rows][columns1], int m2[rows][columns2], int answer[rows][columns1+wanted_cols]){
-	int i;
-	int j;
-	int aux;
-
-	for(i=0;i<rows;i++){
-		for(j=0; j<columns1;j++){
-			answer[i][j] = m1[i][j];
-			//printf("answer[%d][%d] = %d\n", i, j, answer[i][j]);
-		}
-		aux = j;
-		for(j=0; j<wanted_cols;j++){
-			answer[i][aux] = m2[i][j];
-			aux++;
-		}
-	}
-}
-
-void printMatrix(size_t rows, size_t columns, int m[rows][columns]){
-	int i;
-	int j;
-	for (i=0; i<rows; i++){
-		    for(j=0; j<columns; j++){
+	for (i=0; i < rows; i++) {
+		    for (j=0; j < columns; j++) {
 		        printf("%d  ", m[i][j]);
 		    }
 		    printf("\n");
 	}
 }
 
-void printMatrixFloat(size_t rows, size_t columns, float m[rows][columns]){
+void printMatrixFloat(size_t rows, size_t columns, float m[rows][columns]) {
+
 	int i;
 	int j;
-	for (i=0; i<rows; i++){
-		    for(j=0; j<columns; j++){
+	for (i=0; i < rows; i++){
+		    for (j=0; j < columns; j++) {
 		        printf("%f  ", m[i][j]);
 		    }
 		    printf("\n");
 	}
+
 }
 
 void inverse(size_t size, int m[size][size], int answer[size][size]){
-	// printf("Matriz recibida.\n");
-	// printMatrix(size,size,m);
+
 
     int det = determinant(size, m); 
+
     if (det == 0) { 
         printf("Invalid matrix. Doesn't have inverse.\n");
-        printf("me pasaron\n");
+        printf("Me pasaron\n");
         printMatrix(size,size, m);
         return;
     } 
     
     int adjMatrix[size][size]; 
     adjoint(size, m, adjMatrix); 
-    //printf("La adjunta es\n");
-   // printMatrix(size, size, adjMatrix);
-   // printf("mInv aca en el mio es %d\n", mod_inverse((det % 251 + 251) % 251, 251));
-    for (int i=0; i<size; i++) {
-    	for (int j=0; j<size; j++){
-        	answer[i][j] = (((adjMatrix[i][j])*mod_inverse((det % 251 + 251) % 251, 251)) % 251 + 251) % 251 ;  
 
-        	/*if(answer[i][j] < 0){
-				answer[i][j] = answer[i][j] + 251;
-			}*/
+    for (int i = 0; i < size; i++) {
+    	for (int j = 0; j < size; j++) {
+        	answer[i][j] = (((adjMatrix[i][j])*mod_inverse((det % 251 + 251) % 251, 251)) % 251 + 251) % 251;  
         } 
           
     }
 
 }
 
-int mod_inverse(int a, int m) 
-{ 
+int mod_inverse(int a, int m) { 
+
     a = a%m; 
     for (int x=1; x<m; x++) 
        if ((a*x) % m == 1) 
@@ -335,25 +282,22 @@ int mod_inverse(int a, int m)
 
 
 void cofactor(int size, int m[size][size], int ans[size-1][size-1], int forbidden_row, int forbidden_col) { 
+
     int i = 0;
     int j = 0; 
   	int k;
   	int z;
-  	//printf("size es %d\n", size);
-  	//printf("");
+
     for (k = 0; k < size; k++) { 
         for (z = 0; z < size; z++) { 
             if (k != forbidden_row && z != forbidden_col) { 
-            	// printf("i es %d\n", i);
-            	// printf("j es %d\n", j);
-            	// printf("k es %d\n", k);
-            	// printf("z es %d\n", z);
-            	// printf("----------------\n");
+
                 ans[i][j++] = m[k][z]; 
                 if (j == size - 1) { 
                     j = 0; 
                     i++; 
                 } 
+
             } 
         } 
     } 
@@ -365,30 +309,23 @@ int determinant(size_t size, int m[size][size]) {
   	int i;
 
     if (size == 1) {
-    	//printf("WHAT\n");
         return m[0][0]; 
     }
   
-  	// aux es para guardar los cofactors
+
     int aux[size-1][size-1];
     int sign = 1;  
-  //	printf("ok...\n");
+
     for (i = 0; i < size; i++) { 
+
         cofactor(size, m, aux, 0, i); 
-      /*  int aux[size-1][size-1];
-	    for (i=0; i<size-1; i++){
-			for(j=0; j<size-1; j++){
-				aux[i][j] = m[i][j];
-			}
-		}*/
+
         if(sign == -1){
         	det = (det + sign * (m[0][i] * determinant(size - 1, aux))); 
-        	// if(det < 0){
-        	// 	det = det + 251;
-        	// }
         }else{
         	det = (det + sign * (m[0][i] * determinant(size - 1, aux))); 
         }
+
         sign = -sign; 
     } 
   
@@ -397,9 +334,9 @@ int determinant(size_t size, int m[size][size]) {
 
 
 void adjoint(int size, int m[size][size],int answer[size][size]) { 
+
     if (size == 1) { 
         answer[0][0] = 1; 
-        printf("RETORNO\n");
         return; 
     } 
   
@@ -407,16 +344,15 @@ void adjoint(int size, int m[size][size],int answer[size][size]) {
     int aux[size-1][size-1];
     int i;
     int j; 
-  	//printf("hasta aca ok\n");
+
     for (i=0; i<size; i++) { 
         for (j=0; j<size; j++) { 
             cofactor(size, m, aux, i, j); 
-          //  printf("IMPRIMO COFACTOR:\n");
-         //   printMatrix(size, size, aux);
             sign = ((i+j)%2==0)? 1: -1; 
             answer[j][i] = (sign)*(determinant(size-1,aux)); 
         } 
     } 
+
 } 
 
 // la ultima columna serian los valores G
@@ -425,24 +361,24 @@ void gauss_jordan(int rows, int m[rows][rows+1], int** answer) {
 	int i,j,k;
     int c;
     int aux[rows][rows+1];
-    //copio la matriz
-    for(i=0; i<rows;i++){
-    	for(j=0;j<(rows+1);j++){
+
+    for (i = 0; i < rows; i++) {
+    	for (j = 0; j < (rows+1); j++) {
     		aux[i][j] = m[i][j];
     	}
     }
 
-    for(j=0; j<rows; j++)
+    for (j=0; j < rows; j++)
     {
-        for(i=0; i<rows; i++)
+        for (i=0; i < rows; i++)
         {
-            if(i!=j)
+            if (i != j)
             {
                 c=(aux[i][j] * mod_inverse(aux[j][j], 251))%251 ;
-                for(k=0; k<(rows+1); k++)
-                {
+
+                for (k=0; k<(rows+1); k++) {
                     aux[i][k]=aux[i][k]-(c*aux[j][k])%251;
-                    if(aux[i][k] < 0){
+                    if (aux[i][k] < 0) {
                     	aux[i][k] = aux[i][k] + 251;
                     }
                 }
@@ -450,20 +386,18 @@ void gauss_jordan(int rows, int m[rows][rows+1], int** answer) {
         }
     }
 
-    for(i=0; i<rows; i++)
-    {
+    for(i = 0; i < rows; i++) {
     	
         (*answer)[i]=(aux[i][rows] * mod_inverse(aux[i][i], 251))%251;
-
     }
 }
 
-size_t calculateRank(int rows, int columns, int matrix[rows][columns]) {
+size_t calculate_rank(int rows, int columns, int matrix[rows][columns]) {
 	size_t rank = columns;
 	int m[rows][columns];
 	
-	for (int i=0; i<rows; i++) {
-		for (int j=0; j<columns; j++) {
+	for (int i = 0; i < rows; i++) {
+		for (int j = 0; j < columns; j++) {
 			m[i][j] = matrix[i][j];
 		}
 	}
@@ -504,18 +438,14 @@ size_t calculateRank(int rows, int columns, int matrix[rows][columns]) {
 	return rank;
 }
 
-/* calcula la proyeccion usando la matrix a
-
-*/
-void calculateProjection(int a_rows, int a_cols, int a_matrix[a_rows][a_cols], int rows, int cols, int answer[rows][cols]) {
+void calculate_projection(int a_rows, int a_cols, int a_matrix[a_rows][a_cols], int rows, int cols, int answer[rows][cols]) {
 
 	int at[a_cols][a_rows];
 	transpose (a_rows, a_cols, a_matrix, at); //ahi obtengo mi transpuesta en at
 	
 	int multiplication[a_cols][a_cols];
 	multiply (a_cols, a_rows, a_rows, a_cols ,at, a_matrix, multiplication); //en multiplication tengo at*a
-	// printf("mutliplacacion dentro\n");
-	// printMatrix(a_cols, a_cols, multiplication);
+
 	int invM[a_cols][a_cols];
 	inverse(a_cols, multiplication, invM); //en invm tengo (at*a)^inv
 

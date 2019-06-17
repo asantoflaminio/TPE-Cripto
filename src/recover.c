@@ -11,24 +11,17 @@
 #include "matrix_functions.h"
 #include "utils.h"
 
-int resta(int a, int b){
-	int ans = a - b;
-	if(ans < 0){
-		ans = ans + 251;
-	}
-	return ans;
-}
-
 void recover(int k, int n){ //, image_t* output_image, image_t* watermark_image){
+
 	char* steg_type = "LSB1";
 
 	// esto viene del main pasado!
 	char* secret_path = "deberia_ser_albert.bmp";
 	 char* watermark_path = "./Archivos de Prueba-4-8/shares/RW/RW.bmp";
 	  char* directory_path = "./Archivos de Prueba-4-8/shares/"; 
-	//char* watermark_path = "generated_watermark.bmp";
+	// char* watermark_path = "generated_watermark.bmp";
 	//char* directory_path = "./test_shares/"; 
-	//char* directory_path = "./test24/";
+	// char* directory_path = "./test24/";
 	// char* directory_path = "./48/";
 
 	DIR *directory;
@@ -43,24 +36,19 @@ void recover(int k, int n){ //, image_t* output_image, image_t* watermark_image)
 	int steg_aux = 0;
 	int max = 1925; //DESPS CAMBIARLO
 
-	if(k==2){
-
+	if (k == 2) {
 		share_size = 4*3;
 		steg_type = "LSB2";
 		max = 7700;
-
-	}else{
+	} else {
 		// k == 4
 		share_size = 8*3;
-
 	}
 
-	if(steg_type == "LSB1"){
+	if (steg_type == "LSB1") {
 		// k == 4
 		steg_aux = 8;
-
-	}else{
-
+	} else {
 		steg_aux = 4;
 	}
 
@@ -77,7 +65,7 @@ void recover(int k, int n){ //, image_t* output_image, image_t* watermark_image)
 		int index = 0;  
         uint8_t * sh;
 
-        if((strcmp("bmp",get_filename_ext(file->d_name)) == 0)){
+        if ((strcmp("bmp",get_filename_ext(file->d_name)) == 0)) {
 
         	printf("%s\n", file->d_name);
         	char *result = malloc(strlen(directory_path) + strlen(file->d_name) + 1); // +1 for the null-terminator
@@ -93,15 +81,15 @@ void recover(int k, int n){ //, image_t* output_image, image_t* watermark_image)
             previous_quantity = quantity;
             quantity = sharefile_size_decrypted/share_size;
 
-            if(quantity!= 0 && previous_quantity !=0 && previous_quantity !=quantity){
+            if (quantity!= 0 && previous_quantity !=0 && previous_quantity !=quantity) {
 
             	printf("Error in shares\n");
             	return;
 
             }
-			sh = (uint8_t *) stegobmp_extract(image, steg_type); 
+			sh = (uint8_t *) recover_data(image, steg_type); 
 
-			for(int i = 0; i < quantity * share_size; i++){
+			for (int i = 0; i < quantity * share_size; i++){
 
 				shadows[reached][i] = sh[index]; // en shadows[0] guardaria todos los datos juntos de la share 0. 
 				index++;
@@ -121,7 +109,7 @@ void recover(int k, int n){ //, image_t* output_image, image_t* watermark_image)
 
 	}
 
-	if(reached != k){
+	if (reached != k) {
 
 		printf("Not enough shares\n");
 		return;
@@ -136,17 +124,17 @@ void recover(int k, int n){ //, image_t* output_image, image_t* watermark_image)
 	int r_index = 0;
 
 
-	for(int curr = 0; curr < quantity; curr++){
+	for (int curr = 0; curr < quantity; curr++) {
 
 		// printf("spindex es %d\n", sp_index);
 		int secret_projection[n][n];
 		int my_shadows[k][n][3]; // ejemplo si uso 4,8 voy a tneer 4 shadows de 8x3
 
-		for(int curr_k = 0; curr_k < k; curr_k ++){
+		for (int curr_k = 0; curr_k < k; curr_k ++) {
 
-			for(int aux_i = 0; aux_i < n; aux_i++){
+			for (int aux_i = 0; aux_i < n; aux_i++) {
 
-				for(int aux_j = 0; aux_j < 3; aux_j++){
+				for (int aux_j = 0; aux_j < 3; aux_j++) {
 
 					my_shadows[curr_k][aux_i][aux_j] = shadows[curr_k][curr*share_size + aux_i*3 + aux_j];
 
@@ -168,20 +156,19 @@ void recover(int k, int n){ //, image_t* output_image, image_t* watermark_image)
 		*/
 		
 
-		for (int counter=0; counter < k ;counter++){
+		for (int counter=0; counter < k ;counter++) {
 			int r;
 			int c;
 			int aux[n][3];
-			for (r=0; r<n; r++){
-				    for(c=0; c<3; c++){
+			for (r=0; r < n; r++) {
+				    for (c=0; c < 3; c++) {
 				        aux[r][c] = my_shadows[counter][r][c];
 				    }
 			}
-			// printf("ERA \n");
-			// printMatrix(n,3,aux);
-			separateMatrixByColumn(1, 2, n, 3, aux, v[counter], g[counter]);
+			separate_matrix_by_column(1, 2, n, 3, aux, v[counter], g[counter]);
 		}
-		if (k==2){
+
+		if (k == 2) {
 			concat (n, 1,1, v[0], v[1], b_matrix);
 		} else {
 			//k == 4
@@ -192,19 +179,18 @@ void recover(int k, int n){ //, image_t* output_image, image_t* watermark_image)
 			concat (n, 2,1, curr1, v[2], curr2);	
 			concat (n, 3,1, curr2, v[3], b_matrix);
 			
-
 		}
 
 		/*
 		ahora vamos a obtener secret_projection que surge de proyeccion de B
 		*/
-		calculateProjection(n, k, b_matrix, n, n, secret_projection); 
+		calculate_projection(n, k, b_matrix, n, n, secret_projection); 
 		
 		// ahora guado los datos en secret_extended para desps sumar a rw
 
-		for(int si = 0; si < n; si++){
+		for (int si = 0; si < n; si++) {
 
-			for(int sj= 0; sj < n; sj++){
+			for (int sj= 0; sj < n; sj++) {
 
 				secret_projection_extended[sp_index] = (uint8_t) secret_projection[si][sj];
 				sp_index++;
@@ -215,10 +201,10 @@ void recover(int k, int n){ //, image_t* output_image, image_t* watermark_image)
 
 		int r_matrix[n][n];
 
-		for(int r_row =0; r_row < n; r_row++){
+		for (int r_row =0; r_row < n; r_row++) {
 			/* hago la matriz que tiene la columna de 1s y del 1 a k)*/
 			
-			if(k == 4){
+			if (k == 4) {
 
 				int g00 = g[0][r_row][0]; //ESTO ES DE G0 elemento en la fila r_row y columna 0
 				int g10 = g[1][r_row][0]; //ESTO ES DE G1 elemento en la fila r_row y columna 0
@@ -269,7 +255,7 @@ void recover(int k, int n){ //, image_t* output_image, image_t* watermark_image)
 				r_matrix[r_row][7] = answer2[3][0];
 
 
-			}else{
+			} else {
 				// k == 2
 				//TODO
 
@@ -306,11 +292,11 @@ void recover(int k, int n){ //, image_t* output_image, image_t* watermark_image)
 		// printf("r matrix es\n");
 		// printMatrix(n,n, r_matrix);
 
-		for(int si = 0; si < n; si++){
+		for (int si = 0; si < n; si++) {
 
-			for(int sj = 0; sj < n; sj++){
-				r_extended[r_index] = (uint8_t) r_matrix[si][sj];
-				
+			for (int sj = 0; sj < n; sj++) {
+
+				r_extended[r_index] = (uint8_t) r_matrix[si][sj];				
 				r_index++;
 
 			}
@@ -322,7 +308,7 @@ void recover(int k, int n){ //, image_t* output_image, image_t* watermark_image)
 	
 	/*leo la rw */
 	bmp_image_t8 *wimage = bmp_from_path8(watermark_path);
-	bmp_image_t8 *simage = bmp_from_path8("./Archivos de Prueba-4-8/Secreto.bmp"); //cambiar
+	bmp_image_t8 *simage = bmp_from_path8(watermark_path); //cambiar
 	/* esto es la generacion de la secreta*/
 	uint8_t* water = bmp_get_data_buffer8(wimage);
 
@@ -330,11 +316,10 @@ void recover(int k, int n){ //, image_t* output_image, image_t* watermark_image)
 	uint8_t * secret_data = calloc(secret_size, 1);
 	int secret_index = 0;
 
-	for(secret_index = 0; secret_index < secret_size; secret_index++){
+	for (secret_index = 0; secret_index < secret_size; secret_index++) {
 
 				secret_data[secret_index] = (r_extended[secret_index] + secret_projection_extended[secret_index])%251;
 				
-
 	}
 
 	bmp_image_t8 *final_secret = simage;
@@ -357,7 +342,7 @@ void recover(int k, int n){ //, image_t* output_image, image_t* watermark_image)
 	int rw_col;
 	uint8_t * new_data = calloc(secret_size, 1);
 
-	for(rw_index = 0; rw_index < secret_size; rw_index++){
+	for (rw_index = 0; rw_index < secret_size; rw_index++) {
 
 				new_data[rw_index] = (water[rw_index] + secret_projection_extended[rw_index])%251;
 
@@ -372,8 +357,6 @@ void recover(int k, int n){ //, image_t* output_image, image_t* watermark_image)
 	bmp_save8(final_watermark, "recovered_watermark.bmp");
 	printf("Guardado recovered_watermark.bmp\n");
 
-	// free(simage);
-	// free(wimage);
 	free(water);
 	free(final_watermark);
 	free(secret_projection_extended);
