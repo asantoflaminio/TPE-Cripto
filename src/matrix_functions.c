@@ -458,6 +458,52 @@ void gauss_jordan(int rows, int m[rows][rows+1], int** answer) {
     }
 }
 
+size_t calculateRank(int rows, int columns, int matrix[rows][columns]) {
+	size_t rank = columns;
+	int m[rows][columns];
+	
+	for (int i=0; i<rows; i++) {
+		for (int j=0; j<columns; j++) {
+			m[i][j] = matrix[i][j];
+		}
+	}
+
+	for (size_t row = 0; row < rank; row++) {
+		if (m[row][row]) {
+			for (size_t col = 0; col < rows; col++) {
+				if (col != row) {
+					double mult = (double) m[col][row] / m[row][row];
+					for (size_t i = 0; i < rank; i++) {
+						int elem = m[col][i] - (mult * m[row][i]);
+						m[col][i] = elem;
+					}
+				}
+			}
+		}
+		else {
+			int reduce = 1;
+			for (int i = row + 1; i < rows; i++) {
+				if (m[i][row]) {
+					for (size_t k = 0; k < rank; k++) {
+						int temp = m[row][k];
+						m[row][k] = m[i][k];
+						m[i][k] = temp;
+					}
+					reduce = 0;
+					break;
+				}
+			}
+			if (reduce) {
+				rank--;
+				for (int i = 0; i < rows; i++)
+					m[i][row] = m[i][rank];
+			}
+			row--;
+		}
+	}
+	return rank;
+}
+
 /* calcula la proyeccion usando la matrix a
 
 */

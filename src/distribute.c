@@ -78,21 +78,20 @@ void distribute(int k, int n){
 		//Para la matrix A de m*k tomo m=8 si k es 4 y m=4 sino, es decir seria lo mismo que n
 
 		int a_matrix[n][k];
+		size_t rank;
 		//int a_matrix[4][2] =  {{3,7}, {6,1}, {2,5}, {6,6}}; //BORRAR y descometnar arriba y abajo
-		for(int ai = 0; ai < n; ai++){
-
-			for(int aj = 0; aj < n; aj++){
-
-				num = nextChar();
-				a_matrix[ai][aj] = num;
-
+		do {
+			for(int ai = 0; ai < n; ai++){
+				for(int aj = 0; aj < k; aj++){
+					num = (nextChar() % 251 + 251) % 251;
+					a_matrix[ai][aj] = num;
+				}
 			}
-
-		}
-
+			rank = calculateRank(n, k, a_matrix);
+		} while (rank != k);
 		
-		// printf("----------------\n");
-		// printMatrix(n,k, a_matrix);
+		printf("----------------\n");
+		printMatrix(n,k, a_matrix);
 		/*
 		ahora vamos a obtener secret_projection que surge de proyeccion de A
 		*/

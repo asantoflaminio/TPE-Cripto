@@ -24,11 +24,11 @@ void recover(int k, int n){ //, image_t* output_image, image_t* watermark_image)
 
 	// esto viene del main pasado!
 	char* secret_path = "deberia_ser_albert.bmp";
-	 // char* watermark_path = "./Archivos de Prueba-4-8/shares/RW/RW.bmp";
-	 // char* directory_path = "./Archivos de Prueba-4-8/shares/"; 
-	char* watermark_path = "generated_watermark.bmp";
+	 char* watermark_path = "./Archivos de Prueba-4-8/shares/RW/RW.bmp";
+	  char* directory_path = "./Archivos de Prueba-4-8/shares/"; 
+	//char* watermark_path = "generated_watermark.bmp";
 	//char* directory_path = "./test_shares/"; 
-	char* directory_path = "./test24/";
+	//char* directory_path = "./test24/";
 	// char* directory_path = "./48/";
 
 	DIR *directory;
