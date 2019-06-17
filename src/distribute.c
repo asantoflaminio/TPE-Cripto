@@ -16,8 +16,8 @@ void distribute(int k, int n){
 	char* secret_path = "./Archivos de Prueba-4-8/Secreto.bmp";
 	char* watermark_path = "./Archivos de Prueba-4-8/Marca.bmp";
 	char* watermark_destiny_path = "generated_watermark.bmp";
-	char* directory_path = "./48/"; 
-	// char* directory_path = "./test24/"; 
+	// char* directory_path = "./48/"; 
+	char* directory_path = "./test24/"; 
 	char* lsb;
 
 	if(k == 2){
@@ -78,7 +78,7 @@ void distribute(int k, int n){
 		//Para la matrix A de m*k tomo m=8 si k es 4 y m=4 sino, es decir seria lo mismo que n
 
 		int a_matrix[n][k];
-		//int a_matrix[4][2] =  {{3,7}, {6,1}, {2,5}, {6,6}}; //BORRAR y descometnar arriba
+		//int a_matrix[4][2] =  {{3,7}, {6,1}, {2,5}, {6,6}}; //BORRAR y descometnar arriba y abajo
 		for(int ai = 0; ai < n; ai++){
 
 			for(int aj = 0; aj < n; aj++){
@@ -170,8 +170,8 @@ void distribute(int k, int n){
 
 		}
 
-		printf("----\n");
-		printMatrix(n,2,g_matrices[0]);
+		// printf("----\n");
+		// printMatrix(n,2,g_matrices[0]);
 
 		/* concateno cada v con su correspondiente G para obtener las n sombras*/
 		int my_shadows[n][n][3];
