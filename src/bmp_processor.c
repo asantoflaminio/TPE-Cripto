@@ -27,25 +27,24 @@ bmp_image_t8 *bmp_from_path8(const char *path) {
     }
     
     const size_t header_size = sizeof(struct bmp_header) + sizeof(struct bmp_info) + sizeof(RGBQUAD)*256;
-    // printf("header size es %d\n", header_size);
-    // printf("imageDataOffset es %d\n", image->header.imageDataOffset);
+
     if (header_size != image->header.imageDataOffset) {
-        printf("Image contains extra data!\n");
+        printf("Invalid: Extra data found in image.\n");
         goto _ABORT;
     }
 
-    if (image->info.bitsPerPixel != 24 && image->info.bitsPerPixel != 8) {
-        printf("Image does not contains 24 or 8 bits per pixel.\n");
+    if (image->info.bitsPerPixel != 8) {
+        printf("Invalid: Image must be 8bpp.\n");
         goto _ABORT;
     }
 
     if (image->info.compressionMethod != 0) {
-        printf("Image is compressed\n");
+        printf("Invalid: compressed image\n");
         goto _ABORT;
     }
 
     if (image->header.imageDataOffset - header_size != 0) {
-        printf("Image contains extra data between header and bitmap!\n");
+        printf("Invalid: There's extra deate between header and bitmap.\n");
         goto _ABORT;
     }
 
@@ -68,7 +67,7 @@ bmp_image_t24 *bmp_from_path24(const char *path) {
     FILE *fp = fopen(path, "rb");
 
     if (fp == NULL) {
-        printf("Could not open file %s: ", path);
+        printf("Could not open file %s: \n", path);
         printf("%s\n", strerror(errno));
         return NULL;
     }
@@ -79,25 +78,24 @@ bmp_image_t24 *bmp_from_path24(const char *path) {
     fread(&image->info, sizeof(struct bmp_info), 1, fp);
 
     const size_t header_size = sizeof(struct bmp_header) + sizeof(struct bmp_info);
-    // printf("header size es %d\n", header_size);
-    // printf("imageDataOffset es %d\n", image->header.imageDataOffset);
+ 
     if (header_size != image->header.imageDataOffset) {
-        printf("Image contains extra data!\n");
+        printf("Invalid: Extra data found in image.\n");
         goto _ABORT;
     }
 
-    if (image->info.bitsPerPixel != 24 && image->info.bitsPerPixel != 8) {
-        printf("Image does not contains 24 or 8 bits per pixel.\n");
+    if (image->info.bitsPerPixel != 24) {
+        printf("Invalid: Image must be 24bpp.\n");
         goto _ABORT;
     }
 
     if (image->info.compressionMethod != 0) {
-        printf("Image is compressed\n");
+        printf("Invalid: compressed image\n");
         goto _ABORT;
     }
 
     if (image->header.imageDataOffset - header_size != 0) {
-        printf("Image contains extra data between header and bitmap!\n");
+        printf("Invalid: There's extra deate between header and bitmap.\n");
         goto _ABORT;
     }
 
@@ -121,7 +119,7 @@ int bmp_save8(const bmp_image_t8 *image, const char *path) {
     FILE *fp = fopen(path, "wb+");
 
     if (fp == NULL) {
-        printf("Could not open file %s: ", path);
+        printf("Could not open file %s: \n", path);
         printf("%s\n", strerror(errno));
         return 0;
     }
@@ -160,7 +158,7 @@ int bmp_save24(const bmp_image_t24 *image, const char *path) {
     FILE *fp = fopen(path, "wb+");
 
     if (fp == NULL) {
-        printf("Could not open file %s: ", path);
+        printf("Could not open file %s: \n", path);
         printf("%s\n", strerror(errno));
         return 0;
     }
