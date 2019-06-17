@@ -1,7 +1,12 @@
 #ifndef STEGOBMP_BMP_H
 #define STEGOBMP_BMP_H
-
 #include <stdint.h>
+
+/* Handling of BMP files of 8 and 24 bits per pixel */
+
+
+
+/* BMP header structure */
 struct __attribute__ ((packed)) bmp_header {
     char fileIdentifier[2];
     uint32_t fileSize;
@@ -10,6 +15,7 @@ struct __attribute__ ((packed)) bmp_header {
     uint32_t imageDataOffset;
 };
 
+/* BMP info structure */
 struct __attribute__ ((packed)) bmp_info {
     uint32_t headerSize;
     int32_t imageWidth;
@@ -24,7 +30,7 @@ struct __attribute__ ((packed)) bmp_info {
     uint32_t numImportantColors;
 };
 
-
+/* Only for 8bpp images. Source: https://codeday.me/es/qa/20190325/375640.html */
 typedef struct                       /**** Colormap entry structure ****/
     {
     unsigned char  rgbBlue;          /* Blue value */
@@ -33,12 +39,14 @@ typedef struct                       /**** Colormap entry structure ****/
     unsigned char  rgbReserved;      /* Reserved */
     } RGBQUAD;
 
+/* Struct for 24bpp images */
 struct bmp_image24 {
     struct bmp_header header;
     struct bmp_info info;
     uint8_t *data;
 };
 
+/* Struct for 8bpp images */
 struct bmp_image8 {
     struct bmp_header header;
     struct bmp_info info;
@@ -48,28 +56,21 @@ struct bmp_image8 {
 
 typedef struct bmp_image24 bmp_image_t24;
 typedef struct bmp_image8 bmp_image_t8;
+
+/* Functions to work with 8bpp images */
 bmp_image_t8 *bmp_from_path8(const char *path);
-
 int bmp_save8(const bmp_image_t8 *image, const char *path);
-
 void bmp_free8(bmp_image_t8 *image);
-
 uint8_t *bmp_get_data_buffer8(bmp_image_t8 *image);
-
 uint32_t bmp_get_image_size8(bmp_image_t8 *image);
-
 int bmp_check_size8(bmp_image_t8 *image, long size);
 
+/* Functions to work with 24bpp images */
 bmp_image_t24 *bmp_from_path24(const char *path);
-
 int bmp_save24(const bmp_image_t24 *image, const char *path);
-
 void bmp_free24(bmp_image_t24 *image);
-
 uint8_t *bmp_get_data_buffer24(bmp_image_t24 *image);
-
 uint32_t bmp_get_image_size24(bmp_image_t24 *image);
-
 int bmp_check_size24(bmp_image_t24 *image, long size);
 
 #endif 

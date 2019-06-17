@@ -10,8 +10,10 @@ typedef unsigned char byte;
 #define SET 10 
 
 
-/* Funciones provistas por la catedra */
+/* Gets filename extension */
 const char *get_filename_ext(const char *filename);
+
+/* Funciones provistas por la catedra */
 void setSeed(int64_t s);
 uint8_t nextChar(void);
 #endif
