@@ -454,34 +454,3 @@ void calculate_projection(int a_rows, int a_cols, int a_matrix[a_rows][a_cols], 
 	multiply(a_rows, a_cols, a_cols, a_rows,multiplication2, at, answer); //resultado final es multiplication2 * at
 
 }
-
-int check_all_different(int rows, int cols, int p[rows][cols]) {
-
-	int m[rows][cols];
-
-	for (int i = 0; i < rows; i++) {
-		for (int j = 0; j < cols; j++) {
-			m[i][j] = p[i][j];
-		}
-	}
-
-	int aux[rows*cols];
-	int index = 0;
-
-	for(int i = 0; i < rows; i++) {
-		for(int j = 0; j < cols; j++) {
-			for(int p = 0; p < index; p++){
-				if(aux[p]  == m[i][j]){
-					// printf("Tenia\n");
-					// printMatrix(rows,cols,m);
-					return 0; // 0 si encontre alguno igaul
-				}
-
-			}
-			aux[index] = m[i][j];
-			index++;
-		}
-	}
-
-	return 1; // 1 si no encontro repetidos
-}
