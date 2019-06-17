@@ -55,4 +55,6 @@ void separate_matrix_by_column(size_t wanted_cols1, size_t wanted_cols2, size_t 
 /* Calculates rank for matrix */
 size_t calculate_rank(int rows, int columns, int matrix[rows][columns]);
 
+/* Returns 1 if the matrix has all different values. Otherwise it returns 0. */
+int check_all_different(int rows, int cols, int m[rows][cols]);
 #endif

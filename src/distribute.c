@@ -36,14 +36,14 @@ void distribute(int k, int n){
 	if (image == NULL) {
 
 		printf("Unable to get secret image.\n");
-		return;
+		exit(EXIT_FAILURE);
 
 	}
 
 	if (wimage == NULL) {
 
 		printf("Unable to get watermark image.\n");
-		return;
+		exit(EXIT_FAILURE);
 
 	}
 
@@ -90,8 +90,8 @@ void distribute(int k, int n){
 			rank = calculate_rank(n, k, a_matrix);
 		} while (rank != k);
 		
-		printf("----------------\n");
-		printMatrix(n,k, a_matrix);
+		// printf("----------------\n");
+		// printMatrix(n,k, a_matrix);
 		/*
 		ahora vamos a obtener secret_projection que surge de proyeccion de A
 		*/
@@ -118,19 +118,43 @@ void distribute(int k, int n){
 
 		/* aca hay que generar n cantidad de X cada uno de kx1 con valores random */
 		int x_matrices[n][k][1];
-		//int x_matrices[4][2][1] = { {{9}, {5}} ,   {{4}, {4}} ,  {{9}, {8}}  ,  {{3}, {2}} }  ; //BORRAR y desocmentar arriba
+
+		// int random_values[n];
+		// for(int p = 0; p < n; p++){
+		// 	int temp = nextChar();
+		// 	int found = 0;
+		// 	for(int pe = 0; pe < p; pe++){
+		// 		if(random_values[pe] == temp){
+		// 			found = 1;
+		// 		}
+		// 	}
+		// 	if (found == 1) {
+		// 		p--;
+		// 	} else {
+		// 		random_values[p] = temp;
+		// 	}
+			
+		// }
 
 		
 		for (int x_counter = 0; x_counter < n; x_counter++) {
+				//num = nextChar();
+				for (int row = 0; row < k; row++) {
+					num = nextChar();
+					x_matrices[x_counter][row][0] = ((int) pow(num, row))%251;
 
-			for (int col = 0; col < k; col++) {
-
-				num = nextChar();
-				x_matrices[x_counter][col][0] = num;
-
-			}
+				}
+			
 
 		} 
+
+		// for(int re = 0; re < n; re++){
+		// 	printf("----\n");
+		// 	printMatrix(k,1, x_matrices[re]);
+		// }
+		//exit(EXIT_FAILURE);
+
+		
 		
 		int v_matrices[n][n][1];
 
@@ -212,10 +236,29 @@ void distribute(int k, int n){
 
 	if (directory == NULL) {
 		printf("Invalid directory for shares.\n");
-		return;
+		exit(EXIT_FAILURE);
 	}
 
-	while ((file=readdir(directory)) != NULL && reached != n) {
+	DIR *auxdir;
+	auxdir = opendir(directory_path); 
+
+	int bmp_counter = 0;
+	while ((file=readdir(directory)) != NULL) {
+
+		if((strcmp("bmp",get_filename_ext(file->d_name)) == 0)) {
+
+			bmp_counter++;
+		}
+
+	}
+
+	if(bmp_counter != n){
+		printf("Number of BMP files in directory must be exactly n.\n");
+		exit(EXIT_FAILURE);
+	}
+
+
+	while ((file=readdir(directory)) != NULL) {
 
 		if((strcmp("bmp",get_filename_ext(file->d_name)) == 0)) {
 
@@ -233,16 +276,9 @@ void distribute(int k, int n){
 
 	}
 
-	if (reached != n) {
-
-		printf("Not enough files for shares.\n");
-		return;
-
-	}
-
 	
 
-	/* guardo en archivo las 8 shares*/
+	/* guardo en archivo las n shares*/
 
 	/* calculo Rw que es watermark - secret_projection_extended */
 	uint8_t * watermark_data = bmp_get_data_buffer8(wimage);
