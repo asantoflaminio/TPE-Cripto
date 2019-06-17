@@ -155,7 +155,7 @@ void distribute(int k, int n){
 					if(k == 2){
 
 						g_matrices[g_counter][i][0] = r_matrix[i][0] + r_matrix[i][1]*pow((g_counter+1),1);
-						g_matrices[g_counter][i][1] = r_matrix[i][2] + r_matrix[i][3]*pow((g_counter+1),2);
+						g_matrices[g_counter][i][1] = r_matrix[i][2] + r_matrix[i][3]*pow((g_counter+1),1);
 
 					}else{
 
