@@ -16,8 +16,8 @@ void distribute(int k, int n){
 	char* secret_path = "./Archivos de Prueba-4-8/Secreto.bmp";
 	char* watermark_path = "./Archivos de Prueba-4-8/Marca.bmp";
 	char* watermark_destiny_path = "generated_watermark.bmp";
-	//char* directory_path = "./48/"; 
-	char* directory_path = "./test24/"; 
+	char* directory_path = "./48/"; 
+	// char* directory_path = "./test24/"; 
 	char* lsb;
 
 	if(k == 2){
@@ -154,14 +154,14 @@ void distribute(int k, int n){
 
 					if(k == 2){
 
-						g_matrices[g_counter][i][0] = r_matrix[i][0] + r_matrix[i][1]*pow((g_counter+1),1);
-						g_matrices[g_counter][i][1] = r_matrix[i][2] + r_matrix[i][3]*pow((g_counter+1),1);
+						g_matrices[g_counter][i][0] = (r_matrix[i][0] + (r_matrix[i][1]*(((int) pow((g_counter+1),1))%251))%251)%251;
+						g_matrices[g_counter][i][1] = (r_matrix[i][2] + (r_matrix[i][3]*(((int) pow((g_counter+1),1))%251))%251)%251;
 
 					}else{
 
-						g_matrices[g_counter][i][0] = r_matrix[i][0] + r_matrix[i][1]*pow((g_counter+1),1) + r_matrix[i][2]*pow((g_counter+1),2) + r_matrix[i][3]*pow((g_counter+1),3);
-						g_matrices[g_counter][i][1] = r_matrix[i][4] + r_matrix[i][5]*pow((g_counter+1),2) + r_matrix[i][6]*pow((g_counter+1),2)+ r_matrix[i][7]*pow((g_counter+1),3);
-
+						g_matrices[g_counter][i][0] = (r_matrix[i][0] + (r_matrix[i][1]*(((int) pow((g_counter+1),1))%251))%251 + (r_matrix[i][2]*(((int) pow((g_counter+1),2))%251))%251+ (r_matrix[i][3]*(((int) pow((g_counter+1),3))%251))%251)%251;
+						g_matrices[g_counter][i][1] = (r_matrix[i][4] + (r_matrix[i][5]*(((int) pow((g_counter+1),1))%251))%251 + (r_matrix[i][6]*(((int) pow((g_counter+1),2))%251))%251 + (r_matrix[i][7]*(((int) pow((g_counter+1),3))%251))%251)%251;
+						
 					}
 					
 
@@ -169,6 +169,9 @@ void distribute(int k, int n){
 
 
 		}
+
+		printf("----\n");
+		printMatrix(n,2,g_matrices[0]);
 
 		/* concateno cada v con su correspondiente G para obtener las n sombras*/
 		int my_shadows[n][n][3];

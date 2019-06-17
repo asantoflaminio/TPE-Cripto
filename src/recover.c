@@ -28,8 +28,8 @@ void recover(int k, int n){ //, image_t* output_image, image_t* watermark_image)
 	 // char* directory_path = "./Archivos de Prueba-4-8/shares/"; 
 	char* watermark_path = "generated_watermark.bmp";
 	//char* directory_path = "./test_shares/"; 
-	char* directory_path = "./test24/";
-	//char* directory_path = "./48/";
+	// char* directory_path = "./test24/";
+	char* directory_path = "./48/";
 
 	DIR *directory;
 	directory = opendir(directory_path); 
