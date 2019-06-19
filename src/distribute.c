@@ -15,9 +15,12 @@ void distribute(int k, int n){
 
 	char* secret_path = "./Archivos de Prueba-4-8/Secreto.bmp";
 	char* watermark_path = "./Archivos de Prueba-4-8/Marca.bmp";
+	// char* watermark_path = "./Archivos de Prueba-4-8/Secreto.bmp";
+	// char* secret_path = "./Archivos de Prueba-4-8/Marca.bmp";
 	char* watermark_destiny_path = "generated_watermark.bmp";
-	char* directory_path = "./48/"; 
+	char* directory_path = "./rara/"; 
 	// char* directory_path = "./test24/"; 
+	// char* directory_path = "./Archivos de Prueba-4-8/shares/"; 
 	char* lsb;
 
 	if (k == 2) {
@@ -79,6 +82,7 @@ void distribute(int k, int n){
 
 		int a_matrix[n][k];
 		size_t rank;
+		size_t rank2;
 		//int a_matrix[4][2] =  {{3,7}, {6,1}, {2,5}, {6,6}}; //BORRAR y descometnar arriba y abajo
 		do {
 			for (int ai = 0; ai < n; ai++) {
@@ -87,8 +91,15 @@ void distribute(int k, int n){
 					a_matrix[ai][aj] = num;
 				}
 			}
+
 			rank = calculate_rank(n, k, a_matrix);
-		} while (rank != k);
+			int at_matrix[k][n];
+			int result[n][n];
+			transpose(n,k,a_matrix, at_matrix);
+			multiply (n, k, k, n , a_matrix, at_matrix, result);
+			rank2 = calculate_rank(k, n, result); //quiero que a*at tambien sea de rango k
+
+		} while (rank != k && rank2 != k);
 		
 		// printf("----------------\n");
 		// printMatrix(n,k, a_matrix);
@@ -138,9 +149,9 @@ void distribute(int k, int n){
 
 		
 		for (int x_counter = 0; x_counter < n; x_counter++) {
-				//num = nextChar();
+				num = nextChar();
 				for (int row = 0; row < k; row++) {
-					num = nextChar();
+				//	num = nextChar();
 					x_matrices[x_counter][row][0] = ((int) pow(num, row))%251;
 
 				}
@@ -243,7 +254,7 @@ void distribute(int k, int n){
 	auxdir = opendir(directory_path); 
 
 	int bmp_counter = 0;
-	while ((file=readdir(directory)) != NULL) {
+	while ((file=readdir(auxdir)) != NULL) {
 
 		if((strcmp("bmp",get_filename_ext(file->d_name)) == 0)) {
 
@@ -303,6 +314,8 @@ void distribute(int k, int n){
 	bmp_save8(final_rw, watermark_destiny_path);
 	printf("Watermark saved %s.\n", watermark_destiny_path);
 
-
+	// printf("BYE\n");
+	// exit(EXIT_FAILURE);
+	// printf("FAILURE\n");
 
 }

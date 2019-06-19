@@ -18,11 +18,11 @@ void recover(int k, int n){ //, image_t* output_image, image_t* watermark_image)
 	// esto viene del main pasado!
 	char* secret_path = "deberia_ser_albert.bmp";
 	 // char* watermark_path = "./Archivos de Prueba-4-8/shares/RW/RW.bmp";
-	 //  char* directory_path = "./Archivos de Prueba-4-8/shares/"; 
+	  // char* directory_path = "./Archivos de Prueba-4-8/shares/"; 
 	char* watermark_path = "generated_watermark.bmp";
 	//char* directory_path = "./test_shares/"; 
 	// char* directory_path = "./test24/";
-	char* directory_path = "./48/";
+	char* directory_path = "./rara/";
 
 	DIR *directory;
 	directory = opendir(directory_path); 
@@ -292,6 +292,16 @@ void recover(int k, int n){ //, image_t* output_image, image_t* watermark_image)
 		// printf("r matrix es\n");
 		// printMatrix(n,n, r_matrix);
 
+		// for (int si = 0; si < n; si++) {
+
+		// 	for (int sj = 0; sj < n; sj++) {
+
+		// 		r_extended[r_index] = (uint8_t) r_matrix[si][sj];				
+		// 		r_index++;
+
+		// 	}
+		// }
+
 		for (int si = 0; si < n; si++) {
 
 			for (int sj = 0; sj < n; sj++) {
@@ -301,7 +311,6 @@ void recover(int k, int n){ //, image_t* output_image, image_t* watermark_image)
 
 			}
 		}
-
 
 
 	}
