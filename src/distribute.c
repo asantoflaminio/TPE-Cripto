@@ -11,12 +11,12 @@
 #include "matrix_functions.h"
 #include "utils.h"
 
-void distribute(int k, int n){ 
+void distribute (int k, int n) { 
 
+	printf("Starting image distribuition.\n");
+ 
+	char* watermark_path = "./Archivos de Prueba-4-8/Marca.bmp"; 
 	char* secret_path = "./Archivos de Prueba-4-8/Secreto.bmp";
-	char* watermark_path = "./Archivos de Prueba-4-8/Marca.bmp";
-	// char* watermark_path = "./Archivos de Prueba-4-8/Secreto.bmp";
-	// char* secret_path = "./Archivos de Prueba-4-8/Marca.bmp";
 	char* watermark_destiny_path = "generated_watermark.bmp";
 	char* directory_path = "./rara/"; 
 	// char* directory_path = "./test24/"; 
@@ -130,29 +130,29 @@ void distribute(int k, int n){
 		/* aca hay que generar n cantidad de X cada uno de kx1 con valores random */
 		int x_matrices[n][k][1];
 
-		// int random_values[n];
-		// for(int p = 0; p < n; p++){
-		// 	int temp = nextChar();
-		// 	int found = 0;
-		// 	for(int pe = 0; pe < p; pe++){
-		// 		if(random_values[pe] == temp){
-		// 			found = 1;
-		// 		}
-		// 	}
-		// 	if (found == 1) {
-		// 		p--;
-		// 	} else {
-		// 		random_values[p] = temp;
-		// 	}
+		int random_values[n];
+		for(int p = 0; p < n; p++){
+			int temp = (nextChar() % 251 + 251) % 251;
+			int found = 0;
+			for(int pe = 0; pe < p; pe++){
+				if(random_values[pe] == temp){
+					found = 1;
+				}
+			}
+			if (found == 1) {
+				p--;
+			} else {
+				random_values[p] = temp;
+			}
 			
-		// }
+		}
 
 		
 		for (int x_counter = 0; x_counter < n; x_counter++) {
 				num = nextChar();
 				for (int row = 0; row < k; row++) {
 				//	num = nextChar();
-					x_matrices[x_counter][row][0] = ((int) pow(num, row))%251;
+					x_matrices[x_counter][row][0] = ((int) pow(random_values[x_counter], row))%251;
 
 				}
 			
@@ -280,7 +280,6 @@ void distribute(int k, int n){
 		    strcat(result, file->d_name);
 		    printf("Using share %s\n", result);
 			hide_data(shadows[current],result,lsb, current);
-			printf("out\n");
 			current++;
 
 		}

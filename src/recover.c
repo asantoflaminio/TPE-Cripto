@@ -13,6 +13,8 @@
 
 void recover(int k, int n){ //, image_t* output_image, image_t* watermark_image){
 
+	printf("Starting image recovery.\n");
+
 	char* steg_type = "LSB1";
 
 	// esto viene del main pasado!
