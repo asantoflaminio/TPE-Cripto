@@ -90,10 +90,13 @@ void distribute (int k, int n, char* secret_path, char* watermark_path, char* di
 		do {
 			for (int ai = 0; ai < n; ai++) {
 				for (int aj = 0; aj < k; aj++) {
-					num = (((int)nextChar()) % 251);// + 251) % 251;w
-					while(num > 2){
+					num = (((int)nextChar()) % 251);
+					if(k == 4) { // en 4,8 restrinjo valores
+						while (num > 2) {
 						num = (((int)nextChar()) % 251);
+						}
 					}
+					
 					a_matrix[ai][aj] = num;
 				}
 			}
