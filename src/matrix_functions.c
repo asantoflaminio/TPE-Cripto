@@ -159,17 +159,32 @@ void transpose (size_t rows, size_t columns, int m[rows][columns],  int answer[c
 	}
 }
 
-void multiply (size_t rows1, size_t columns1, size_t rows2, size_t columns2 ,int m1[rows1][columns1], int m2[rows2][columns2], int answer[rows1][columns2]) {
+void multiply (size_t rows1, size_t columns1, size_t rows2, size_t columns2 ,int mat1[rows1][columns1], int mat2[rows2][columns2], int answer[rows1][columns2]) {
 	
 	if(columns1 != rows2) {
 		printf("Invalid multiplication.\n");
 		return;
 	}
+	
+	long m1[rows1][columns1];
+	long m2[rows2][columns2];
+
+	for (int ii = 0; ii < rows1; ii++) {
+		for(int jj = 0; jj < columns1; jj++){
+			m1[ii][jj] = (long) mat1[ii][jj];
+		}
+	}
+
+	for (int ii = 0; ii < rows2; ii++) {
+		for(int jj = 0; jj < columns2; jj++) {
+			m2[ii][jj] = (long) mat2[ii][jj];
+		}
+	}
 
 	int i;
 	int j;
 	int k;
-	int sum = 0;
+	long sum = 0;
 	for (i = 0; i < rows1; i++) {
       for (j = 0; j < columns2; j++) {
         for (k = 0; k < rows2; k++) {
