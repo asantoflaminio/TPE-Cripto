@@ -374,7 +374,7 @@ void recover (int k, int n, char* secret_path, char* watermark_path, char* direc
 	bmp_image_t8 *final_watermark = wimage;
 	final_watermark->data = new_data;
 	bmp_save8(final_watermark, "recovered_watermark.bmp");
-	printf("Guardado recovered_watermark.bmp\n");
+	printf("Recovered watermark saved as recovered_watermark.bmp\n");
 
 	free(water);
 	free(final_watermark);

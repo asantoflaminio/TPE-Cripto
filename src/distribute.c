@@ -102,7 +102,7 @@ void distribute (int k, int n, char* secret_path, char* watermark_path, char* di
 			multiply (k, n, n, k , at_matrix, a_matrix, result);
 			rank2 = calculate_rank(k, k, result); //quiero que at*a tambien sea de rango k
 
-		} while (rank != k && rank2 != k);
+		} while (rank != k || rank2 != k);
 		
 		// printf("----------------\n");
 		// printMatrix(n,k, a_matrix);
