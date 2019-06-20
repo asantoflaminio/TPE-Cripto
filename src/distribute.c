@@ -75,7 +75,7 @@ void distribute (int k, int n, char* secret_path, char* watermark_path, char* di
 
 			for (int j = 0; j < n; j++) {
 
-				s_matrix[i][j] =  secret_data[q*individual_s_size + i*n + j];   
+				s_matrix[i][j] =  (int) secret_data[q*individual_s_size + i*n + j];   
 
 			}
 
@@ -90,7 +90,10 @@ void distribute (int k, int n, char* secret_path, char* watermark_path, char* di
 		do {
 			for (int ai = 0; ai < n; ai++) {
 				for (int aj = 0; aj < k; aj++) {
-					num = (nextChar() % 251 + 251) % 251;
+					num = (((int)nextChar()) % 251);// + 251) % 251;w
+					while(num > 2){
+						num = (((int)nextChar()) % 251);
+					}
 					a_matrix[ai][aj] = num;
 				}
 			}
@@ -98,14 +101,19 @@ void distribute (int k, int n, char* secret_path, char* watermark_path, char* di
 			rank = calculate_rank(n, k, a_matrix);
 			int at_matrix[k][n];
 			int result[k][k];
+			// int result[n][n];
 			transpose(n,k,a_matrix, at_matrix);
 			multiply (k, n, n, k , at_matrix, a_matrix, result);
+			// multiply (n, k, k, n , a_matrix, at_matrix, result);
+			// rank2 = calculate_rank(n, n, result);
 			rank2 = calculate_rank(k, k, result); //quiero que at*a tambien sea de rango k
 
 		} while (rank != k || rank2 != k);
 		
+
 		// printf("----------------\n");
 		// printMatrix(n,k, a_matrix);
+		// exit(EXIT_FAILURE);
 		/*
 		ahora vamos a obtener secret_projection que surge de proyeccion de A
 		*/
@@ -134,34 +142,38 @@ void distribute (int k, int n, char* secret_path, char* watermark_path, char* di
 		int x_matrices[n][k][1];
 
 		int random_values[n];
+		// for(int p = 0; p < n; p++){
+		// 	int temp = (((int)nextChar())% 251 + 251) % 251;
+		// 	int found = 0;
+		// 	for(int pe = 0; pe < p; pe++){
+		// 		if(random_values[pe] == temp){
+		// 			found = 1;
+		// 		}
+		// 	}
+		// 	if (found == 1) {
+		// 		p--;
+		// 	} else {
+		// 		random_values[p] = temp;
+		// 	}
+			
+		// }
+
 		for(int p = 0; p < n; p++){
-			int temp = (nextChar() % 251 + 251) % 251;
-			int found = 0;
-			for(int pe = 0; pe < p; pe++){
-				if(random_values[pe] == temp){
-					found = 1;
-				}
-			}
-			if (found == 1) {
-				p--;
-			} else {
-				random_values[p] = temp;
-			}
+				random_values[p] = p;
 			
 		}
 
-		
+		size_t x_rank;
 		for (int x_counter = 0; x_counter < n; x_counter++) {
 				for (int row = 0; row < k; row++) {
-					x_matrices[x_counter][row][0] = ((int) pow(random_values[x_counter], row))%251;
+					//
+					x_matrices[x_counter][row][0] = ((int) pow(random_values[x_counter], row))% 251;
+					//x_matrices[x_counter][row][0] = nextChar()% 251;
+					
 				}
 		} 
 
-		// for(int re = 0; re < n; re++){
-		// 	printf("----\n");
-		// 	printMatrix(k,1, x_matrices[re]);
-		// }
-		//exit(EXIT_FAILURE);
+		
 
 		
 		
@@ -175,6 +187,12 @@ void distribute (int k, int n, char* secret_path, char* watermark_path, char* di
 			// printMatrix(n,1,v_matrices[v_counter]);
 
 		}
+
+		// for(int re = 0; re < n; re++){
+		// 	printf("----\n");
+		// 	printMatrix(k,1, x_matrices[re]);
+		// }
+		// exit(EXIT_FAILURE);
 
 		int g_matrices[n][n][2];
 		/* aca armar n matrices G cada una de n*2 */
@@ -193,6 +211,10 @@ void distribute (int k, int n, char* secret_path, char* watermark_path, char* di
 
 						g_matrices[g_counter][i][0] = (r_matrix[i][0] + (r_matrix[i][1]*(((int) pow((g_counter+1),1))%251))%251 + (r_matrix[i][2]*(((int) pow((g_counter+1),2))%251))%251+ (r_matrix[i][3]*(((int) pow((g_counter+1),3))%251))%251)%251;
 						g_matrices[g_counter][i][1] = (r_matrix[i][4] + (r_matrix[i][5]*(((int) pow((g_counter+1),1))%251))%251 + (r_matrix[i][6]*(((int) pow((g_counter+1),2))%251))%251 + (r_matrix[i][7]*(((int) pow((g_counter+1),3))%251))%251)%251;
+						
+
+						// g_matrices[g_counter][i][0] = (r_matrix[i][0] + (r_matrix[i][1]*(g_counter+1))%251 + (r_matrix[i][2]*(g_counter+1))%251 + (r_matrix[i][3]*(g_counter+1))%251)%251;
+						// g_matrices[g_counter][i][1] = (r_matrix[i][4] + (r_matrix[i][5]*(g_counter+1))%251 + (r_matrix[i][6]*(g_counter+1))%251 + (r_matrix[i][7]*(g_counter+1))%251)%251;
 						
 					}
 					
@@ -218,7 +240,7 @@ void distribute (int k, int n, char* secret_path, char* watermark_path, char* di
 
 				for (int j = 0; j < 3; j++) {
 
-					shadows[ext_counter][sh_aux_counter] = my_shadows[ext_counter][i][j];
+					shadows[ext_counter][sh_aux_counter] = (uint8_t) my_shadows[ext_counter][i][j];
 					sh_aux_counter++;
 
 				}

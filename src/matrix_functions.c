@@ -5,6 +5,7 @@
 #include <stdint.h>
 #include "matrix_functions.h"
 
+static uint32_t mod                 = 251;
 
 // este main es solo para testear esto
 
@@ -172,7 +173,7 @@ void multiply (size_t rows1, size_t columns1, size_t rows2, size_t columns2 ,int
 	for (i = 0; i < rows1; i++) {
       for (j = 0; j < columns2; j++) {
         for (k = 0; k < rows2; k++) {
-          	sum = (sum + (m1[i][k]*m2[k][j])/*%251*/);
+          	sum = (sum + (m1[i][k]*m2[k][j])%251)%251;
         }
         answer[i][j] = sum%251;
         sum = 0;

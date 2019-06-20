@@ -100,7 +100,7 @@ void recover (int k, int n, char* secret_path, char* watermark_path, char* direc
 
 			for (int i = 0; i < quantity * share_size; i++){
 
-				shadows[reached][i] = sh[index]; // en shadows[0] guardaria todos los datos juntos de la share 0. 
+				shadows[reached][i] = sh[index]; // en shadows[0] guardaria todos los datos juntos de las share 0. 
 				index++;
 
 			}
@@ -145,7 +145,7 @@ void recover (int k, int n, char* secret_path, char* watermark_path, char* direc
 
 				for (int aux_j = 0; aux_j < 3; aux_j++) {
 
-					my_shadows[curr_k][aux_i][aux_j] = shadows[curr_k][curr*share_size + aux_i*3 + aux_j];
+					my_shadows[curr_k][aux_i][aux_j] = (int) shadows[curr_k][curr*share_size + aux_i*3 + aux_j];
 
 				}
 
@@ -165,12 +165,12 @@ void recover (int k, int n, char* secret_path, char* watermark_path, char* direc
 		*/
 		
 
-		for (int counter=0; counter < k ;counter++) {
+		for (int counter = 0; counter < k ; counter++) {
 			int r;
 			int c;
 			int aux[n][3];
-			for (r=0; r < n; r++) {
-				    for (c=0; c < 3; c++) {
+			for (r = 0; r < n; r++) {
+				    for (c = 0; c < 3; c++) {
 				        aux[r][c] = my_shadows[counter][r][c];
 				    }
 			}
@@ -181,14 +181,16 @@ void recover (int k, int n, char* secret_path, char* watermark_path, char* direc
 			concat (n, 1,1, v[0], v[1], b_matrix);
 		} else {
 			//k == 4
-			
+
 			int curr1[n][2];
 			concat (n, 1,1, v[0], v[1], curr1);		
-			int curr2[n][3];
-			concat (n, 2,1, curr1, v[2], curr2);	
-			concat (n, 3,1, curr2, v[3], b_matrix);
+			int curr2[n][2];
+			concat (n, 1,1, v[2], v[3], curr2);	
+			concat (n, 2,2, curr1, curr2, b_matrix);
 			
 		}
+
+
 
 		/*
 		ahora vamos a obtener secret_projection que surge de proyeccion de B
@@ -231,7 +233,7 @@ void recover (int k, int n, char* secret_path, char* watermark_path, char* direc
 				int g3_coef = shadow_number[3] + 1;
 
 
-				// ACA uso lo que pregunte https://math.stackexchange.com/questions/3264557/solution-to-linear-equation-system-using-modulo-251
+				//  https://math.stackexchange.com/questions/3264557/solution-to-linear-equation-system-using-modulo-251
 				// 
 
 				int m[4][4] = {{1,g0_coef%251,((int)pow(g0_coef,2))%251,((int)pow(g0_coef,3))%251},
@@ -239,8 +241,6 @@ void recover (int k, int n, char* secret_path, char* watermark_path, char* direc
 								{1,g2_coef%251,((int)pow(g2_coef,2))%251,((int)pow(g2_coef,3))%251},
 								{1,g3_coef%251,((int)pow(g3_coef,2))%251,((int)pow(g3_coef,3))%251}};
 
-				 // printf("Imprimo m\n");
-				 // printMatrix(4, 4, m);
 
 				int inversaM[4][4];
 				inverse(4,m, inversaM);
@@ -298,18 +298,6 @@ void recover (int k, int n, char* secret_path, char* watermark_path, char* direc
 				
 
 		}
-		// printf("r matrix es\n");
-		// printMatrix(n,n, r_matrix);
-
-		// for (int si = 0; si < n; si++) {
-
-		// 	for (int sj = 0; sj < n; sj++) {
-
-		// 		r_extended[r_index] = (uint8_t) r_matrix[si][sj];				
-		// 		r_index++;
-
-		// 	}
-		// }
 
 		for (int si = 0; si < n; si++) {
 
@@ -327,7 +315,7 @@ void recover (int k, int n, char* secret_path, char* watermark_path, char* direc
 	/*leo la rw */
 	
 
-	bmp_image_t8 *simage = bmp_from_path8(watermark_path); //cambiar
+	bmp_image_t8 *simage = bmp_from_path8(watermark_path); 
 	/* esto es la generacion de la secreta*/
 	uint8_t* water = bmp_get_data_buffer8(wimage);
 
