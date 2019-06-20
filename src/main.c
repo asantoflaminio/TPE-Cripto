@@ -82,23 +82,9 @@ int main(int argc, char* argv[]) {
   //  encode(read_image(image), k, n, dir); //change this
   }*/
 
-  //image_t *image = read_image("./beautybeastshare.bmp");
 
-
-
-
-  // //write_image(image);
-  distribute(4,8);
-  recover(4, 8); //, image_t* output_image, image_t* watermark_image)
-
-  
-  // distribute(2,4);
-  // recover(2, 4); 
-
- // 
-
- 
-
+  distribute(2,4, "./Archivos de Prueba-4-8/Secreto.bmp", "./Archivos de Prueba-4-8/Marca.bmp", "./test24/");
+  recover(2, 4, "test.bmp", "generated_watermark.bmp", "./test24/"); //, image_t* output_image, image_t* watermark_image)
 
   return 0;
 }

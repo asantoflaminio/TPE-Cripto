@@ -11,23 +11,30 @@
 #include "matrix_functions.h"
 #include "utils.h"
 
-void recover(int k, int n){ //, image_t* output_image, image_t* watermark_image){
+void recover (int k, int n, char* secret_path, char* watermark_path, char* directory_path) { //, image_t* output_image, image_t* watermark_image){
 
-	printf("Starting image recovery.\n");
+	printf ("Starting image recovery.\n");
+
+
+	bmp_image_t8 *wimage = bmp_from_path8(watermark_path);
+
+	if (wimage == NULL) {
+
+		printf("Unable to get watermark image.\n");
+		exit(EXIT_FAILURE);
+
+	}
 
 	char* steg_type = "LSB1";
 
-	// esto viene del main pasado!
-	char* secret_path = "deberia_ser_albert.bmp";
-	 // char* watermark_path = "./Archivos de Prueba-4-8/shares/RW/RW.bmp";
-	  // char* directory_path = "./Archivos de Prueba-4-8/shares/"; 
-	char* watermark_path = "generated_watermark.bmp";
-	//char* directory_path = "./test_shares/"; 
-	// char* directory_path = "./test24/";
-	char* directory_path = "./rara/";
-
 	DIR *directory;
 	directory = opendir(directory_path); 
+
+	if(directory == NULL){
+		printf("Unable to open directory.\n");
+		exit(EXIT_FAILURE);
+	}
+
 	struct dirent* file;
 	int reached = 0;
 
@@ -318,7 +325,8 @@ void recover(int k, int n){ //, image_t* output_image, image_t* watermark_image)
 	}
 	
 	/*leo la rw */
-	bmp_image_t8 *wimage = bmp_from_path8(watermark_path);
+	
+
 	bmp_image_t8 *simage = bmp_from_path8(watermark_path); //cambiar
 	/* esto es la generacion de la secreta*/
 	uint8_t* water = bmp_get_data_buffer8(wimage);

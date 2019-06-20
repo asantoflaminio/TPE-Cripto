@@ -11,16 +11,11 @@
 #include "matrix_functions.h"
 #include "utils.h"
 
-void distribute (int k, int n) { 
+void distribute (int k, int n, char* secret_path, char* watermark_path, char* directory_path) { 
 
 	printf("Starting image distribuition.\n");
  
-	char* watermark_path = "./Archivos de Prueba-4-8/Marca.bmp"; 
-	char* secret_path = "./Archivos de Prueba-4-8/Secreto.bmp";
 	char* watermark_destiny_path = "generated_watermark.bmp";
-	char* directory_path = "./rara/"; 
-	// char* directory_path = "./test24/"; 
-	// char* directory_path = "./Archivos de Prueba-4-8/shares/"; 
 	char* lsb;
 
 	if (k == 2) {
@@ -48,6 +43,14 @@ void distribute (int k, int n) {
 		printf("Unable to get watermark image.\n");
 		exit(EXIT_FAILURE);
 
+	}
+
+	DIR *directory;
+	directory = opendir(directory_path); 
+
+	if(directory == NULL){
+		printf("Unable to open directory.\n");
+		exit(EXIT_FAILURE);
 	}
 
 
@@ -234,8 +237,9 @@ void distribute (int k, int n) {
 	/* aplico esteganografia a cada sombra extendida y guardo en archivo*/
 
 
-	DIR *directory;
-	directory = opendir(directory_path); 
+	
+
+
 	struct dirent* file;
 	int reached = 0;
 	int current = 0;
