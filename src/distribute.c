@@ -94,10 +94,10 @@ void distribute (int k, int n) {
 
 			rank = calculate_rank(n, k, a_matrix);
 			int at_matrix[k][n];
-			int result[n][n];
+			int result[k][k];
 			transpose(n,k,a_matrix, at_matrix);
-			multiply (n, k, k, n , a_matrix, at_matrix, result);
-			rank2 = calculate_rank(k, n, result); //quiero que a*at tambien sea de rango k
+			multiply (k, n, n, k , at_matrix, a_matrix, result);
+			rank2 = calculate_rank(k, k, result); //quiero que at*a tambien sea de rango k
 
 		} while (rank != k && rank2 != k);
 		
@@ -149,14 +149,9 @@ void distribute (int k, int n) {
 
 		
 		for (int x_counter = 0; x_counter < n; x_counter++) {
-				num = nextChar();
 				for (int row = 0; row < k; row++) {
-				//	num = nextChar();
 					x_matrices[x_counter][row][0] = ((int) pow(random_values[x_counter], row))%251;
-
 				}
-			
-
 		} 
 
 		// for(int re = 0; re < n; re++){
