@@ -13,7 +13,7 @@
 
 void distribute (int k, int n, char* secret_path, char* watermark_path, char* directory_path) { 
 
-	printf("Starting image distribuition.\n");
+	printf("Starting image distribution.\n");
  
 	char* watermark_destiny_path = "generated_watermark.bmp";
 	char* lsb;
@@ -58,7 +58,12 @@ void distribute (int k, int n, char* secret_path, char* watermark_path, char* di
 	int shadow_size = (secret_size/n)*3;
 	uint8_t shadows[n][shadow_size]; //sin el tema de LSB1 o LSB2
 	int individual_s_size = n*n;
-	int quantity = secret_size/(n*n);
+	int quantity = (int) secret_size/(n*n);
+
+	if((quantity*(n*n)) != (secret_size)) {
+		printf("Invalid secret image size.\n");
+		exit(EXIT_FAILURE);
+	}
 
 	uint8_t * secret_data = bmp_get_data_buffer8(image);
 	uint8_t * secret_projection_extended = calloc(secret_size, 1);

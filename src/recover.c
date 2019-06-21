@@ -11,7 +11,7 @@
 #include "matrix_functions.h"
 #include "utils.h"
 
-void recover (int k, int n, char* secret_path, char* watermark_path, char* directory_path) { //, image_t* output_image, image_t* watermark_image){
+void recover (int k, int n, char* secret_path, char* watermark_path, char* directory_path) { 
 
 	printf ("Starting image recovery.\n");
 
@@ -23,6 +23,14 @@ void recover (int k, int n, char* secret_path, char* watermark_path, char* direc
 		printf("Unable to get watermark image.\n");
 		exit(EXIT_FAILURE);
 
+	}
+
+	int s_size = (wimage->info.imageWidth) * (wimage->info.imageHeight); //Secret tiene mismo size que watermark
+	int max = (int) s_size/(n*n);
+
+	if((max*(n*n)) != (s_size)) {
+		printf("Invalid watermark image size.\n");
+		exit(EXIT_FAILURE);
 	}
 
 	char* steg_type = "LSB1";
@@ -38,17 +46,12 @@ void recover (int k, int n, char* secret_path, char* watermark_path, char* direc
 	struct dirent* file;
 	int reached = 0;
 
-	
-	int rows = 440;
-	int cols =280;
 	int share_size = 0;
 	int steg_aux = 0;
-	int max = 1925; //DESPS CAMBIARLO
 
 	if (k == 2) {
 		share_size = 4*3;
 		steg_type = "LSB2";
-		max = 7700;
 	} else {
 		// k == 4
 		share_size = 8*3;
