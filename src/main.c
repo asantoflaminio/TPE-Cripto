@@ -110,12 +110,7 @@ int main(int argc, char* argv[]) {
     distribute(k,n, secret_image, mark_image, dir);
   }
 
-
-  // distribute(2,4, "./Archivos de Prueba-4-8/Secreto.bmp", "./Archivos de Prueba-4-8/Marca.bmp", "./24/");
-  // recover(2, 4, "test.bmp", "generated_watermark.bmp", "./24/"); 
-
-  // distribute(4,8, "./Archivos de Prueba-4-8/Secreto.bmp", "./Archivos de Prueba-4-8/Marca.bmp", "./Archivos de Prueba-4-8/shares/");
-  // recover(4,8, "test.bmp", "generated_watermark.bmp", "./Archivos de Prueba-4-8/shares/"); 
   printf("Action executed successfully.\n");
   exit(EXIT_SUCCESS);
+  
 }

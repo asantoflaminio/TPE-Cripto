@@ -80,12 +80,10 @@ void recover (int k, int n, char* secret_path, char* watermark_path, char* direc
         if ((strcmp("bmp",get_filename_ext(file->d_name)) == 0)) {
 
         	printf("%s\n", file->d_name);
-        	char *result = malloc(strlen(directory_path) + strlen(file->d_name) + 1); // +1 for the null-terminator
-		    // in real code you would check for errors in malloc here
+        	char *result = malloc(strlen(directory_path) + strlen(file->d_name) + 1); 
 		    strcpy(result, directory_path);
 		    strcat(result, file->d_name);
             bmp_image_t24 *image = bmp_from_path24(result);
-            //printf("leo la share %d\n", image->header.reserved1);
             int sharefile_size_encrypted = (image->info.imageWidth) * (image->info.imageHeight) * 3;
             width = (image->info.imageWidth);
             height = (image->info.imageHeight);
@@ -138,7 +136,6 @@ void recover (int k, int n, char* secret_path, char* watermark_path, char* direc
 
 	for (int curr = 0; curr < quantity; curr++) {
 
-		// printf("spindex es %d\n", sp_index);
 		int secret_projection[n][n];
 		int my_shadows[k][n][3]; // ejemplo si uso 4,8 voy a tneer 4 shadows de 8x3
 
@@ -252,8 +249,6 @@ void recover (int k, int n, char* secret_path, char* watermark_path, char* direc
 				int answer[4][1];
 				int answer2[4][1];
 				multiply(4,4,4,1,inversaM,g0,answer);
-				// printf("Imprimo inversa\n");
-				// printMatrix(4, 4, inversaM);
 				multiply(4,4,4,1,inversaM,g1,answer2);
 
 				
@@ -269,7 +264,6 @@ void recover (int k, int n, char* secret_path, char* watermark_path, char* direc
 
 			} else {
 				// k == 2
-				//TODO
 
 				int g00 = g[0][r_row][0];
 				int g10 = g[1][r_row][0];
@@ -287,8 +281,6 @@ void recover (int k, int n, char* secret_path, char* watermark_path, char* direc
 				int answer[2][1];
 				int answer2[2][1];
 				multiply(2,2,2,1,inversaM,g0,answer);
-				// printf("Imprimo inversa\n");
-				// printMatrix(4, 4, inversaM);
 				multiply(2,2,2,1,inversaM,g1,answer2);
 
 

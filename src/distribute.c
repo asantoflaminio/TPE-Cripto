@@ -69,7 +69,8 @@ void distribute (int k, int n, char* secret_path, char* watermark_path, char* di
 	uint8_t * secret_projection_extended = calloc(secret_size, 1);
 	int sp_index = 0;
 	int sh_aux_counter = 0;
-	uint8_t num;
+	//uint8_t num;
+	int num;
 	setSeed(SET);
 
 	for (int q = 0; q < quantity; q++) {
@@ -91,7 +92,8 @@ void distribute (int k, int n, char* secret_path, char* watermark_path, char* di
 		int a_matrix[n][k];
 		size_t rank;
 		size_t rank2;
-		//int a_matrix[4][2] =  {{3,7}, {6,1}, {2,5}, {6,6}}; //BORRAR y descometnar arriba y abajo
+
+
 		do {
 			for (int ai = 0; ai < n; ai++) {
 				for (int aj = 0; aj < k; aj++) {
@@ -110,15 +112,13 @@ void distribute (int k, int n, char* secret_path, char* watermark_path, char* di
 			int at_matrix[k][n];
 			int result[k][k];
 			transpose(n,k,a_matrix, at_matrix);
+			
 			multiply (k, n, n, k , at_matrix, a_matrix, result);
 			rank2 = calculate_rank(k, k, result); //quiero que at*a tambien sea de rango k
 
 		} while (rank != k || rank2 != k);
 		
-
-		// printf("----------------\n");
-		// printMatrix(n,k, a_matrix);
-		// exit(EXIT_FAILURE);
+		
 		/*
 		ahora vamos a obtener secret_projection que surge de proyeccion de A
 		*/
@@ -173,10 +173,7 @@ void distribute (int k, int n, char* secret_path, char* watermark_path, char* di
 		size_t x_rank;
 		for (int x_counter = 0; x_counter < n; x_counter++) {
 				for (int row = 0; row < k; row++) {
-					//
-					x_matrices[x_counter][row][0] = ((int_pow(random_values[x_counter], row))% 251);
-					//x_matrices[x_counter][row][0] = nextChar()% 251;
-					
+					x_matrices[x_counter][row][0] = ((int_pow(random_values[x_counter], row))% 251);	
 				}
 		} 
 
@@ -190,16 +187,9 @@ void distribute (int k, int n, char* secret_path, char* watermark_path, char* di
 		for (int v_counter = 0; v_counter < n; v_counter++) {
 
 			multiply(n ,k, k, 1, a_matrix, x_matrices[v_counter], v_matrices[v_counter]);
-			// printf("--------------\n");
-			// printMatrix(n,1,v_matrices[v_counter]);
 
 		}
 
-		// for(int re = 0; re < n; re++){
-		// 	printf("----\n");
-		// 	printMatrix(k,1, x_matrices[re]);
-		// }
-		// exit(EXIT_FAILURE);
 
 		int g_matrices[n][n][2];
 		/* aca armar n matrices G cada una de n*2 */
@@ -226,9 +216,6 @@ void distribute (int k, int n, char* secret_path, char* watermark_path, char* di
 
 
 		}
-
-		// printf("----\n");
-		// printMatrix(n,2,g_matrices[0]);
 
 		/* concateno cada v con su correspondiente G para obtener las n sombras*/
 		int my_shadows[n][n][3];
@@ -298,8 +285,7 @@ void distribute (int k, int n, char* secret_path, char* watermark_path, char* di
 		if((strcmp("bmp",get_filename_ext(file->d_name)) == 0)) {
 
 			reached++;
-        	char *result = malloc(strlen(directory_path) + strlen(file->d_name) + 1); // +1 for the null-terminator
-		    // in real code you would check for errors in malloc here
+        	char *result = malloc(strlen(directory_path) + strlen(file->d_name) + 1); 
 		    strcpy(result, directory_path);
 		    strcat(result, file->d_name);
 		    printf("Using share %s\n", result);
@@ -337,8 +323,5 @@ void distribute (int k, int n, char* secret_path, char* watermark_path, char* di
 	bmp_save8(final_rw, watermark_destiny_path);
 	printf("Watermark saved %s.\n", watermark_destiny_path);
 
-	// printf("BYE\n");
-	// exit(EXIT_FAILURE);
-	// printf("FAILURE\n");
 
 }
