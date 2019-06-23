@@ -112,8 +112,8 @@ int main(int argc, char* argv[]) {
 
 
   //distribute(2,4, "./Archivos de Prueba-4-8/Secreto.bmp", "./Archivos de Prueba-4-8/Marca.bmp", "./24/");
-  // recover(2, 4, "test.bmp", "./2-4/RW.bmp", "./2-4/"); 
-  //recover(4, 8, "test.bmp", "RW.bmp", "./4-8/"); 
+ // recover(2, 4, "test.bmp", "./2-4/RW.bmp", "./2-4/"); 
+  // recover(4, 8, "test.bmp", "RW.bmp", "./4-8/"); 
 
   //distribute(4,8, "./Archivos de Prueba-4-8/Secreto.bmp", "./Archivos de Prueba-4-8/Marca.bmp", "./Archivos de Prueba-4-8/shares/");
   // recover(4,8, "test.bmp", "./hey/shares/RW/RW.bmp", "./hey/shares/"); 
