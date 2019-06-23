@@ -71,7 +71,6 @@ void recover (int k, int n, char* secret_path, char* watermark_path, char* direc
 	int shadow_number[k];
 	int width = 0;
 	int height = 0;
-
 	while ((file=readdir(directory)) != NULL && reached != k) {
 
 		int index = 0;  
@@ -97,8 +96,9 @@ void recover (int k, int n, char* secret_path, char* watermark_path, char* direc
             	exit(EXIT_FAILURE);
 
             }
+            printf("here.\n");
 			sh = (uint8_t *) recover_data(image, steg_type); 
-
+			printf("here2.\n");
 			for (int i = 0; i < quantity * share_size; i++){
 
 				shadows[reached][i] = sh[index]; // en shadows[0] guardaria todos los datos juntos de las share 0. 
@@ -132,7 +132,6 @@ void recover (int k, int n, char* secret_path, char* watermark_path, char* direc
 	uint8_t * r_extended = calloc(secret_size, 1);;
 	int sp_index = 0;
 	int r_index = 0;
-
 
 	for (int curr = 0; curr < quantity; curr++) {
 
@@ -308,7 +307,7 @@ void recover (int k, int n, char* secret_path, char* watermark_path, char* direc
 	}
 	
 	/*leo la rw */
-	
+
 
 	bmp_image_t8 *simage = bmp_from_path8(watermark_path); 
 	/* esto es la generacion de la secreta*/

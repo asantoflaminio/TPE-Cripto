@@ -104,13 +104,20 @@ int main(int argc, char* argv[]) {
 
   printf("Parameters validated! \n");
 
-  if (recover_image) {
-    recover(k,n, secret_image, mark_image, dir); 
-  } else {
-    distribute(k,n, secret_image, mark_image, dir);
-  }
+  // if (recover_image) {
+  //   recover(k,n, secret_image, mark_image, dir); 
+  // } else {
+  //   distribute(k,n, secret_image, mark_image, dir);
+  // }
+
+
+  //distribute(2,4, "./Archivos de Prueba-4-8/Secreto.bmp", "./Archivos de Prueba-4-8/Marca.bmp", "./24/");
+  recover(2, 4, "test.bmp", "./2-4/RW.bmp", "./2-4/"); 
+ // recover(4, 8, "test.bmp", "./4-8/RW.bmp", "./4-8/"); 
+
+  // distribute(4,8, "./Archivos de Prueba-4-8/Secreto.bmp", "./Archivos de Prueba-4-8/Marca.bmp", "./Archivos de Prueba-4-8/shares/");
+  // recover(4,8, "test.bmp", "generated_watermark.bmp", "./Archivos de Prueba-4-8/shares/"); 
 
   printf("Action executed successfully.\n");
   exit(EXIT_SUCCESS);
-  
 }

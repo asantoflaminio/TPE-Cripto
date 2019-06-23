@@ -107,13 +107,18 @@ static void recover_pure_data(char* lsb, uint8_t *new_data, uint8_t *image_buffe
 uint8_t* recover_data(bmp_image_t24 *image, char* lsb) {
 
     uint8_t *image_buffer = bmp_get_data_buffer24(image);
+    int sharefile_size_encrypted = (image->info.imageWidth) * (image->info.imageHeight) * 3;
+
     uint32_t hidden_data_size = 46200; 
+    int steg_aux = 8;
 
     if (strcmp(lsb, "LSB1") == 0) {
-        hidden_data_size = 46200;
+        steg_aux = 8;
     } else {
-        hidden_data_size = 92400;
+        steg_aux = 4;
     }
+
+    hidden_data_size = sharefile_size_encrypted/steg_aux;
 
     bmp_image_t24 * answer = image;
     uint32_t offset = 0;
