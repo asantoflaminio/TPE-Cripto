@@ -17,18 +17,21 @@ void distribute (int k, int n, char* secret_path, char* watermark_path, char* di
  
 	char* watermark_destiny_path = "generated_watermark.bmp";
 	char* lsb;
+	int steg_aux;
 
 	if (k == 2) {
-
+		steg_aux = 4;
 		lsb = "LSB2";
-
 	} else {
-
+		steg_aux = 8;
 		lsb = "LSB1";
-
 	}
 
 	bmp_image_t8 *image = bmp_from_path8(secret_path);
+
+	int size_aux = (image->info.imageWidth) * (image->info.imageHeight) * 3;
+	int hidden_data_size = size_aux/steg_aux;
+
 	bmp_image_t8 *wimage = bmp_from_path8(watermark_path);
 
 	if (image == NULL) {
@@ -289,7 +292,7 @@ void distribute (int k, int n, char* secret_path, char* watermark_path, char* di
 		    strcpy(result, directory_path);
 		    strcat(result, file->d_name);
 		    printf("Using share %s\n", result);
-			hide_data(shadows[current],result,lsb, current);
+			hide_data(shadows[current],result,lsb, current, hidden_data_size);
 			current++;
 
 		}

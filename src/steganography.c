@@ -132,18 +132,10 @@ uint8_t* recover_data(bmp_image_t24 *image, char* lsb) {
 }
 
 
-int hide_data(uint8_t *image_buffer, const char *input_path, char* lsb, int current) {
+int hide_data(uint8_t *image_buffer, const char *input_path, char* lsb, int current, int size) {
 
     bmp_image_t24* porter = bmp_from_path24(input_path);
     uint8_t* porter_data = bmp_get_data_buffer24(porter);
-
-    int size;
-
-    if (strcmp(lsb,"LSB1") == 0) {
-        size = 46200;
-    } else {
-        size = 92400;
-    }
 
     if (strcmp(lsb, "LSB1") == 0) {
         lsb1_apply(porter_data,image_buffer,  size);

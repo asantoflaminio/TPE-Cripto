@@ -18,6 +18,6 @@ static size_t lsb2_recover(uint8_t *destination, const uint8_t *source, long byt
 uint8_t* recover_data(bmp_image_t24 *image, char* lsb);
 
 /* Hides data into an image file */
-int hide_data(uint8_t *image_buffer, const char *input_path, char* lsb, int current);
+int hide_data(uint8_t *image_buffer, const char *input_path, char* lsb, int current, int size);
 
 #endif

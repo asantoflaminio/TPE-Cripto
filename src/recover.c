@@ -96,9 +96,9 @@ void recover (int k, int n, char* secret_path, char* watermark_path, char* direc
             	exit(EXIT_FAILURE);
 
             }
-            printf("here.\n");
+
 			sh = (uint8_t *) recover_data(image, steg_type); 
-			printf("here2.\n");
+
 			for (int i = 0; i < quantity * share_size; i++){
 
 				shadows[reached][i] = sh[index]; // en shadows[0] guardaria todos los datos juntos de las share 0. 
