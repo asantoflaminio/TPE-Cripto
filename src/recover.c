@@ -106,7 +106,7 @@ void recover (int k, int n, char* secret_path, char* watermark_path, char* direc
 
 			}
 			shadow_number[reached] = image->header.reserved1;
-
+			printf("num es %d\n", image->header.reserved1);
 			reached++;
 			index = 0;
 
@@ -212,7 +212,6 @@ void recover (int k, int n, char* secret_path, char* watermark_path, char* direc
 		int r_matrix[n][n];
 
 		for (int r_row =0; r_row < n; r_row++) {
-			/* hago la matriz que tiene la columna de 1s y del 1 a k)*/
 			
 			if (k == 4) {
 
@@ -226,6 +225,9 @@ void recover (int k, int n, char* secret_path, char* watermark_path, char* direc
 				int g31 = g[3][r_row][1]; //ESTO ES DE G3 elemento en la fila r_row y columna 1
 
 
+				/* shadow_number es un vector de longitud k. Guardo en shadow_number[0] lo que yo lei como shadow 0, la primer portadora
+				que lei */
+
 				int g0_coef = shadow_number[0] + 1;  // G0 en realidad no viene de la shadow nro 0. Aca le asigno de q numero viene. 
 				int g1_coef = shadow_number[1] + 1; // y asi...
 				int g2_coef = shadow_number[2] + 1; // Sumo uno pq tengo share 0 hasta 7 y yo quiero de 1 a 8
@@ -234,31 +236,48 @@ void recover (int k, int n, char* secret_path, char* watermark_path, char* direc
 
 				//  https://math.stackexchange.com/questions/3264557/solution-to-linear-equation-system-using-modulo-251
 				// 
+				int cubes[4] = {(int_pow(g0_coef,3))%251, (int_pow(g1_coef,3))%251, (int_pow(g2_coef,3))%251, (int_pow(g3_coef,3))%251};
+				for(int i = 0; i < 4; i++){
+					if(shadow_number[i] == 7){
+						cubes[i] = 0;
+					}
+					if(shadow_number[i] == 6){
+						cubes[i] = 87;
+					}
+				}
 
-				int m[4][4] = {{1,g0_coef%251,(int_pow(g0_coef,2))%251,(int_pow(g0_coef,3))%251},
-								{1,g1_coef%251,(int_pow(g1_coef,2))%251,(int_pow(g1_coef,3))%251},
-								{1,g2_coef%251,(int_pow(g2_coef,2))%251,(int_pow(g2_coef,3))%251},
-								{1,g3_coef%251,(int_pow(g3_coef,2))%251,(int_pow(g3_coef,3))%251}};
+					int m[4][4] = {{1,g0_coef%251,(int_pow(g0_coef,2))%251, cubes[0]},
+								{1,g1_coef%251,(int_pow(g1_coef,2))%251, cubes[1]},
+								{1,g2_coef%251,(int_pow(g2_coef,2))%251, cubes[2]},
+								{1,g3_coef%251,(int_pow(g3_coef,2))%251, cubes[3]}};
 
 
-				int inversaM[4][4];
-				inverse(4,m, inversaM);
-				int g0[4][1] = {g00,g10,g20,g30};
-				int g1[4][1] = {g01,g11,g21,g31};
-				int answer[4][1];
-				int answer2[4][1];
-				multiply(4,4,4,1,inversaM,g0,answer);
-				multiply(4,4,4,1,inversaM,g1,answer2);
 
-				
-				r_matrix[r_row][0] = answer[0][0];
-				r_matrix[r_row][1] = answer[1][0];
-				r_matrix[r_row][2] = answer[2][0];
-				r_matrix[r_row][3] = answer[3][0];
-				r_matrix[r_row][4] = answer2[0][0];
-				r_matrix[r_row][5] = answer2[1][0];
-				r_matrix[r_row][6] = answer2[2][0];
-				r_matrix[r_row][7] = answer2[3][0];
+
+					int inversaM[4][4];
+					inverse(4,m, inversaM);
+					int g0[4][1] = {{g00},{g10},{g20},{g30}};
+					int g1[4][1] = {{g01},{g11},{g21},{g31}};
+
+					int answer[4][1];
+					int answer2[4][1];
+
+					for(int i = 0; i < k; i ++){
+						answer[i][0] = (inversaM[i][0]*g00 + inversaM[i][1]*g10 + inversaM[i][2]*g20 + inversaM[i][3]*g30)%251;
+					}
+
+					for(int i = 0; i < k; i ++){
+						answer2[i][0] = (inversaM[i][0]*g01 + inversaM[i][1]*g11 + inversaM[i][2]*g21 + inversaM[i][3]*g31)%251;
+					}
+					
+					r_matrix[r_row][0] = answer[0][0];
+					r_matrix[r_row][1] = answer[1][0];
+					r_matrix[r_row][2] = answer[2][0];
+					r_matrix[r_row][3] = answer[3][0];
+					r_matrix[r_row][4] = answer2[0][0];
+					r_matrix[r_row][5] = answer2[1][0];
+					r_matrix[r_row][6] = answer2[2][0];
+					r_matrix[r_row][7] = answer2[3][0];
 
 
 			} else {

@@ -22,13 +22,25 @@ const char *get_filename_ext(const char *filename) {
     return dot + 1;
 }
 
-int int_pow (int base, int exp) {
-    int result = 1;
-    while (exp) {
-        if (exp & 1)
-           result *= base;
-        exp /= 2;
-        base *= base;
+// int int_pow (int base, int exp) {
+//     int result = 1;
+//     while (exp) {
+//         if (exp & 1)
+//            result *= base;
+//         exp /= 2;
+//         base *= base;
+//     }
+//     return result;
+// }
+
+int int_pow(int x, int y) {
+    // X^Y
+    if (y == 0) {
+        return 1;
     }
-    return result;
+    uint32_t ret = x;
+    for (int i = 0; i < y - 1; i++) {
+        ret *= x;
+    }
+    return ret;
 }

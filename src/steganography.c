@@ -68,6 +68,7 @@ static size_t lsb1_recover(uint8_t *destination, const uint8_t *source, long byt
     return d_index;
 }
 
+
 static size_t lsb2_recover(uint8_t *destination, const uint8_t *source, long bytes_amount, int null_cutoff) {
 
     size_t s_index = 0;
@@ -97,7 +98,7 @@ static size_t lsb2_recover(uint8_t *destination, const uint8_t *source, long byt
 static void recover_pure_data(char* lsb, uint8_t *new_data, uint8_t *image_buffer, uint32_t hidden_data_size, uint32_t *offset) {
 
 	if (strcmp(lsb, "LSB1") == 0) {
-		lsb1_recover(new_data, image_buffer, hidden_data_size, 0);
+		lsb1_recover(new_data, image_buffer , hidden_data_size, 0);
 	} else {		 
         lsb2_recover(new_data, image_buffer, hidden_data_size, 0);
 	}

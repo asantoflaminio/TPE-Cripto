@@ -82,8 +82,9 @@ void multiply (size_t rows1, size_t columns1, size_t rows2, size_t columns2 ,int
 	long sum = 0;
 	for (i = 0; i < rows1; i++) {
       for (j = 0; j < columns2; j++) {
+      	sum = 0;
         for (k = 0; k < rows2; k++) {
-          	sum = (sum + (m1[i][k]*m2[k][j])%251)%251;
+          	sum = (sum + (m1[i][k]*m2[k][j]));
         }
         answer[i][j] = sum%251;
         sum = 0;
@@ -91,6 +92,7 @@ void multiply (size_t rows1, size_t columns1, size_t rows2, size_t columns2 ,int
     }
 	
 }
+
 
 void separate_matrix_by_column (size_t wanted_cols1, size_t wanted_cols2, size_t rows, size_t columns, int m[rows][columns], int answer1[rows][wanted_cols1], int answer2[rows][wanted_cols2]) {
 

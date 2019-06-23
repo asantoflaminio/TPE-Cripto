@@ -208,9 +208,15 @@ void distribute (int k, int n, char* secret_path, char* watermark_path, char* di
 						g_matrices[g_counter][i][1] = (r_matrix[i][2] + (r_matrix[i][3]*(((int) int_pow((g_counter+1),1))%251))%251)%251;
 
 					} else {
-
-						g_matrices[g_counter][i][0] = (r_matrix[i][0] + (r_matrix[i][1]*(((int) int_pow((g_counter+1),1))%251))%251 + (r_matrix[i][2]*(((int) int_pow((g_counter+1),2))%251))%251+ (r_matrix[i][3]*(((int) int_pow((g_counter+1),3))%251))%251)%251;
-						g_matrices[g_counter][i][1] = (r_matrix[i][4] + (r_matrix[i][5]*(((int) int_pow((g_counter+1),1))%251))%251 + (r_matrix[i][6]*(((int) int_pow((g_counter+1),2))%251))%251 + (r_matrix[i][7]*(((int) int_pow((g_counter+1),3))%251))%251)%251;
+						int last_cube = ((int) int_pow((g_counter+1),3));
+						if(g_counter == 7){
+							last_cube = 0;
+						}
+						if(g_counter == 6){
+							last_cube = 87;
+						}
+						g_matrices[g_counter][i][0] = (r_matrix[i][0] + (r_matrix[i][1]*(((int) int_pow((g_counter+1),1))%251))%251 + (r_matrix[i][2]*(((int) int_pow((g_counter+1),2))%251))%251+ (r_matrix[i][3]*(last_cube%251))%251)%251;
+						g_matrices[g_counter][i][1] = (r_matrix[i][4] + (r_matrix[i][5]*(((int) int_pow((g_counter+1),1))%251))%251 + (r_matrix[i][6]*(((int) int_pow((g_counter+1),2))%251))%251 + (r_matrix[i][7]*(last_cube%251))%251)%251;
 						
 					}
 					
