@@ -330,7 +330,7 @@ void distribute (int k, int n, char* secret_path, char* watermark_path, char* di
 	bmp_image_t8 *final_rw = wimage;
 	final_rw->data = new_watermark_data;
 	bmp_save8(final_rw, watermark_destiny_path);
-	printf("Watermark saved %s.\n", watermark_destiny_path);
+	printf("Transformed watermark saved %s.\n", watermark_destiny_path);
 
 
 }
