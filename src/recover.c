@@ -106,7 +106,7 @@ void recover (int k, int n, char* secret_path, char* watermark_path, char* direc
 
 			}
 			shadow_number[reached] = image->header.reserved1;
-			printf("num es %d\n", image->header.reserved1);
+			//printf("num es %d\n", image->header.reserved1);
 			reached++;
 			index = 0;
 
