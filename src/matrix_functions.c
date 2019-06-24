@@ -163,7 +163,7 @@ void printMatrixFloat(size_t rows, size_t columns, float m[rows][columns]) {
 void inverse(size_t size, int m[size][size], int answer[size][size]){
 
 
-    int det = determinant(size, m); 
+    int64_t det = determinant(size, m); 
 
     if (det == 0) { 
         printf("Invalid matrix. Doesn't have inverse.\n");
@@ -172,7 +172,7 @@ void inverse(size_t size, int m[size][size], int answer[size][size]){
         return;
     } 
     
-    int adjMatrix[size][size]; 
+    int64_t adjMatrix[size][size]; 
     adjoint(size, m, adjMatrix); 
 
     for (int i = 0; i < size; i++) {
@@ -217,8 +217,8 @@ void cofactor(int size, int m[size][size], int ans[size-1][size-1], int forbidde
 } 
   
 
-int determinant(size_t size, int m[size][size]) { 
-    int det = 0;  
+int64_t determinant(size_t size, int m[size][size]) { 
+    int64_t det = 0;  
   	int i;
 
     if (size == 1) {
@@ -246,7 +246,7 @@ int determinant(size_t size, int m[size][size]) {
 } 
 
 
-void adjoint(int size, int m[size][size],int answer[size][size]) { 
+void adjoint(int size, int m[size][size],int64_t answer[size][size]) { 
 
     if (size == 1) { 
         answer[0][0] = 1; 

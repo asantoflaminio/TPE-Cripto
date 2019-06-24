@@ -34,10 +34,10 @@ void inverse(size_t size, int m[size][size], int answer[size][size]);
 void cofactor(int size, int m[size][size], int ans[size][size], int forbidden_row, int forbidden_col);
 
 /* Calculates determinant for matrix */
-int determinant(size_t size, int m[size][size]);
+int64_t determinant(size_t size, int m[size][size]);
 
 /* Calculates adjoint matrix */
-void adjoint(int size, int m[size][size],int answer[size][size]);
+void adjoint(int size, int m[size][size],int64_t answer[size][size]);
 
 /* Gauss Jordan solver. Accepts only matrices with the scheme m[rows][rows+1] with the last column being the values
 of the matrix the other side of the 'equal' symbol */

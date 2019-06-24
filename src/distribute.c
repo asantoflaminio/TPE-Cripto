@@ -100,13 +100,7 @@ void distribute (int k, int n, char* secret_path, char* watermark_path, char* di
 		do {
 			for (int ai = 0; ai < n; ai++) {
 				for (int aj = 0; aj < k; aj++) {
-					num = (((int)nextChar()) % 251);
-					if(k == 4) { // en 4,8 restrinjo valores
-						while (num > 2) {
-						num = (((int)nextChar()) % 251);
-						}
-					}
-					
+					num = (((int)nextChar()) % 251);					
 					a_matrix[ai][aj] = num;
 				}
 			}
@@ -150,27 +144,21 @@ void distribute (int k, int n, char* secret_path, char* watermark_path, char* di
 		int x_matrices[n][k][1];
 
 		int random_values[n];
-		if (k == 2) {
-			for(int p = 0; p < n; p++) {
-				int temp = (((int)nextChar())% 251 + 251) % 251;
-				int found = 0;
-				for(int pe = 0; pe < p; pe++){
-					if(random_values[pe] == temp){
-						found = 1;
-					}
-				}
-				if (found == 1) {
-					p--;
-				} else {
-					random_values[p] = temp;
-				}
-			
-			}
-		} else {
-			for (int t = 0; t < n; t++) {
-				random_values[t] = t;		
 
+		for(int p = 0; p < n; p++) {
+			int temp = (((int)nextChar())% 251 + 251) % 251;
+			int found = 0;
+			for(int pe = 0; pe < p; pe++){
+				if(random_values[pe] == temp){
+					found = 1;
+				}
 			}
+			if (found == 1) {
+				p--;
+			} else {
+				random_values[p] = temp;
+			}
+		
 		}
 
 		size_t x_rank;
@@ -209,12 +197,6 @@ void distribute (int k, int n, char* secret_path, char* watermark_path, char* di
 
 					} else {
 						int last_cube = ((int) int_pow((g_counter+1),3));
-						if(g_counter == 7){
-							last_cube = 0;
-						}
-						if(g_counter == 6){
-							last_cube = 87;
-						}
 						g_matrices[g_counter][i][0] = (r_matrix[i][0] + (r_matrix[i][1]*(((int) int_pow((g_counter+1),1))%251))%251 + (r_matrix[i][2]*(((int) int_pow((g_counter+1),2))%251))%251+ (r_matrix[i][3]*(last_cube%251))%251)%251;
 						g_matrices[g_counter][i][1] = (r_matrix[i][4] + (r_matrix[i][5]*(((int) int_pow((g_counter+1),1))%251))%251 + (r_matrix[i][6]*(((int) int_pow((g_counter+1),2))%251))%251 + (r_matrix[i][7]*(last_cube%251))%251)%251;
 						
