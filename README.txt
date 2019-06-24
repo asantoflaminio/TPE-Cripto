@@ -21,6 +21,7 @@ Aclaracion: Al distribuir se generara la imagen que contiene la transformacion d
 			Este archivo es el que debe ser utilizado en la recuperacion.
 			Luego en la recuperacion la watermark recuperada se generara con el nombre recovered_watermark.bmp.
 
+
 ------------------------------------------------------------------------------------------------------------------------------------------
 Ejemplos de ejecucion serian:
 

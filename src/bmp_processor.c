@@ -30,22 +30,22 @@ bmp_image_t8 *bmp_from_path8(const char *path) {
 
     if (header_size != image->header.imageDataOffset) {
         printf("Invalid: Extra data found in image.\n");
-        goto _ABORT;
+        exit(EXIT_FAILURE);;
     }
 
     if (image->info.bitsPerPixel != 8) {
         printf("Invalid: Image must be 8bpp.\n");
-        goto _ABORT;
+        exit(EXIT_FAILURE);;
     }
 
     if (image->info.compressionMethod != 0) {
         printf("Invalid: compressed image\n");
-        goto _ABORT;
+        exit(EXIT_FAILURE);;
     }
 
     if (image->header.imageDataOffset - header_size != 0) {
         printf("Invalid: There's extra deate between header and bitmap.\n");
-        goto _ABORT;
+        exit(EXIT_FAILURE);;
     }
 
     image->data = malloc(image->info.imageSize);
@@ -81,22 +81,22 @@ bmp_image_t24 *bmp_from_path24(const char *path) {
  
     if (header_size != image->header.imageDataOffset) {
         printf("Invalid: Extra data found in image.\n");
-        goto _ABORT;
+        exit(EXIT_FAILURE);;
     }
 
     if (image->info.bitsPerPixel != 24) {
         printf("Invalid: Image must be 24bpp.\n");
-        goto _ABORT;
+        exit(EXIT_FAILURE);;
     }
 
     if (image->info.compressionMethod != 0) {
         printf("Invalid: compressed image\n");
-        goto _ABORT;
+        exit(EXIT_FAILURE);;
     }
 
     if (image->header.imageDataOffset - header_size != 0) {
         printf("Invalid: There's extra deate between header and bitmap.\n");
-        goto _ABORT;
+        exit(EXIT_FAILURE);;
     }
 
     image->data = malloc(image->info.imageSize);
