@@ -237,6 +237,14 @@ void recover (int k, int n, char* secret_path, char* watermark_path, char* direc
 				//  https://math.stackexchange.com/questions/3264557/solution-to-linear-equation-system-using-modulo-251
 				// 
 				int cubes[4] = {(int_pow(g0_coef,3))%251, (int_pow(g1_coef,3))%251, (int_pow(g2_coef,3))%251, (int_pow(g3_coef,3))%251};
+				for(int i = 0; i < 4; i++){
+					if(shadow_number[i] == 7){
+						cubes[i] = 0;
+					}
+					if(shadow_number[i] == 6){
+						cubes[i] = 87;
+					}
+				}
 
 					int m[4][4] = {{1,g0_coef%251,(int_pow(g0_coef,2))%251, cubes[0]},
 								{1,g1_coef%251,(int_pow(g1_coef,2))%251, cubes[1]},
