@@ -1,0 +1,18 @@
+Aclaraciones:
+
+
+Cosas que para mi se podrian mejorar:
+
+	- El codigo esta feo, hecho con vectores de matrices. Nombres incosistentes entre recover y distribute (ejemplo g_matrices y g) 
+	- Hay un valor 0 y 87 harcodeado tanto en recover como en distribute que tiene que ver con las shares 6 y 7 (que serian las 7 y 8).
+	  Esto porque sino no funcionaba si se usaban esas shares. Intente resolverlo de mil formas. Hablando con otros grupos llegue a que
+	  el problema puede ser de la esteganografia LSB1, pero tampoco estoy seguro. 
+
+
+La correccion de Ana:
+
+Nos sacamos un 9,5. Ana dijo que le andaba bien recuperar desde los de la catedra con 2,4 y 4,8.
+Dijo que con 4,8 tambien podria distribuir y recuperar bien pero no con 2,4 porque le generaba un generated_watermark muy chico.
+Yo probe de todo y funcionaba siempre con 2,4. Pense que tal vez ella tenia algun archivo corrompido o algo pero
+como nos puso nota alta no dije nada. 
+Al informe dijo que se podian haber incorporado mas ideas para extender o mejorar el algoritmo. 
